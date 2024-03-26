@@ -2,7 +2,7 @@
 <?= loadPartial('navbar') ?>
 <?= loadPartial('breadcrumb') ?>
 
-<?php inspect($products) ?>
+<!-- <?php inspect($products) ?> -->
 
 <main id="product-list-main">
   <div class="container-fluid py-3">
@@ -25,7 +25,7 @@
                 <option value="3">Price Low to
                   High
                 </option>
-                <option value="3">Price High to
+                <option value="4">Price High to
                   Low
                 </option>
               </select>
@@ -48,7 +48,7 @@
                   </a>
                   <div class="card-body">
                     <h5 class="card-title">
-                      <a href="#" class="link-underline link-underline-opacity-0">
+                      <a href="product?id=<?= $product->product_id ?>" class="link-underline link-underline-opacity-0">
                         <?= $product->product_name ?>
                       </a>
                     </h5>

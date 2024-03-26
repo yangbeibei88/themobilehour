@@ -17,3 +17,4 @@
 $router->get('/themobilehour/', 'App/Controllers/HomeController.php');
 $router->get('/themobilehour/home', 'App/Controllers/HomeController.php');
 $router->get('/themobilehour/products', 'App/Controllers/ProductsController.php');
+$router->get('/themobilehour/product', 'App/Controllers/ProductShowController.php');
