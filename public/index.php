@@ -1,11 +1,8 @@
 <?php
 echo '__DIR__: ' . __DIR__;
 require '../functions.php';
+require basePath('Router.php');
 require basePath('App/Database.php');
-$config = require basePath('config/config.php');
-
-$db = new Database($config);
-
 
 echo '<br>';
 echo 'basePath(): ' . basePath();
@@ -18,10 +15,7 @@ echo '__DIR__: ' . __FILE__;
 echo '<br>';
 echo substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
 echo '<br>';
-// echo getParentFolder();
 echo 'actual URI: ' . $_SERVER['REQUEST_URI'];
-echo '<br>';
-// echo 'PHP_URL_PATH' . PHP_URL_PATH;
 echo '<br>';
 echo 'parse_url: ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 echo '<br>';
@@ -47,19 +41,22 @@ echo '<br>';
 // $uri = getURI($_SERVER['REQUEST_URI']);
 
 
-require basePath('Router.php');
 
+// instatiating the router
 $router = new Router();
 
+// get routes
 $routes = require basePath('routes.php');
 
+// get current URI and HTTP method
 $uri = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
-// inspectAndDie($uri);
+
 inspect($uri);
 inspect($method);
 
+// Route the request
 $router->route($uri, $method);
 
 // if uri exists in routes, then...
