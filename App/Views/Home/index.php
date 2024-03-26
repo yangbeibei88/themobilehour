@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <a href="$" class="btn btn-primary d-block my-5" role="button">All
+    <a href="products" class="btn btn-primary d-block my-5" role="button">All
       Products</a>
   </div>
 </section>

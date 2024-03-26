@@ -41,6 +41,14 @@ echo '<br>';
 // ];
 
 // $uri = getURI($_SERVER['REQUEST_URI']);
+
+
+require basePath('Router.php');
+
+$router = new Router();
+
+$routes = require basePath('routes.php');
+
 $uri = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -48,7 +56,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 inspect($uri);
 inspect($method);
 
-require basePath('Router.php');
+$router->route($uri, $method);
 
 // if uri exists in routes, then...
 // if (array_key_exists($uri, $routes)) {
