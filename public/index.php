@@ -1,7 +1,11 @@
 <?php
 echo '__DIR__: ' . __DIR__;
 require '../functions.php';
-// require '../config/config.php';
+require basePath('App/Database.php');
+$config = require basePath('config/config.php');
+
+$db = new Database($config);
+
 
 echo '<br>';
 echo 'basePath(): ' . basePath();
