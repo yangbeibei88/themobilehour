@@ -4,6 +4,8 @@ $db = new Database($config);
 
 $products = $db->query("SELECT * FROM product")->fetchAll();
 
-inspect($products);
-?>
-<?= loadView('Products/index') ?>
+// inspect($products);
+
+loadView('Products/index', [
+  'products' => $products
+]);

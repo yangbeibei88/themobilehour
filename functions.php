@@ -31,17 +31,20 @@ function getURI($uri)
 
 /**
  * Load a view
+ * $data array comes from pdo
  *
  * @param string $name
+ * @param array $data
  * @return void
  */
-function loadView($name)
+function loadView($name, $data = [])
 {
   $viewPath = basePath("App/Views/{$name}.php");
 
   inspect($viewPath);
 
   if (file_exists($viewPath)) {
+    extract($data);
     require $viewPath;
   } else {
     echo "View '{$name}' not found!";
@@ -88,4 +91,27 @@ function inspectAndDie($value)
   echo '<pre>';
   die(var_dump($value));
   echo '</pre>';
+}
+
+/**
+ * Format price, keep two decimals
+ *
+ * @param float $price
+ * @return void
+ */
+function formatPrice($price)
+{
+  return '$' . number_format(floatval($price), 2);
+}
+
+/**
+ * get sale price
+ *
+ * @param float $rrp
+ * @param float $disc
+ * @return void
+ */
+function getSalePrice($rrp, $disc)
+{
+  return '$' . number_format(floatval($rrp * (1 - $disc / 100)), 2);
 }

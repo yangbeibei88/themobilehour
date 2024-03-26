@@ -2,6 +2,8 @@
 <?= loadPartial('navbar') ?>
 <?= loadPartial('breadcrumb') ?>
 
+<?php inspect($products) ?>
+
 <main id="product-list-main">
   <div class="container-fluid py-3">
     <div class="row">
@@ -32,136 +34,54 @@
         </div>
         <div class="container" id="product-list">
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 my-4">
-            <article class="col">
-              <div class="card">
-                <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
-                  ON SALE
-                </span>
-                <a href="#">
-                  <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href="#" class="link-underline link-underline-opacity-0">
-                      iPhone 15
-                      Pro Max 256GB Natural
-                      Titanium
-                    </a>
-                  </h5>
-                  <p class="card-text fs-3 fw-bold">
-                    $1987
-                  </p>
-                  <a href="#" class="btn btn-primary w-100" role="button">Add to
-                    Cart</a>
-                  <p class="card-text text-success text-center mt-2">
-                    In Stock</p>
+            <?php foreach ($products as $product) : ?>
+              <!-- PRODUCT CARD START -->
+              <article class="col">
+                <div class="card h-100">
+                  <?php if ($product->disc_pct > 0) : ?>
+                    <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
+                      ON SALE
+                    </span>
+                  <?php endif; ?>
+                  <a href="#">
+                    <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
+                  </a>
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <a href="#" class="link-underline link-underline-opacity-0">
+                        <?= $product->product_name ?>
+                      </a>
+                    </h5>
+                    <?php if ($product->disc_pct > 0) : ?>
+                      <p class="card-text fs-5 text-decoration-line-through listprice mb-0">
+                        <?= formatPrice($product->list_price) ?>
+                      </p>
+                      <p class="card-text fs-3 fw-bold saleprice">
+                        <?= getSalePrice($product->list_price, $product->disc_pct) ?>
+                      </p>
+                    <?php else : ?>
+                      <p class="card-text fs-3 fw-bold saleprice">
+                        <?= formatPrice($product->list_price) ?>
+                      </p>
+                    <?php endif; ?>
+                    <?php if ($product->stock_on_hand > 0) : ?>
+                      <a href="#" class="btn btn-primary w-100" role="button">Add to
+                        Cart</a>
+                    <?php else : ?>
+                      <a href="#" class="btn btn-secondary w-100 disabled" role="button" aria-disabled="true">Unavailable</a>
+                    <?php endif; ?>
+                    <?php if ($product->stock_on_hand > 0) : ?>
+                      <p class="card-text text-success text-center mt-2">
+                        In Stock</p>
+                    <?php else : ?>
+                      <p class="card-text text-danger text-center mt-2">
+                        Out of Stock</p>
+                    <?php endif; ?>
+                  </div>
                 </div>
-              </div>
-            </article>
-            <article class="col">
-              <div class="card">
-                <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
-                  ON SALE
-                </span>
-                <a href="#">
-                  <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href="#" class="link-underline link-underline-opacity-0">
-                      iPhone 15
-                      Pro Max 256GB Natural
-                      Titanium
-                    </a>
-                  </h5>
-                  <p class="card-text fs-3 fw-bold">
-                    $1987
-                  </p>
-                  <a href="#" class="btn btn-primary w-100" role="button">Add to
-                    Cart</a>
-                  <p class="card-text text-success text-center mt-2">
-                    In Stock</p>
-                </div>
-              </div>
-            </article>
-            <article class="col">
-              <div class="card">
-                <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
-                  ON SALE
-                </span>
-                <a href="#">
-                  <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href="#" class="link-underline link-underline-opacity-0">
-                      iPhone 15
-                      Pro Max 256GB Natural
-                      Titanium
-                    </a>
-                  </h5>
-                  <p class="card-text fs-3 fw-bold">
-                    $1987
-                  </p>
-                  <a href="#" class="btn btn-primary w-100" role="button">Add to
-                    Cart</a>
-                  <p class="card-text text-success text-center mt-2">
-                    In Stock</p>
-                </div>
-              </div>
-            </article>
-            <article class="col">
-              <div class="card">
-                <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
-                  ON SALE
-                </span>
-                <a href="#">
-                  <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href="#" class="link-underline link-underline-opacity-0">
-                      iPhone 15
-                      Pro Max 256GB Natural
-                      Titanium
-                    </a>
-                  </h5>
-                  <p class="card-text fs-3 fw-bold">
-                    $1987
-                  </p>
-                  <a href="#" class="btn btn-primary w-100" role="button">Add to
-                    Cart</a>
-                  <p class="card-text text-success text-center mt-2">
-                    In Stock</p>
-                </div>
-              </div>
-            </article>
-            <article class="col">
-              <div class="card">
-                <span class="position-absolute top-0 start-0 badge rounded-pill bg-danger">
-                  ON SALE
-                </span>
-                <a href="#">
-                  <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href="#" class="link-underline link-underline-opacity-0">
-                      iPhone 15
-                      Pro Max 256GB Natural
-                      Titanium
-                    </a>
-                  </h5>
-                  <p class="card-text fs-3 fw-bold">
-                    $1987
-                  </p>
-                  <a href="#" class="btn btn-primary w-100" role="button">Add to
-                    Cart</a>
-                  <p class="card-text text-success text-center mt-2">
-                    In Stock</p>
-                </div>
-              </div>
-            </article>
+              </article>
+              <!-- PRODUCT CARD END -->
+            <?php endforeach; ?>
           </div>
         </div>
       </section>
