@@ -1,0 +1,23 @@
+.carousel-item img {
+  object-fit: cover;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+#checkout .shipping-address address p {
+  margin-bottom: 0;
+}
+
+@media screen and (min-width: 576px) {
+  .product-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .product-img-gallery {
+    grid-row: 1 / span 2;
+  }
+  
+}
