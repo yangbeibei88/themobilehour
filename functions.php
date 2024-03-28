@@ -115,3 +115,20 @@ function getSalePrice($rrp, $disc)
 {
   return '$' . number_format(floatval($rrp * (1 - $disc / 100)), 2);
 }
+
+/**
+ * get discount amount
+ *
+ * @param float $rrp
+ * @param float $disc
+ * @return void
+ */
+function getDiscAmount($rrp, $disc)
+{
+  return '$' . number_format(floatval($rrp * $disc / 100), 0);
+}
+
+function getInteger($number)
+{
+  return number_format(floatval($number), 0);
+}

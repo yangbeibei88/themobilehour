@@ -1,38 +1,72 @@
 <?= loadPartial('header') ?>
 <?= loadPartial('navbar') ?>
-<?= loadPartial('breadcrumb') ?>
+<?= loadPartial('breadcrumb-notitle') ?>
+<?php
+
+// push each product's not-null image paths to a new array
+$imagePaths = [];
+
+foreach ((array) $product as $key => $value) {
+  if (strripos($key, 'imgpath') === 0 && !is_null($value)) {
+    $num = substr($key, -1);
+    $altKey = 'alt' . $num;
+    $imagePaths[] = [
+      'imgpath' => $value,
+      'alt' => $product->$altKey
+    ];
+  }
+}
+
+// inspect($imagePaths);
+// inspect(count($imagePaths));
+?>
 <main id="single-product-page-detail">
   <div class="container py-4">
     <section class="row product-info">
       <div class="col order-1 order-md-2 product-title">
-        <h1 class="fs-2">iPhone 15 Pro Max
-          256GB
-          Natural Titanium</h1>
-        <p>SKU: 639220</p>
+        <h1 class="fs-2"><?= $product->product_name ?></h1>
+        <p>SKU: <?= $product->sku ?></p>
       </div>
       <div class="col product-img-gallery order-2 order-md-1">
         <div id="productGalleryCarousel" class="carousel slide">
           <div class="carousel-indicators">
-            <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="0" class="active img-thumnail">
-              <img src="uploads/images/639220.jpg" alt="" class="d-block w-100">
-            </button>
-            <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="1" class="img-thumnail">
-              <img src="uploads/images/639220.jpg" alt="" class="d-block w-100">
-            </button>
-            <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="2" class="img-thumnail">
-              <img src="uploads/images/639220.jpg" alt="" class="d-block w-100">
-            </button>
+            <?php if (is_null($product->image_gallery_id) || count($imagePaths) === 0) : ?>
+              <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="0" class="active img-thumnail">
+                <img src="uploads/images/product-placeholder.jpeg" alt="<?= $product->product_name ?>" class="d-block w-100">
+              </button>
+            <?php else : ?>
+              <?php foreach ($imagePaths as $key => $value) : ?>
+                <?php if ($key === 0) : ?>
+                  <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="0" class="active img-thumnail">
+                    <img src="<?= $value['imgpath'] ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
+                  </button>
+                <?php else : ?>
+                  <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="<?= $key ?>" class="img-thumnail">
+                    <img src="<?= $value['imgpath'] ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
+                  </button>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            <?php endif; ?>
+
           </div>
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="uploads/images/639220.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-              <img src="uploads/images/639220.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-              <img src="uploads/images/639220.jpg" class="d-block w-100" alt="...">
-            </div>
+          <div class="carousel-inner border">
+            <?php if (is_null($product->image_gallery_id) || count($imagePaths) === 0) : ?>
+              <div class="carousel-item active">
+                <img src="uploads/images/product-placeholder.jpeg" class="d-block w-100" alt="<?= $product->product_name ?>">
+              </div>
+            <?php else : ?>
+              <?php foreach ($imagePaths as $key => $value) : ?>
+                <?php if ($key === 0) : ?>
+                  <div class="carousel-item active">
+                    <img src="<?= $value['imgpath'] ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
+                  </div>
+                <?php else : ?>
+                  <div class="carousel-item">
+                    <img src="<?= $value['imgpath'] ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
+                  </div>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
           <button class="carousel-control-prev" type="button" data-bs-target="#productGalleryCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
@@ -45,12 +79,16 @@
         </div>
       </div>
       <div class="col product-short-desc order-3">
-        <p class="mb-0">RRP: <s>$2,199</s></p>
-        <p class="fs-2 fw-bold">$1987
-          <span class="fs-4">($212 OFF)</span>
-        </p>
-        <p>Colour: Natural Titanium</p>
-        <p>Storage: 256GB</p>
+        <?php if ($product->disc_pct > 0) : ?>
+          <p class="mb-0">RRP: <s><?= formatPrice($product->list_price) ?></s></p>
+          <span class="fs-2 fw-bold"><?= getSalePrice($product->list_price, $product->disc_pct) ?></span>
+          <span class="fs-4">(<?= getDiscAmount($product->list_price, $product->disc_pct) ?> OFF)</span>
+        <?php else : ?>
+          <span class="fs-2 fw-bold"><?= formatPrice($product->list_price) ?></span>
+        <?php endif; ?>
+
+        <p>Colour: <?= $product->colour ?></p>
+        <p>Storage: <?= getInteger($product->storage) ?>GB</p>
         <input type="number" name="product-qty" class="form-control w-auto my-4" value="1">
         <a href="#" class="btn btn-primary d-block w-100" role="button">Add to Cart</a>
       </div>
@@ -66,98 +104,78 @@
       </ul>
       <div class="tab-content" id="productContentTab">
         <div class="tab-pane fade show active" id="desc-tab-pane" role="tabpanel" aria-labelledby="desc-tab" tabindex="0">
-          <p>iPhone 15 Pro Max. Forged in
-            titanium and featuring the
-            groundbreaking A17 Pro chip, a
-            customisable Action button and the
-            most powerful iPhone camera system
-            ever.</p>
-          <ul>
-            <li>Forged In Titanium. iPhone 15
-              Pro Max has a strong and light
-              aerospace-grade titanium design
-              with a textured matt glass back.
-              It also features a Ceramic Shield
-              front that’s tougher than any
-              smartphone glass. And it’s
-              splash-, water- and dust-resistant
-            </li>
-          </ul>
+          <?= $product->product_desc ?>
         </div>
         <div class="tab-pane fade" id="specs-tab-pane" role="tabpanel" aria-labelledby="specs-tab" tabindex="0">
           <table class="table table-striped my-4">
             <tbody>
               <tr>
                 <th scope="row">SKU</th>
-                <td>639220</td>
+                <td><?= $product->sku ?></td>
               </tr>
               <tr>
                 <th scope="row">Brand</th>
-                <td>Apple</td>
-              </tr>
-              <tr>
-                <th scope="row">Model</th>
-                <td>iPhone 15 Pro Max</td>
+                <td><?= $product->manufacturer ?></td>
               </tr>
               <tr>
                 <th scope="row">MPN</th>
-                <td>MU793ZP/A</td>
+                <td><?= $product->product_model ?></td>
               </tr>
               <tr>
                 <th scope="row">OS</th>
-                <td>IOS 17</td>
+                <td><?= $product->os ?></td>
               </tr>
               <tr>
                 <th scope="row">Screen Size
                   (Inches)</th>
-                <td>6.7</td>
+                <td><?= $product->screensize ?></td>
               </tr>
               <tr>
                 <th scope="row">Resolution
                   (Pixels)</th>
-                <td>2796 x 1260</td>
+                <td><?= $product->resolution ?></td>
               </tr>
               <tr>
                 <th scope="row">Storage (GB)
                 </th>
-                <td>256</td>
+                <td><?= getInteger($product->storage) ?></td>
               </tr>
               <tr>
                 <th scope="row">RAM (GB)</th>
-                <td>8</td>
+                <td><?= getInteger($product->ram) ?></td>
               </tr>
               <tr>
                 <th scope="row">Colour</th>
-                <td>Natural Titanium</td>
+                <td><?= $product->colour ?></td>
               </tr>
               <tr>
                 <th scope="row">CPU</th>
-                <td>A17 Pro Chip with 6-core GPU
+                <td><?= $product->cpu ?>
                 </td>
               </tr>
               <tr>
                 <th scope="row">Battery (mAh)
                 </th>
-                <td>4422</td>
+                <td><?= getInteger($product->battery) ?></td>
               </tr>
               <tr>
                 <th scope="row">Rear Camera (MP)
                 </th>
-                <td>48MP + 12MP + 12MP</td>
+                <td><?= $product->rear_camera ?></td>
               </tr>
               <tr>
                 <th scope="row">Front Camera
                   (MP)</th>
-                <td>12MP</td>
+                <td><?= $product->front_camera ?></td>
               </tr>
               <tr>
                 <th scope="row">Weight (kg)</th>
-                <td>0.221</td>
+                <td><?= $product->weight ?></td>
               </tr>
               <tr>
-                <th scope="row">Dimensions (mm)
+                <th scope="row">Dimensions (W x H x T, mm)
                 </th>
-                <td>76.7W x 82.5D x 159.9H</td>
+                <td><?= $product->dimensions ?></td>
               </tr>
             </tbody>
           </table>
