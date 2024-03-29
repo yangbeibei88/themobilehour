@@ -1,16 +1,22 @@
 <?php
-echo '__DIR__: ' . __DIR__;
+
+require __DIR__ . '/../vendor/autoload.php';
 require '../functions.php';
+echo '__DIR__: ' . __DIR__;
+
+
+use Framework\Router;
+
 // require basePath('Framework/Router.php');
 // require basePath('Framework/Database.php');
 
 
-spl_autoload_register(function ($className) {
-  $path = basePath('Framework/' . $className . '.php');
-  if (file_exists($path)) {
-    require $path;
-  }
-});
+// spl_autoload_register(function ($className) {
+//   $path = basePath('Framework/' . $className . '.php');
+//   if (file_exists($path)) {
+//     require $path;
+//   }
+// });
 
 
 echo '<br>';

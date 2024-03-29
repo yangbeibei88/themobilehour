@@ -1,0 +1,16 @@
+{
+  "name": "yangbeibei88/themobilehour",
+  "description": "php mvc project for themobilehour e-commerce",
+  "authors": [
+    {
+      "name": "Beibei Yang",
+      "email": "beibeiyang88@hotmail.com"
+  }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Framework\\": "Framework/",
+      "App\\": "App/"
+    }
+  }
+}

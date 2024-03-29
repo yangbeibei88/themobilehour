@@ -1,4 +1,6 @@
 <?php
+
+namespace Framework;
 // require basePath('routes.php');
 // inspect($routes);
 // // if uri exists in routes, then...
