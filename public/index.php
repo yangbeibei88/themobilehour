@@ -1,8 +1,17 @@
 <?php
 echo '__DIR__: ' . __DIR__;
 require '../functions.php';
-require basePath('Router.php');
-require basePath('App/Database.php');
+// require basePath('Framework/Router.php');
+// require basePath('Framework/Database.php');
+
+
+spl_autoload_register(function ($className) {
+  $path = basePath('Framework/' . $className . '.php');
+  if (file_exists($path)) {
+    require $path;
+  }
+});
+
 
 echo '<br>';
 echo 'basePath(): ' . basePath();
