@@ -1,6 +1,9 @@
 <?php
 
 namespace Framework;
+
+use App\Controllers\ErrorController;
+
 // require basePath('routes.php');
 // inspect($routes);
 // // if uri exists in routes, then...
@@ -81,12 +84,12 @@ class Router
     $this->registerRoute('DELETE', $uri, $controller);
   }
 
-  public function error($httpCode = 404)
-  {
-    http_response_code($httpCode);
-    loadView("error");
-    exit;
-  }
+  // public function error($httpCode = 404)
+  // {
+  //   http_response_code($httpCode);
+  //   loadView("error");
+  //   exit;
+  // }
 
   /**
    * Route the request
@@ -109,10 +112,14 @@ class Router
         // instatiate the controller and call the method
         $controllerInstance = new $controller();
         $controllerInstance->$controllerMethod();
+
+        inspect($controller);
+        inspect($controllerMethod);
+
         return;
       }
     }
 
-    $this->error();
+    ErrorController::notFound();
   }
 }

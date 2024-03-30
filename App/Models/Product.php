@@ -15,9 +15,19 @@ class Product
     $this->db = new Database($config);
   }
 
+  // public function getAllProducts()
+  // {
+  //   $products = $this->db->query("SELECT * FROM product")->fetchAll();
+
+  //   return $products;
+  // }
+
   public function getAllProducts()
   {
-    $products = $this->db->query("SELECT * FROM product")->fetchAll();
+    $products = $this->db->query("SELECT * FROM product p 
+    LEFT JOIN feature f ON p.feature_id = f.feature_id  
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id")->fetchAll();
 
     return $products;
   }

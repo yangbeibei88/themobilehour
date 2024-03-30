@@ -15,6 +15,11 @@ class ProductsController
   }
 
 
+  /**
+   * Show all products
+   *
+   * @return void
+   */
   public function index()
   {
     $products = $this->model->getAllProducts();
@@ -25,6 +30,11 @@ class ProductsController
     ]);
   }
 
+  /**
+   * Show a single product
+   *
+   * @return void
+   */
   public function show()
   {
     $product = $this->model->getSingleProduct();

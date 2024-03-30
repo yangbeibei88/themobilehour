@@ -1,6 +1,10 @@
 <?= loadPartial('header') ?>
 <?= loadPartial('navbar') ?>
 <?= loadPartial('breadcrumb') ?>
+<?php
+
+
+?>
 
 <!-- <?php inspect($products) ?> -->
 
@@ -43,8 +47,13 @@
                       ON SALE
                     </span>
                   <?php endif; ?>
-                  <a href="#">
-                    <img src="uploads/images/639220.jpg" alt="" class="card-img-top p-4">
+
+                  <a href="product?id=<?= $product->product_id ?>">
+                    <?php if (!is_null($product->image_gallery_id) && !is_null($product->imgpath1)) : ?>
+                      <img src="<?= $product->imgpath1 ?>" alt="<?= $product->alt1 ?>" class="card-img-top p-4">
+                    <?php else : ?>
+                      <img src="uploads/images/product-placeholder.jpeg" alt="<?= $product->product_name ?>" class="card-img-top p-4">
+                    <?php endif; ?>
                   </a>
                   <div class="card-body">
                     <h5 class="card-title">

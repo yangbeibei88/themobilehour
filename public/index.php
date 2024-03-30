@@ -3,6 +3,8 @@
 require __DIR__ . '/../vendor/autoload.php';
 require '../functions.php';
 echo '__DIR__: ' . __DIR__;
+echo '<br>';
+echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
 
 
 use Framework\Router;
@@ -26,9 +28,13 @@ echo 'DIRECTORY_SEPARATOR: ' . DIRECTORY_SEPARATOR;
 echo '<br>';
 echo 'DOCUMENT_ROOT: ' . $_SERVER['DOCUMENT_ROOT'];
 echo '<br>';
-echo '__DIR__: ' . __FILE__;
+echo '__DIR__: ' . __DIR__;
+echo '<br>';
+echo '__FILE__' . __FILE__;
 echo '<br>';
 echo substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+echo '<br>';
+echo substr(dirname(__DIR__), strlen($_SERVER['DOCUMENT_ROOT']));
 echo '<br>';
 echo 'actual URI: ' . $_SERVER['REQUEST_URI'];
 echo '<br>';

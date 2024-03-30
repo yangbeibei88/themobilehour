@@ -16,6 +16,12 @@ function basePath($path = '')
 //   return substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
 // }
 
+function assetPath($path)
+{
+  $docRoot = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+  return $docRoot . DIRECTORY_SEPARATOR . $path;
+}
+
 /**
  * remove subfolder's name from URI
  *

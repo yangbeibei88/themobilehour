@@ -18,6 +18,11 @@ class HomeController
     $this->model = new Category();
   }
 
+  /**
+   * site public home page, display all categories
+   *
+   * @return void
+   */
   public function index()
   {
 

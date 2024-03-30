@@ -26,3 +26,9 @@ $router->get('/themobilehour/', 'HomeController@index');
 $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
 $router->get('/themobilehour/product', 'ProductsController@show');
+
+$router->get('/themobilehour/admin/product-management/index', 'Admin\ProductManagementController@index');
+$router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create');
+$router->get('/themobilehour/admin/product-management/edit', 'Admin\ProductManagementController@edit');
+$router->get('/themobilehour/admin/product-management/update', 'Admin\ProductManagementController@update');
+$router->get('/themobilehour/admin/product-management/delete', 'Admin\ProductManagementController@delete');
