@@ -1,14 +1,35 @@
 <?php
 
-use Framework\Database;
+namespace App\Controllers;
 
-$config = require basePath('config/config.php');
-$db = new Database($config);
+use App\Models\Product;
 
-$products = $db->query("SELECT * FROM product")->fetchAll();
+class ProductsController
+{
 
-// inspect($products);
+  protected $model;
 
-loadView('Products/index', [
-  'products' => $products
-]);
+  public function __construct()
+  {
+    $this->model = new Product();
+  }
+
+
+  public function index()
+  {
+    $products = $this->model->getAllProducts();
+    // inspect($products);
+    // $products = $db->query("SELECT * FROM product")->fetchAll();
+    loadView('Products/index', [
+      'products' => $products
+    ]);
+  }
+
+  public function show()
+  {
+    $product = $this->model->getSingleProduct();
+    loadView('Products/show', [
+      'product' => $product
+    ]);
+  }
+}

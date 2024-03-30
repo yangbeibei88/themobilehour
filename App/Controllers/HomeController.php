@@ -2,11 +2,30 @@
 
 namespace App\Controllers;
 
+use App\Models\Category;
+
 class HomeController
 {
+  // create DI container and use the constructor promotion if I have time to refactor
+  // public function __construct(protected Category $model)
+  // {
+  // }
+
+  protected $model;
+
   public function __construct()
   {
-    // die('HomeController@index');
-    loadView('Home/index');
+    $this->model = new Category();
+  }
+
+  public function index()
+  {
+
+    $categories = $this->model->getAllCategories();
+
+
+    loadView('Home/index', [
+      'categories' => $categories
+    ]);
   }
 }

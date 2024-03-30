@@ -25,4 +25,4 @@
 $router->get('/themobilehour/', 'HomeController@index');
 $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
-$router->get('/themobilehour/product', 'ProductShowController@show');
+$router->get('/themobilehour/product', 'ProductsController@show');
