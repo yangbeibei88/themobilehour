@@ -22,20 +22,21 @@ class Router
   /**
    * Add a new route
    *
-   * @param string $method
+   * @param string $method http method
    * @param string $uri
-   * @param string $action
+   * @param string $controllerAndAction
    * @return void
    */
-  public function registerRoute($method, $uri, $action)
+  public function registerRoute($method, $uri, $controllerAndAction)
   {
-    list($controller, $controllerMethod) = explode('@', $action);
-    // inspectAndDie($controllerMethod);
+    // destructure to $controller and $action
+    list($controller, $action) = explode('@', $controllerAndAction);
+    // inspectAndDie($action);
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
       'controller' => $controller,
-      'controllerMethod' => $controllerMethod
+      'action' => $action
     ];
   }
 
@@ -93,11 +94,11 @@ class Router
 
   /**
    * Route the request
-   * $uri and $method parsed in this function are actual $uri and $methods called in public/index.php
+   * $uri and $method parsed in this function are actual url and http method called in public/index.php
    * This function also handles errors
    * 
    * @param string $uri
-   * @param string $method
+   * @param string $method http method
    * @return void
    */
   public function route($uri, $method)
@@ -107,14 +108,14 @@ class Router
         // require basePath('App/' . $route['controller']);
         // Extract controller and controller method
         $controller = 'App\\Controllers\\' . $route['controller'];
-        $controllerMethod = $route['controllerMethod'];
+        $action = $route['action'];
 
-        // instatiate the controller and call the method
+        // instantiate the controller and call the method
         $controllerInstance = new $controller();
-        $controllerInstance->$controllerMethod();
+        $controllerInstance->$action();
 
         inspect($controller);
-        inspect($controllerMethod);
+        inspect($action);
 
         return;
       }
