@@ -101,24 +101,78 @@ class Router
    * @param string $method http method
    * @return void
    */
-  public function route($uri, $method)
+  public function route($uri)
   {
+    $requestMethod = $_SERVER['REQUEST_METHOD'];
+
     foreach ($this->routes as $route) {
-      if ($route['uri'] === $uri && $route['method'] === $method) {
-        // require basePath('App/' . $route['controller']);
-        // Extract controller and controller method
-        $controller = 'App\\Controllers\\' . $route['controller'];
-        $action = $route['action'];
 
-        // instantiate the controller and call the method
-        $controllerInstance = new $controller();
-        $controllerInstance->$action();
+      // split the current URI into segments
+      $uriSegments = explode('/', trim($uri, '/'));
 
-        inspect($controller);
-        inspect($action);
+      // inspectAndDie($uriSegments);
 
-        return;
+      // split the route URI into segments
+      $routeSegments = explode('/', trim($route['uri'], '/'));
+
+      // inspect($routeSegments);
+
+      // check if actual uri and route uri match, set initial value to true
+      $match = true;
+
+      // first check if the number of segments matches
+      if (count($uriSegments) === count($routeSegments) && strtoupper($route['method'] === $requestMethod)) {
+        $params = [];
+
+        for ($i = 0; $i < count($uriSegments); $i++) {
+          // if actual uri segment part not match router uri segment part, and there is no pram
+          if ($routeSegments[$i] !== $uriSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
+            $match = false;
+            break;
+          }
+
+          // check for the pram and add to $params array
+          if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
+            // inspectAndDie($matches); // $matches[0] == {id}, $matches[1] == id
+            // inspectAndDie($uriSegments[$i]);
+            $params[$matches[1]] = $uriSegments[$i];
+            // inspectAndDie($params);
+          }
+        }
+
+        if ($match) {
+          // Extract controller and controller method
+          $controller = 'App\\Controllers\\' . $route['controller'];
+          $action = $route['action'];
+
+          // instantiate the controller and call the method
+          $controllerInstance = new $controller();
+          $controllerInstance->$action($params);
+
+          inspect($controller);
+          inspect($action);
+
+          return;
+        }
       }
+
+      /**--------------------------first version start ---------------------------------- */
+      // if ($route['uri'] === $uri && $route['method'] === $method) {
+      //   // require basePath('App/' . $route['controller']);
+      //   // Extract controller and controller method
+      //   $controller = 'App\\Controllers\\' . $route['controller'];
+      //   $action = $route['action'];
+
+      //   // instantiate the controller and call the method
+      //   $controllerInstance = new $controller();
+      //   $controllerInstance->$action();
+
+      //   inspect($controller);
+      //   inspect($action);
+
+      //   return;
+      // }
+      /**--------------------------first version end ---------------------------------- */
     }
 
     ErrorController::notFound();

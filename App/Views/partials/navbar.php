@@ -14,8 +14,8 @@
   <div class="container">
     <div class="row justify-content-between align-items-center">
       <div class="col-3 order-1">
-        <a href="home" class="navbar-brand">
-          <img src="assets/logo/the mobile hour logo-3-logo.png" alt="logo" width="120" height="auto">
+        <a href="<?= assetPath("home") ?>" class="navbar-brand">
+          <img src="<?= assetPath("assets/logo/the mobile hour logo-3-logo.png") ?>" alt="logo" width="120" height="auto">
         </a>
       </div>
       <div class="col-8 col-sm-6 order-2">
@@ -46,7 +46,7 @@
               </div>
               <div class="offcanvas-body">
                 <ul class="navbar-nav flex-grow-1 justify-content-center">
-                  <li class="nav-item"><a class="nav-link" href="products">Products</a></li>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath("products") ?>"> Products</a></li>
                   <li class="nav-item"><a class="nav-link" href="#">Apple</a></li>
                   <li class="nav-item"><a class="nav-link" href="#">Samsung</a></li>
                   <li class="nav-item"><a class="nav-link" href="#">Motorala</a></li>

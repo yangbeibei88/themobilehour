@@ -32,17 +32,8 @@ class Product
     return $products;
   }
 
-  public function getSingleProduct()
+  public function getSingleProduct($params)
   {
-
-    $id = $_GET['id'] ?? '';
-
-    inspect($id);
-
-    $params = [
-      'id' => $id
-    ];
-
     $product = $this->db->query("SELECT * FROM product p 
                             LEFT JOIN feature f ON p.feature_id = f.feature_id  
                             LEFT JOIN category c ON p.category_id = c.category_id

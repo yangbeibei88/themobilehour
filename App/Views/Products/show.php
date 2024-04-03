@@ -32,17 +32,17 @@ foreach ((array) $product as $key => $value) {
           <div class="carousel-indicators">
             <?php if (is_null($product->image_gallery_id) || count($imagePaths) === 0) : ?>
               <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="0" class="active img-thumnail">
-                <img src="uploads/images/product-placeholder.jpeg" alt="<?= $product->product_name ?>" class="d-block w-100">
+                <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="d-block w-100">
               </button>
             <?php else : ?>
               <?php foreach ($imagePaths as $key => $value) : ?>
                 <?php if ($key === 0) : ?>
                   <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="0" class="active img-thumnail">
-                    <img src="<?= $value['imgpath'] ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
+                    <img src="<?= assetPath($value['imgpath']) ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
                   </button>
                 <?php else : ?>
                   <button type="button" data-bs-target="#productGalleryCarousel" data-bs-slide-to="<?= $key ?>" class="img-thumnail">
-                    <img src="<?= $value['imgpath'] ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
+                    <img src="<?= assetPath($value['imgpath']) ?>" alt="<?= $value['alt'] ?>" class="d-block w-100">
                   </button>
                 <?php endif; ?>
               <?php endforeach; ?>
@@ -52,17 +52,17 @@ foreach ((array) $product as $key => $value) {
           <div class="carousel-inner border">
             <?php if (is_null($product->image_gallery_id) || count($imagePaths) === 0) : ?>
               <div class="carousel-item active">
-                <img src="uploads/images/product-placeholder.jpeg" class="d-block w-100" alt="<?= $product->product_name ?>">
+                <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" class="d-block w-100" alt="<?= $product->product_name ?>">
               </div>
             <?php else : ?>
               <?php foreach ($imagePaths as $key => $value) : ?>
                 <?php if ($key === 0) : ?>
                   <div class="carousel-item active">
-                    <img src="<?= $value['imgpath'] ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
+                    <img src="<?= assetPath($value['imgpath']) ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
                   </div>
                 <?php else : ?>
                   <div class="carousel-item">
-                    <img src="<?= $value['imgpath'] ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
+                    <img src="<?= assetPath($value['imgpath']) ?>" class="d-block w-100" alt="<?= $value['alt'] ?>">
                   </div>
                 <?php endif; ?>
               <?php endforeach; ?>

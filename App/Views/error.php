@@ -3,9 +3,9 @@
 <?= loadPartial('breadcrumb') ?>
 <main>
   <div class="container py-4">
-    <h2><?= $status ?> Sorry! We cannot find that page.</h2>
-
-    <a type="button" class="btn btn-primary" href="home">Go back
+    <h2><?= $status . ": " . $message ?></h2>
+    <p></p>
+    <a type="button" class="btn btn-primary" href="<?= assetPath("home") ?>">Go back
       home</a>
 
   </div>

@@ -25,9 +25,14 @@ class ProductsController
     $products = $this->model->getAllProducts();
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
-    loadView('Products/index', [
-      'products' => $products
-    ]);
+
+    if (!$products) {
+      ErrorController::notFound('Products not found');
+    } else {
+      loadView('Products/index', [
+        'products' => $products
+      ]);
+    }
   }
 
   /**
@@ -35,11 +40,26 @@ class ProductsController
    *
    * @return void
    */
-  public function show()
+  public function show($params)
   {
-    $product = $this->model->getSingleProduct();
-    loadView('Products/show', [
-      'product' => $product
-    ]);
+
+    // $id = $_GET['id'] ?? '';
+    $id = $params['id'] ?? '';
+
+    inspect($id);
+
+    $params = [
+      'id' => $id
+    ];
+    $product = $this->model->getSingleProduct($params);
+
+    if (!$product) {
+      ErrorController::notFound('Product not found');
+    } else {
+
+      loadView('Products/show', [
+        'product' => $product
+      ]);
+    }
   }
 }

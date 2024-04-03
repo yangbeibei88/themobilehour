@@ -71,14 +71,16 @@ $routes = require basePath('routes.php');
 
 // get current URI and HTTP method
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$method = $_SERVER['REQUEST_METHOD'];
+// move $method to Router, 
+// $method = $_SERVER['REQUEST_METHOD'];
 
 
 inspect($uri);
-inspect($method);
+// inspect($method);
 
 // Route the request
-$router->route($uri, $method);
+// $router->route($uri, $method);
+$router->route($uri);
 
 // if uri exists in routes, then...
 // if (array_key_exists($uri, $routes)) {

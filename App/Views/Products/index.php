@@ -48,7 +48,7 @@
                     </span>
                   <?php endif; ?>
 
-                  <a href="product?id=<?= $product->product_id ?>">
+                  <a href="products/<?= $product->product_id ?>">
                     <?php if (!is_null($product->image_gallery_id) && !is_null($product->imgpath1)) : ?>
                       <img src="<?= $product->imgpath1 ?>" alt="<?= $product->alt1 ?>" class="card-img-top p-4">
                     <?php else : ?>
@@ -57,7 +57,7 @@
                   </a>
                   <div class="card-body">
                     <h5 class="card-title">
-                      <a href="product?id=<?= $product->product_id ?>" class="link-underline link-underline-opacity-0">
+                      <a href="products/<?= $product->product_id ?>" class="link-underline link-underline-opacity-0">
                         <?= $product->product_name ?>
                       </a>
                     </h5>
