@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Models\Product;
+use Framework\Validation;
 
 class ProductManagementController
 {
@@ -24,5 +25,10 @@ class ProductManagementController
     loadView('Admin/ProductManagement/index', [
       'products' => $products
     ]);
+  }
+
+  public function create()
+  {
+    loadView('Admin/ProductManagement/create');
   }
 }
