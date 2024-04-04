@@ -37,3 +37,5 @@ $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagemen
 
 
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');
+
+$router->get('/themobilehour/admin/user-management', 'Admin\UserManagementController@index');

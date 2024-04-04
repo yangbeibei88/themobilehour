@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\ErrorController;
+use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Changelog;
 
 class ChangelogsController
@@ -19,7 +19,7 @@ class ChangelogsController
     $changelogs = $this->changelogModel->getAllChangelogs();
 
     if (!$changelogs) {
-      ErrorController::notFound('Changelogs not found');
+      AdminErrorController::notFound('Changelogs not found');
     } else {
       loadView('Admin/Changelogs/index', [
         'changelogs' => $changelogs
