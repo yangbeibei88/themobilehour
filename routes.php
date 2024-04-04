@@ -34,3 +34,6 @@ $router->get('/themobilehour/admin/product-management/update', 'Admin\ProductMan
 $router->get('/themobilehour/admin/product-management/delete', 'Admin\ProductManagementController@delete');
 
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
+
+
+$router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');

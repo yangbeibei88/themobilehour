@@ -59,7 +59,7 @@ class ProductManagementController
 
     $newProductData = array_intersect_key($_POST, array_flip($allowedFields));
 
-    $newProductData['user_id'] = 1;
+    // $newProductData['user_id'] = 1;
 
     $requiredFields = ["sku", "product_name", "list_price"];
 

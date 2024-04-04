@@ -7,11 +7,11 @@ use App\Models\Product;
 class ProductsController
 {
 
-  protected $model;
+  protected $productModel;
 
   public function __construct()
   {
-    $this->model = new Product();
+    $this->productModel = new Product();
   }
 
 
@@ -22,7 +22,7 @@ class ProductsController
    */
   public function index()
   {
-    $products = $this->model->getAllProducts();
+    $products = $this->productModel->getAllProducts();
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
 
@@ -51,7 +51,7 @@ class ProductsController
     $params = [
       'id' => $id
     ];
-    $product = $this->model->getSingleProduct($params);
+    $product = $this->productModel->getSingleProduct($params);
 
     if (!$product) {
       ErrorController::notFound('Product not found');
