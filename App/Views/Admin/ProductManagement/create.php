@@ -5,6 +5,13 @@
 <main id="add-product">
   <div class="container my-4">
     <form method="POST" action="/themobilehour/admin/product-management" enctype="multipart/form-data" id="form-product">
+      <?php if (isset($errors)) : ?>
+        <?php foreach ($errors as $error) : ?>
+          <div class="alert alert-danger" role="alert">
+            <?= $error ?>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
       <div class="accordion" id="productAccordion">
         <div class="accordion-item">
           <div class="accordion-header">
@@ -17,13 +24,13 @@
               <div class="row mb-3">
                 <label for="sku" class="col-2 col-form-label">SKU</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="sku" id="sku" class="form-control">
+                  <input type="text" name="sku" id="sku" class="form-control" value="<?= $product['sku'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="title" class="col-2 col-form-label">Title</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="title" id="title" class="form-control">
+                  <input type="text" name="product_name" id="title" class="form-control" value="<?= $product['product_name'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
@@ -32,47 +39,53 @@
                   <select name="category" id="category" class="form-select">
                     <option selected value="">Select a
                       Category</option>
-                    <option value="">Apple
-                    </option>
+                    <?php foreach ($categories as $category) : ?>
+                      <?php if ($category->category_id === $product['category']) : ?>
+                        <option selected value="<?= $category->category_id ?>"><?= $category->category_name ?>
+                        </option>
+                      <?php else : ?>
+                        <option value="<?= $category->category_id ?>"><?= $category->category_name ?></option>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
                   </select>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="product_model" class="col-2 col-form-label">Model</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="product_model" id="product_model" class="form-control">
+                  <input type="text" name="product_model" id="product_model" class="form-control" value="<?= $product['product_model'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="manufacturer" class="col-2 col-form-label">Manufacturer</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="manufacturer" id="manufacturer" class="form-control">
+                  <input type="text" name="manufacturer" id="manufacturer" class="form-control" value="<?= $product['manufacturer'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="list-price" class="col-2 col-form-label">List
+                <label for="list_price" class="col-2 col-form-label">List
                   Price</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="list-price" id="list-price" class="form-control">
+                  <input type="number" name="list_price" id="list_price" class="form-control" value="<?= $product['list_price'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="discount" class="col-2 col-form-label">Discount</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="discount" id="discount" class="form-control">
+                  <input type="number" name="discount" id="discount" class="form-control" value="<?= $product['discount'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="stock" class="col-2 col-form-label">Stock</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="stock" id="stock" class="form-control">
+                  <input type="number" name="stock" id="stock" class="form-control" value="<?= $product['stock'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3 form-check form-switch">
                 <div class="col-10">
                   <label for="displayOnline" class="form-check-label">Display
                     Online</label>
-                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="displayOnline">
+                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="displayOnline" value="<?= $product['displayOnline'] ?>">
                 </div>
               </div>
             </div>
@@ -89,7 +102,9 @@
             <div class="accordion-body">
               <label for="description" class="form-label">Product
                 Description</label>
-              <textarea name="description" id="description" rows="15" class="form-control"></textarea>
+              <textarea name="description" id="description" rows="15" class="form-control">
+              <?= $product['description'] ?? '' ?>
+              </textarea>
             </div>
           </div>
         </div>
@@ -175,65 +190,63 @@
               <div class="row row-cols-1 row-cols-md-2 g-3">
                 <div class="col">
                   <label for="weight" class="form-label">Weight(kg)</label>
-                  <input type="number" name="weight" id="weight" class="form-control">
+                  <input type="number" name="weight" id="weight" class="form-control" value="<?= $product['weight'] ?>">
                 </div>
                 <div class="col">
                   <label for="dimensions" class="form-label">Dimensions</label>
-                  <input type="text" name="dimensions" id="dimensions" class="form-control">
+                  <input type="text" name="dimensions" id="dimensions" class="form-control" value="<?= $product['dimensions'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="os" class="form-label">OS</label>
-                  <input type="text" name="os" id="os" class="form-control">
+                  <input type="text" name="os" id="os" class="form-control" value="<?= $product['os'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="screensize" class="form-label">Screensize
                     (inches)</label>
-                  <input type="number" name="screensize" id="screensize" class="form-control">
+                  <input type="number" name="screensize" id="screensize" class="form-control" value="<?= $product['screensize'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="resolution" class="form-label">Resolution
                     (Pixels)</label>
-                  <input type="number" name="resolution" id="resolution" class="form-control">
+                  <input type="number" name="resolution" id="resolution" class="form-control" value="<?= $product['resolution'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="storage" class="form-label">Storage
                     (GB)</label>
-                  <input type="number" name="storage" id="storage" class="form-control">
+                  <input type="number" name="storage" id="storage" class="form-control" value="<?= $product['storage'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="colour" class="form-label">Colour
                     (GB)</label>
-                  <input type="text" name="colour" id="colour" class="form-control">
+                  <input type="text" name="colour" id="colour" class="form-control" value="<?= $product['colour'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="ram" class="form-label">RAM
                     (GB)</label>
-                  <input type="number" name="ram" id="ram" class="form-control">
+                  <input type="number" name="ram" id="ram" class="form-control" value="<?= $product['ram'] ?? '' ?>">
                 </div>
                 <div class="col">
-                  <label for="CPU" class="form-label">CPU
+                  <label for="cpu" class="form-label">CPU
                   </label>
-                  <input type="text" name="CPU" id="CPU" class="form-control">
+                  <input type="text" name="cpu" id="cpu" class="form-control" value="<?= $product['cpu'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="battery" class="form-label">Battery
                     (mAh)
                   </label>
-                  <input type="number" name="battery" id="battery" class="form-control">
+                  <input type="number" name="battery" id="battery" class="form-control" value="<?= $product['battery'] ?>">
                 </div>
                 <div class="col">
                   <label for="rear-camera" class="form-label">Rear
-                    Camera (MP)
-                    (MP)
+                    Camera
                   </label>
-                  <input type="text" name="rear-camera" id="rear-camera" class="form-control">
+                  <input type="text" name="rear-camera" id="rear-camera" class="form-control" value="<?= $product['rear-camera'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="front-camera" class="form-label">Front
-                    Camera (MP)
-                    (MP)
+                    Camera
                   </label>
-                  <input type="text" name="front-camera" id="front-camera" class="form-control">
+                  <input type="text" name="front-camera" id="front-camera" class="form-control" value="<?= $product['front-camera'] ?? '' ?>">
                 </div>
               </div>
             </div>

@@ -11,11 +11,11 @@ class HomeController
   // {
   // }
 
-  protected $model;
+  protected $categoryModel;
 
   public function __construct()
   {
-    $this->model = new Category();
+    $this->categoryModel = new Category();
   }
 
   /**
@@ -26,7 +26,7 @@ class HomeController
   public function index()
   {
 
-    $categories = $this->model->getAllCategories();
+    $categories = $this->categoryModel->getAllCategories();
 
 
     loadView('Home/index', [
