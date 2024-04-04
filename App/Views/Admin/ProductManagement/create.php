@@ -24,13 +24,13 @@
               <div class="row mb-3">
                 <label for="sku" class="col-2 col-form-label">SKU</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="sku" id="sku" class="form-control" value="<?= $product['sku'] ?? '' ?>">
+                  <input type="text" name="sku" id="sku" class="form-control" value="<?= $productMeta['sku'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="title" class="col-2 col-form-label">Title</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="product_name" id="title" class="form-control" value="<?= $product['product_name'] ?? '' ?>">
+                  <input type="text" name="product_name" id="title" class="form-control" value="<?= $productMeta['product_name'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
@@ -40,7 +40,7 @@
                     <option selected value="">Select a
                       Category</option>
                     <?php foreach ($categories as $category) : ?>
-                      <?php if ($category->category_id === $product['category']) : ?>
+                      <?php if ($category->category_id === $productMeta['category']) : ?>
                         <option selected value="<?= $category->category_id ?>"><?= $category->category_name ?>
                         </option>
                       <?php else : ?>
@@ -53,39 +53,39 @@
               <div class="row mb-3">
                 <label for="product_model" class="col-2 col-form-label">Model</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="product_model" id="product_model" class="form-control" value="<?= $product['product_model'] ?? '' ?>">
+                  <input type="text" name="product_model" id="product_model" class="form-control" value="<?= $productMeta['product_model'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="manufacturer" class="col-2 col-form-label">Manufacturer</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="manufacturer" id="manufacturer" class="form-control" value="<?= $product['manufacturer'] ?? '' ?>">
+                  <input type="text" name="manufacturer" id="manufacturer" class="form-control" value="<?= $productMeta['manufacturer'] ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="list_price" class="col-2 col-form-label">List
                   Price</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="list_price" id="list_price" class="form-control" value="<?= $product['list_price'] ?? 0 ?>">
+                  <input type="number" name="list_price" id="list_price" class="form-control" value="<?= $productMeta['list_price'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="discount" class="col-2 col-form-label">Discount</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="discount" id="discount" class="form-control" value="<?= $product['discount'] ?? 0 ?>">
+                  <input type="number" name="disc_pct" id="discount" class="form-control" value="<?= $productMeta['disc_pct'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="stock" class="col-2 col-form-label">Stock</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="stock" id="stock" class="form-control" value="<?= $product['stock'] ?? 0 ?>">
+                  <input type="number" name="stock_on_hand" id="stock" class="form-control" value="<?= $productMeta['stock_on_hand'] ?? 0 ?>">
                 </div>
               </div>
               <div class="row mb-3 form-check form-switch">
                 <div class="col-10">
                   <label for="displayOnline" class="form-check-label">Display
                     Online</label>
-                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="displayOnline" value="<?= $product['displayOnline'] ?>">
+                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="is_active" value="1" <?= isset($productMeta['is_active']) && $productMeta['is_active'] == 1 ? 'checked' : '' ?>>
                 </div>
               </div>
             </div>
@@ -102,8 +102,8 @@
             <div class="accordion-body">
               <label for="description" class="form-label">Product
                 Description</label>
-              <textarea name="description" id="description" rows="15" class="form-control">
-              <?= $product['description'] ?? '' ?>
+              <textarea name="product_desc" id="description" rows="15" class="form-control">
+              <?= $productMeta['product_desc'] ?? '' ?>
               </textarea>
             </div>
           </div>

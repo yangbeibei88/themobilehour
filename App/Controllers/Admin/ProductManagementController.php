@@ -55,9 +55,19 @@ class ProductManagementController
   public function store()
   {
     // Sanitizing data, only fields in $allowedFields can be submitted through $_POST
-    $allowedFields = ["sku", "product_name", "category", "product_model", "manufacturer", "list_price", "discount", "stock", "displayOnline", "description", "weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear-camera", "front-camera", "imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"];
+    // $allowedFields = ["sku", "product_name", "category", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc", "weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear-camera", "front-camera", "imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"];
 
-    $newProductData = array_intersect_key($_POST, array_flip($allowedFields));
+    $allowedFields = [
+      'product_meta' => ["sku", "product_name", "category", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc"],
+      'product_feature' => ["weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear-camera", "front-camera"],
+      'product_imggallery' => ["imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"]
+    ];
+
+    // $newProductData = array_intersect_key($_POST, array_flip($allowedFields));
+
+    $newProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
+    $newProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
+    $newProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
 
     // $newProductData['user_id'] = 1;
 
@@ -66,26 +76,69 @@ class ProductManagementController
     $errors = [];
 
     foreach ($requiredFields as $field) {
-      if (empty($newProductData[$field])) {
+      if (empty($newProductMetaData[$field])) {
         $errors[] = ucfirst($field) . ' is required';
       }
     }
 
-    $newProductData = array_map('sanitize', $newProductData);
+    // $newProductData = array_map('sanitize', $newProductData);
+
+    $newProductMetaData = array_map('sanitize', $newProductMetaData);
+    $newProductFeatureData = array_map('sanitize', $newProductFeatureData);
+    $newProductImgGallery = array_map('sanitize', $newProductImgGallery);
 
     if (!empty($errors)) {
       // reload view with errors
       loadView('Admin/ProductManagement/create', [
         'errors' => $errors,
-        'product' => $newProductData
+        'productMeta' => $newProductMetaData
       ]);
     } else {
       // submit data
-      echo 'Success';
+
+      $productMetaFields = [];
+      $newProductFeatureFields = [];
+      foreach ($newProductMetaData as $field => $value) {
+        $productMetaFields[] = $field;
+      }
+      foreach ($newProductFeatureData as $field => $value) {
+        $newProductFeatureFields[] = $field;
+      }
+
+      $productMetaFields = implode(', ', $productMetaFields);
+      $newProductFeatureFields = implode(', ', $newProductFeatureFields);
+
+      $productMetaValues = [];
+      $productFeatureValues = [];
+      foreach ($newProductMetaData as $field => $value) {
+        if ($value === '') {
+          $newProductMetaData[$field] === null;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+          $newProductMetaData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+        }
+
+        $productMetaValues[] = ':' . $field;
+      }
+
+      foreach ($newProductFeatureData as $field => $value) {
+        if ($value === '') {
+          $newProductFeatureData[$field] === null;
+        }
+
+        $productFeatureValues[] = ':' . $field;
+      }
+
+      $productMetaValues = implode(', ', $productMetaValues);
+      $productFeatureValues = implode(', ', $productFeatureValues);
+
+
+      // inspectAndDie($fields);
+      // inspectAndDie($values);
     }
 
 
-    // inspectAndDie($newProductData);
-
+    inspectAndDie($newProductMetaData);
   }
 }
