@@ -11,3 +11,7 @@ const carousel2 = new bootstrap.Carousel(productGalleryCarouselEl, {
   interval: 2000,
   touch: true,
 });
+
+const btnProductImgUpload = document.getElementById("#btn-productImageUpload");
+
+// btnProductImgUpload.addEventListener("click", (e) => e.preventDefault());
