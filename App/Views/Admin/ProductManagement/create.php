@@ -36,11 +36,11 @@
               <div class="row mb-3">
                 <label for="category" class="col-2 col-form-label">Category</label>
                 <div class="col-10 col-md-6">
-                  <select name="category" id="category" class="form-select">
+                  <select name="category_id" id="category" class="form-select">
                     <option selected value="">Select a
                       Category</option>
                     <?php foreach ($categories as $category) : ?>
-                      <?php if ($category->category_id === $productMeta['category']) : ?>
+                      <?php if ($category->category_id === $productMeta['category_id']) : ?>
                         <option selected value="<?= $category->category_id ?>"><?= $category->category_name ?>
                         </option>
                       <?php else : ?>
@@ -190,63 +190,63 @@
               <div class="row row-cols-1 row-cols-md-2 g-3">
                 <div class="col">
                   <label for="weight" class="form-label">Weight(kg)</label>
-                  <input type="number" name="weight" id="weight" class="form-control" value="<?= $product['weight'] ?>">
+                  <input type="number" name="weight" id="weight" class="form-control" value="<?= $productFeature['weight'] ?>">
                 </div>
                 <div class="col">
                   <label for="dimensions" class="form-label">Dimensions</label>
-                  <input type="text" name="dimensions" id="dimensions" class="form-control" value="<?= $product['dimensions'] ?? '' ?>">
+                  <input type="text" name="dimensions" id="dimensions" class="form-control" value="<?= $productFeature['dimensions'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="os" class="form-label">OS</label>
-                  <input type="text" name="os" id="os" class="form-control" value="<?= $product['os'] ?? '' ?>">
+                  <input type="text" name="os" id="os" class="form-control" value="<?= $productFeature['os'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="screensize" class="form-label">Screensize
                     (inches)</label>
-                  <input type="number" name="screensize" id="screensize" class="form-control" value="<?= $product['screensize'] ?? '' ?>">
+                  <input type="number" name="screensize" id="screensize" class="form-control" value="<?= $productFeature['screensize'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="resolution" class="form-label">Resolution
                     (Pixels)</label>
-                  <input type="number" name="resolution" id="resolution" class="form-control" value="<?= $product['resolution'] ?? '' ?>">
+                  <input type="text" name="resolution" id="resolution" class="form-control" value="<?= $productFeature['resolution'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="storage" class="form-label">Storage
                     (GB)</label>
-                  <input type="number" name="storage" id="storage" class="form-control" value="<?= $product['storage'] ?? '' ?>">
+                  <input type="number" name="storage" id="storage" class="form-control" value="<?= $productFeature['storage'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="colour" class="form-label">Colour
                     (GB)</label>
-                  <input type="text" name="colour" id="colour" class="form-control" value="<?= $product['colour'] ?? '' ?>">
+                  <input type="text" name="colour" id="colour" class="form-control" value="<?= $productFeature['colour'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="ram" class="form-label">RAM
                     (GB)</label>
-                  <input type="number" name="ram" id="ram" class="form-control" value="<?= $product['ram'] ?? '' ?>">
+                  <input type="number" name="ram" id="ram" class="form-control" value="<?= $productFeature['ram'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="cpu" class="form-label">CPU
                   </label>
-                  <input type="text" name="cpu" id="cpu" class="form-control" value="<?= $product['cpu'] ?? '' ?>">
+                  <input type="text" name="cpu" id="cpu" class="form-control" value="<?= $productFeature['cpu'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="battery" class="form-label">Battery
                     (mAh)
                   </label>
-                  <input type="number" name="battery" id="battery" class="form-control" value="<?= $product['battery'] ?>">
+                  <input type="number" name="battery" id="battery" class="form-control" value="<?= $productFeature['battery'] ?>">
                 </div>
                 <div class="col">
                   <label for="rear-camera" class="form-label">Rear
                     Camera
                   </label>
-                  <input type="text" name="rear-camera" id="rear-camera" class="form-control" value="<?= $product['rear-camera'] ?? '' ?>">
+                  <input type="text" name="rear_camera" id="rear_camera" class="form-control" value="<?= $productFeature['rear_camera'] ?? '' ?>">
                 </div>
                 <div class="col">
                   <label for="front-camera" class="form-label">Front
                     Camera
                   </label>
-                  <input type="text" name="front-camera" id="front-camera" class="form-control" value="<?= $product['front-camera'] ?? '' ?>">
+                  <input type="text" name="front_camera" id="front_camera" class="form-control" value="<?= $productFeature['front_camera'] ?? '' ?>">
                 </div>
               </div>
             </div>

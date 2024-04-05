@@ -42,4 +42,10 @@ class Product
 
     return $product;
   }
+
+  public function insert($fields, $values, $params)
+  {
+    $query = "INSERT INTO product({$fields}) VALUES({$values})";
+    $this->db->query($query, $params);
+  }
 }

@@ -31,7 +31,7 @@ $router->get('/themobilehour/admin/product-management', 'Admin\ProductManagement
 $router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create');
 $router->get('/themobilehour/admin/product-management/edit', 'Admin\ProductManagementController@edit');
 $router->get('/themobilehour/admin/product-management/update', 'Admin\ProductManagementController@update');
-$router->get('/themobilehour/admin/product-management/delete', 'Admin\ProductManagementController@delete');
+$router->delete('/themobilehour/admin/product-management/{id}', 'Admin\ProductManagementController@destroy');
 
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
 

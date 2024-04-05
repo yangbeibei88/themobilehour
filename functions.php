@@ -150,3 +150,35 @@ function sanitize($dirty)
 {
   return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
 }
+
+/**
+ * Redirect to a given url
+ * 
+ * @param string $url
+ * @return void
+ */
+function redirect($url)
+{
+  header("Location: {$url}");
+  exit;
+}
+
+/**
+ * Exclude sanitising some values, and return a new array
+ *
+ * @param array $arr
+ * @param array $excludeKeys
+ * @return array
+ */
+function sanitizeArr($arr, $excludeKeys)
+{
+  $sanitizedArr = [];
+  foreach ($arr as $key => $value) {
+    if (in_array($key, $excludeKeys)) {
+      $sanitizedArr[$key] = $value;
+    } else {
+      $sanitizedArr[$key] = sanitize($value);
+    }
+  }
+  return $sanitizedArr;
+}
