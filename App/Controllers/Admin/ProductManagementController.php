@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Category;
 use App\Models\Feature;
 use App\Models\Product;
@@ -52,6 +53,35 @@ class ProductManagementController
   public function getFeatures()
   {
     return $this->featureModel = new Feature();
+  }
+
+  /**
+   * show the product edit form
+   *
+   * @param array $params
+   * @return void
+   */
+  public function edit($params)
+  {
+    $id = $params['id'] ?? '';
+
+    inspect($id);
+
+    $params = [
+      'id' => $id
+    ];
+    $product = $this->productModel->getSingleProduct($params);
+    $categories = $this->getCategories();
+
+    if (!$product) {
+      AdminErrorController::notFound('Product not found');
+    } else {
+      // inspectAndDie($product);
+      loadView('Admin/ProductManagement/edit', [
+        'product' => $product,
+        'categories' => $categories
+      ]);
+    }
   }
 
   /**
