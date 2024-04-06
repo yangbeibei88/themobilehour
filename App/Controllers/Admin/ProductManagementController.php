@@ -155,9 +155,12 @@ class ProductManagementController
         $productFeatureValues[] = ':' . $field;
       }
 
-      // inspectAndDie($values);
+      // inspectAndDie($productFeatureValues);
 
-      if (count(array_filter($productFeatureValues, fn ($val) => empty($val))) < count(explode(', ', $productFeatureFields))) {
+      // inspectAndDie($newProductFeatureData);
+      // inspectAndDie(count(array_filter($newProductFeatureData, fn ($val) => !empty($val))));
+
+      if (count(array_filter($newProductFeatureData, fn ($val) => !empty($val))) > 0) {
         $productFeatureValues = implode(', ', $productFeatureValues);
         $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
         // $newProductMetaData['feature_id'] = $this->getFeatures()->getInsertID();
@@ -172,5 +175,35 @@ class ProductManagementController
       // inspectAndDie($fields);
       // inspectAndDie($values);
     }
+  }
+
+  public function delete($params)
+  {
+    $id = $params['id'];
+
+    $params = [
+      'id' => $id
+    ];
+
+    $product = $this->productModel->getSingleProduct($params);
+
+    loadView('Admin/ProductManagement/delete', [
+      'product' => $product
+    ]);
+  }
+
+  public function destroy($params)
+  {
+    $id = $params['id'];
+
+    $params = [
+      'id' => $id
+    ];
+
+    $product = $this->productModel->getSingleProduct($params);
+
+    $this->productModel->delete($params);
+
+    redirect(assetPath('admin/product-management'));
   }
 }

@@ -48,4 +48,9 @@ class Product
     $query = "INSERT INTO product({$fields}) VALUES({$values})";
     $this->db->query($query, $params);
   }
+
+  public function delete($params)
+  {
+    $this->db->query("DELETE FROM product WHERE product_id = :id", $params);
+  }
 }

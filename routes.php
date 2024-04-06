@@ -29,11 +29,12 @@ $router->get('/themobilehour/products/{id}', 'ProductsController@show');
 
 $router->get('/themobilehour/admin/product-management', 'Admin\ProductManagementController@index');
 $router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create');
-$router->get('/themobilehour/admin/product-management/edit', 'Admin\ProductManagementController@edit');
-$router->get('/themobilehour/admin/product-management/update', 'Admin\ProductManagementController@update');
-$router->delete('/themobilehour/admin/product-management/{id}', 'Admin\ProductManagementController@destroy');
+$router->get('/themobilehour/admin/product-management/edit/{id}', 'Admin\ProductManagementController@edit');
+$router->get('/themobilehour/admin/product-management/update/{id}', 'Admin\ProductManagementController@update');
 
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
+$router->get('/themobilehour/admin/product-management/delete/{id}', 'Admin\ProductManagementController@delete');
+$router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\ProductManagementController@destroy');
 
 
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');

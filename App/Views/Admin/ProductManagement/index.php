@@ -8,7 +8,7 @@
         <input type="search" name="admin-product-search" id="admin-product-search" placeholder="Search" aria-label="Search" class="form-control me-2">
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
-      <a href="#" role="button" class="btn btn-outline-primary">Add New
+      <a href="product-management/create" role="button" class="btn btn-outline-primary">Add New
         Product</a>
     </div>
     <table class="table">
@@ -34,13 +34,13 @@
                 <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="img-thumbnail" width="50" height="50">
               <?php endif; ?>
             </td>
-            <td><?= $product->sku ?></td>
-            <td><?= $product->product_name ?></td>
-            <td><?= $product->manufacturer ?></td>
+            <td><a href="product-management/<?= $product->product_id ?>"><?= $product->sku ?></a></td>
+            <td><a href="product-management/<?= $product->product_id ?>"><?= $product->product_name ?></a></td>
+            <td><a href="category-management/<?= $product->category_id ?>"><?= $product->category_name ?></a></td>
             <td><?= formatPrice($product->list_price) ?></td>
             <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
             <td><a href="#" class="btn btn-primary btn-sm" role="button">Edit</a></td>
-            <td><a href="#" class="btn btn-danger btn-sm" role="button">Delete</a></td>
+            <td><a href="product-management/delete/<?= $product->product_id ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
           <?php endforeach; ?>
           </tr>
       </tbody>
