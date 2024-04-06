@@ -1,6 +1,8 @@
 <?= loadPartial('header') ?>
 <?= loadPartial('navbar-admin') ?>
 <?= loadPartial('breadcrumb') ?>
+<?= loadPartial('message') ?>
+
 <main id="product-manager">
   <div class="container my-4">
     <div class="d-flex align-items-center justify-content-between" id="product-manager-top">

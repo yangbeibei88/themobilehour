@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Controllers\ErrorController;
 
 // require basePath('routes.php');
@@ -105,12 +106,13 @@ class Router
   {
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+    // split the current URI into segments
+    $uriSegments = explode('/', trim($uri, '/'));
+
+    // inspectAndDie($uriSegments);
+
     foreach ($this->routes as $route) {
 
-      // split the current URI into segments
-      $uriSegments = explode('/', trim($uri, '/'));
-
-      // inspectAndDie($uriSegments);
 
       // split the route URI into segments
       $routeSegments = explode('/', trim($route['uri'], '/'));
@@ -175,6 +177,10 @@ class Router
       /**--------------------------first version end ---------------------------------- */
     }
 
-    ErrorController::notFound();
+    if (in_array('admin', $uriSegments)) {
+      AdminErrorController::notFound();
+    } else {
+      ErrorController::notFound();
+    }
   }
 }

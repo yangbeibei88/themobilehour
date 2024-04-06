@@ -40,7 +40,7 @@
                   </li>
                   <li class="nav-item"><a class="nav-link" href="#">Customers</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/product-management') ?>">Products</a></li>
                   <li class="nav-item"><a class="nav-link" href="#">Categories</a>
                   </li>
                   <li class="nav-item"><a class="nav-link" href="#">Orders</a></li>

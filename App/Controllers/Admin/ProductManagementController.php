@@ -77,32 +77,36 @@ class ProductManagementController
 
     // $newProductData['user_id'] = 1;
 
-    $requiredFields = ["sku", "product_name", "list_price"];
+    $requiredFields = ["sku", "product_name", "list_price", "category_id"];
 
     $errors = [];
 
-    foreach ($requiredFields as $field) {
-      if (empty($newProductMetaData[$field])) {
-        $errors[] = ucfirst($field) . ' is required';
-      }
-    }
+
 
     // $newProductData = array_map('sanitize', $newProductData);
 
 
-    $excludeSanitizeFields = ["product_desc"];
+
 
     // $newProductMetaData = array_map('sanitize', array_filter($newProductMetaData, function($key) use ($excludeSanitizeFields) {
     //   return !in_array($key, $excludeSanitizeFields);
     // }, ARRAY_FILTER_USE_KEY));
     // $newProductMetaData = array_map('sanitize', $newProductMetaData);
+
+    $excludeSanitizeFields = ["product_desc"];
+
     $newProductMetaData = sanitizeArr($newProductMetaData, $excludeSanitizeFields);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $newProductMetaData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+    }
 
     $newProductFeatureData = array_map('sanitize', $newProductFeatureData);
     $newProductImgGallery = array_map('sanitize', $newProductImgGallery);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $newProductMetaData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+    foreach ($requiredFields as $field) {
+      if (empty($newProductMetaData[$field])) {
+        $errors[] = ucfirst($field) . ' is required';
+      }
     }
 
 
@@ -118,31 +122,19 @@ class ProductManagementController
     } else {
       // submit data
 
-      $productMetaFields = [];
+
       $productFeatureFields = [];
-      foreach ($newProductMetaData as $field => $value) {
-        $productMetaFields[] = $field;
-      }
+
       foreach ($newProductFeatureData as $field => $value) {
         $productFeatureFields[] = $field;
       }
 
 
-      $productMetaFields = implode(', ', $productMetaFields);
+
       $productFeatureFields = implode(', ', $productFeatureFields);
 
-      $productMetaValues = [];
+
       $productFeatureValues = [];
-
-
-      foreach ($newProductMetaData as $field => $value) {
-
-        if ($value === '') {
-          $newProductMetaData[$field] === null;
-        }
-
-        $productMetaValues[] = ':' . $field;
-      }
 
       // inspectAndDie($productMetaFields);
       // inspectAndDie($productMetaValues);
@@ -163,10 +155,33 @@ class ProductManagementController
       if (count(array_filter($newProductFeatureData, fn ($val) => !empty($val))) > 0) {
         $productFeatureValues = implode(', ', $productFeatureValues);
         $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
-        // $newProductMetaData['feature_id'] = $this->getFeatures()->getInsertID();
+        $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
+
+        // inspectAndDie($newProductMetaData['feature_id']);
+      }
+
+
+      $productMetaFields = [];
+
+      foreach ($newProductMetaData as $field => $value) {
+        $productMetaFields[] = $field;
+      }
+
+      $productMetaFields = implode(', ', $productMetaFields);
+
+      $productMetaValues = [];
+
+      foreach ($newProductMetaData as $field => $value) {
+
+        if ($value === '') {
+          $newProductMetaData[$field] === null;
+        }
+
+        $productMetaValues[] = ':' . $field;
       }
 
       $productMetaValues = implode(', ', $productMetaValues);
+
       // inspectAndDie($productMetaValues);
 
       $this->productModel->insert($productMetaFields, $productMetaValues, $newProductMetaData);
@@ -203,6 +218,9 @@ class ProductManagementController
     $product = $this->productModel->getSingleProduct($params);
 
     $this->productModel->delete($params);
+
+    // set flash message
+    $_SESSION['success_product_delete_message'] = 'PRODUCT DELETED SUCCESSFULLY';
 
     redirect(assetPath('admin/product-management'));
   }
