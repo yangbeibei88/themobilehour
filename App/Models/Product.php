@@ -49,6 +49,12 @@ class Product
     $this->db->query($query, $params);
   }
 
+  public function update($fields, $params)
+  {
+    $query = "UPDATE product SET {$fields} WHERE product_id = :id";
+    $this->db->query($query, $params);
+  }
+
   public function delete($params)
   {
     $this->db->query("DELETE FROM product WHERE product_id = :id", $params);

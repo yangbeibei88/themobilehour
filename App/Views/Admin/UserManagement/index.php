@@ -1,6 +1,6 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', ['pageTitle' => 'Admin User Management']) ?>
 <?= loadPartial('navbar-admin') ?>
-<?= loadPartial('breadcrumb') ?>
+<?= loadPartial('pagetitle', ['pageTitle' => 'Admin User Management']) ?>
 
 <main id="account-manager">
   <div class="container my-4">
@@ -9,7 +9,7 @@
         <input type="search" name="admin-account-search" id="admin-account-search" placeholder="Search" aria-label="Search" class="form-control me-2">
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
-      <a href="#" role="button" class="btn btn-outline-primary">Add New
+      <a href="<?= assetPath('admin/user-management/create') ?>" role="button" class="btn btn-outline-primary">Add New
         Account</a>
     </div>
     <table class="table">

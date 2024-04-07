@@ -4,7 +4,7 @@
 
 <main id="add-product">
   <div class="container my-4">
-    <form method="POST" action="/themobilehour/admin/product-management" enctype="multipart/form-data" id="form-product">
+    <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form">
       <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <div class="alert alert-danger" role="alert">

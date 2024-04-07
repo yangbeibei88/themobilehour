@@ -85,6 +85,97 @@ class ProductManagementController
   }
 
   /**
+   * Update a product
+   *
+   * @param array $params
+   * @return void
+   */
+  public function update($params)
+  {
+    $id = $params['id'] ?? '';
+
+    $params = [
+      'id' => $id
+    ];
+
+    $product = $this->productModel->getSingleProduct($params);
+    $categories = $this->getCategories();
+
+    $allowedFields = [
+      'product_meta' => ["sku", "product_name", "category_id", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc"],
+      'product_feature' => ["weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear_camera", "front_camera"],
+      'product_imggallery' => ["imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"]
+    ];
+
+    $updateProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
+    $updateProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
+    $updateProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
+
+
+
+    $excludeSanitizeFields = ["product_desc"];
+    $updateProductMetaData = sanitizeArr($updateProductMetaData, $excludeSanitizeFields);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $updateProductMetaData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+    }
+
+    $updateProductFeatureData = array_map('sanitize', $updateProductFeatureData);
+    $updateProductImgGallery = array_map('sanitize', $updateProductImgGallery);
+
+    $requiredFields = ["sku", "product_name", "list_price", "category_id"];
+
+    $errors = [];
+
+    foreach ($requiredFields as $field) {
+      if (empty($updateProductMetaData[$field])) {
+        $errors[] = ucfirst($field) . ' is required';
+      }
+    }
+
+    if (!empty($errors)) {
+      loadView('Admin/ProductManagement/edit', [
+        'errors' => $errors,
+        'product' => $product
+      ]);
+      exit;
+    } else {
+      // submit updated data to database
+
+      /*-----------------------UPDATE PRODUCT META START------------------------*/
+
+      $updateProductMetaFields = [];
+      foreach (array_keys($updateProductMetaData) as $field) {
+        $updateProductMetaFields[] = "{$field} =:{$field}";
+      }
+      $updateProductMetaFields = implode(', ', $updateProductMetaFields);
+      $updateProductMetaData['id'] = $id;
+      $this->productModel->update($updateProductMetaFields, $updateProductMetaData);
+
+
+      /*-----------------------UPDATE PRODUCT META END------------------------*/
+
+
+
+      /*-----------------------UPDATE FEATURES START------------------------*/
+      $updateProductFeatureFields = [];
+
+      foreach (array_keys($updateProductFeatureData) as $field) {
+        $updateProductFeatureFields[] = "{$field} =:{$field}";
+      }
+      $updateProductFeatureFields = implode(', ', $updateProductFeatureFields);
+      $updateProductFeatureData['id'] = $product->feature_id;
+      $this->getFeatures()->update($updateProductFeatureFields, $updateProductFeatureData);
+      // inspectAndDie($updateProductFeatureFields);
+      /*-----------------------UPDATE FEATURES END------------------------*/
+
+      // set flash message
+      $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
+
+      redirect(assetPath('admin/product-management'));
+    }
+  }
+
+  /**
    * store data in a database
    *
    * @return void
@@ -110,7 +201,6 @@ class ProductManagementController
     $requiredFields = ["sku", "product_name", "list_price", "category_id"];
 
     $errors = [];
-
 
 
     // $newProductData = array_map('sanitize', $newProductData);
@@ -149,6 +239,7 @@ class ProductManagementController
         'productMeta' => $newProductMetaData,
         'productFeature' => $newProductFeatureData
       ]);
+      exit;
     } else {
       // submit data
 
@@ -250,7 +341,7 @@ class ProductManagementController
     $this->productModel->delete($params);
 
     // set flash message
-    $_SESSION['success_product_delete_message'] = 'PRODUCT DELETED SUCCESSFULLY';
+    $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
 
     redirect(assetPath('admin/product-management'));
   }
