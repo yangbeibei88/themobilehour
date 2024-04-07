@@ -1,14 +1,26 @@
 <?php
 
-session_start();
+// session_start();
 require __DIR__ . '/../vendor/autoload.php';
-require '../functions.php';
 echo '__DIR__: ' . __DIR__;
 echo '<br>';
 echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
 
 
 use Framework\Router;
+use Framework\Session;
+
+Session::start();
+
+require '../functions.php';
+
+// inspectAndDie(session_status());
+/**
+ * session_status():
+ * _DISABLED = 0
+ * _NONE = 1
+ * _ACTIVE = 2
+ */
 
 // require basePath('Framework/Router.php');
 // require basePath('Framework/Database.php');
