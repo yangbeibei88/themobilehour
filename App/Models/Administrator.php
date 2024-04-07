@@ -19,4 +19,16 @@ class Administrator
     $adminUsers = $this->db->query("SELECT * FROM administrator")->fetchAll();
     return $adminUsers;
   }
+
+  public function getSingleUser($params)
+  {
+    $adminUser = $this->db->query("SELECT * FROM administrator WHERE username = :username", $params)->fetch();
+    return $adminUser;
+  }
+
+  public function insert($fields, $values, $params)
+  {
+    $query = "INSERT INTO administrator({$fields}) VALUES({$values})";
+    $this->db->query($query, $params);
+  }
 }

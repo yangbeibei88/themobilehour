@@ -1,6 +1,7 @@
 <?= loadPartial('header', ['pageTitle' => 'Admin User Management']) ?>
 <?= loadPartial('navbar-admin') ?>
 <?= loadPartial('pagetitle', ['pageTitle' => 'Admin User Management']) ?>
+<?= loadPartial('message') ?>
 
 <main id="account-manager">
   <div class="container my-4">
@@ -41,7 +42,7 @@
             <td><?= $adminUser->lastname ?></td>
             <td><?= $adminUser->username ?></td>
             <td><?= $adminUser->user_role ?></td>
-            <td><?= $adminUser->status ?></td>
+            <td><?= $adminUser->status == 1 ? 'active' : 'inactive' ?></td>
             <td><a href="#" class="btn btn-secondary btn-sm" role="button">View</a></td>
             <td><a href="#" class="btn btn-primary btn-sm" role="button">Edit</a></td>
           </tr>

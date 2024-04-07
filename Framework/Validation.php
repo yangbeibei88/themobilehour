@@ -54,6 +54,27 @@ class Validation
   }
 
   /**
+   * Validate an password, the password must be at least 8 chars, contains uppercase(s), lowercase(s), number(s) and special chars
+   *
+   * @param string $password
+   * @return boolean
+   */
+  public static function isPassword($password)
+  {
+    if (
+      strlen($password) >= 8                     // Length 8 or more chars
+      and preg_match('/[A-Z]/', $password)       // Contains uppercase A-Z
+      and preg_match('/[a-z]/', $password)       // Contains lowercase a-z
+      and preg_match('/[0-9]/', $password)       // Contains 0-9
+      and preg_match('/[\W_]/', $password)       // Contains special char(s)
+    ) {
+      return true;                               // Passed all tests
+    }
+    return false;                                  // Invalid password
+  }
+
+
+  /**
    * Match a value against another, 
    * use this function to compare if re-entered password match password
    *
@@ -63,9 +84,6 @@ class Validation
    */
   public static function isMatch($val1, $val2): bool
   {
-    $val1 = trim($val1);
-    $val2 = trim($val2);
-
-    return $val1 === $val2;
+    return strcmp($val1, $val2) === 0 ? true : false;
   }
 }

@@ -32,11 +32,15 @@ $router->get('/themobilehour/admin/product-management/create', 'Admin\ProductMan
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
 $router->get('/themobilehour/admin/product-management/edit/{id}', 'Admin\ProductManagementController@edit');
 $router->post('/themobilehour/admin/product-management/update/{id}', 'Admin\ProductManagementController@update');
-
 $router->get('/themobilehour/admin/product-management/delete/{id}', 'Admin\ProductManagementController@delete');
 $router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\ProductManagementController@destroy');
 
 
-$router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');
 
 $router->get('/themobilehour/admin/user-management', 'Admin\UserManagementController@index');
+$router->get('/themobilehour/admin/user-management/create', 'Admin\UserManagementController@create');
+$router->post('/themobilehour/admin/user-management', 'Admin\UserManagementController@store');
+$router->get('/themobilehour/admin/user-management/edit/{id}', 'Admin\UserManagementController@edit');
+$router->get('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update');
+
+$router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');

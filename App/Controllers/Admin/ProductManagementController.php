@@ -225,7 +225,7 @@ class ProductManagementController
 
     foreach ($requiredFields as $field) {
       if (empty($newProductMetaData[$field])) {
-        $errors[] = ucfirst($field) . ' is required';
+        $errors[$field] = ucfirst($field) . ' is required';
       }
     }
 
