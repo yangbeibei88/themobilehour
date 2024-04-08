@@ -1,15 +1,27 @@
+<?php
+
+use Framework\Session;
+?>
+
 <div class="bg-dark border-bottom">
   <nav class="navbar navbar-expand-md bg-dark border-bottom py-0 top-navbar" data-bs-theme="dark">
     <div class="container">
       <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-end">
-        <li class="nav-item"><a href="" class="nav-link">Beibei</a>
-        </li>
-        <div class="vr"></div>
-        <li class="nav-item"><a href="" class="nav-link">Admin</a>
-        </li>
-        <div class="vr"></div>
-        <li class="nav-item"><a href="" class="nav-link">Logout</a>
-        </li>
+        <?php if (Session::has('adminUser')) : ?>
+          <li class="nav-item"><a href="" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
+          </li>
+          <div class="vr"></div>
+          <li class="nav-item"><a href="<?= assetPath('admin/dashboard') ?>" class="nav-link"><?= Session::get('adminUser')['role'] ?></a>
+          </li>
+          <div class="vr"></div>
+          <!-- <li class="nav-item"><a href="" class="nav-link">Logout</a> -->
+          <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item">
+            <button type="submit" class="nav-link">Logout</button>
+          </form>
+        <?php else : ?>
+          <li class="nav-item"><a href="<?= assetPath('admin/auth/login') ?>" class="nav-link">Login</a>
+          </li>
+        <?php endif; ?>
       </ul>
     </div>
   </nav>
@@ -36,7 +48,7 @@
               </div>
               <div class="offcanvas-body">
                 <ul class="navbar-nav flex-grow-1 justify-content-center">
-                  <li class="nav-item"><a class="nav-link" href="#">Administrators</a>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/user-management') ?>">Administrators</a>
                   </li>
                   <li class="nav-item"><a class="nav-link" href="#">Customers</a>
                   </li>
@@ -44,7 +56,7 @@
                   <li class="nav-item"><a class="nav-link" href="#">Categories</a>
                   </li>
                   <li class="nav-item"><a class="nav-link" href="#">Orders</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Changelogs</a>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/changelogs') ?>">Changelogs</a>
                   </li>
                 </ul>
               </div>

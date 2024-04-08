@@ -203,6 +203,8 @@ class UserManagementController
           'id' => $adminUserRow->user_id,
           'email' => $adminUserRow->username,
           'role' => $adminUserRow->user_role,
+          'firstname' => $adminUserRow->firstname,
+          'lastname' => $adminUserRow->lastname
         ]);
         redirect(assetPath('admin/dashboard'));
       }
