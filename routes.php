@@ -27,6 +27,8 @@ $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
 $router->get('/themobilehour/products/{id}', 'ProductsController@show');
 
+$router->get('/themobilehour/admin/dashboard', 'Admin\DashboardController@index');
+
 $router->get('/themobilehour/admin/product-management', 'Admin\ProductManagementController@index');
 $router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create');
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
@@ -42,5 +44,9 @@ $router->get('/themobilehour/admin/user-management/create', 'Admin\UserManagemen
 $router->post('/themobilehour/admin/user-management', 'Admin\UserManagementController@store');
 $router->get('/themobilehour/admin/user-management/edit/{id}', 'Admin\UserManagementController@edit');
 $router->get('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update');
+
+$router->get('/themobilehour/admin/auth/login', 'Admin\UserManagementController@login');
+$router->post('/themobilehour/admin/auth/login', 'Admin\UserManagementController@authenticate');
+$router->post('/themobilehour/admin/auth/logout', 'Admin\UserManagementController@logout');
 
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');

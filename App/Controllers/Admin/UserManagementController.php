@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Administrator;
+use Framework\Session;
 use Framework\Validation;
 
 class UserManagementController
@@ -100,7 +101,7 @@ class UserManagementController
 
     // validate password match
     if (!Validation::isMatch($adminUser['password'], $confirmPassword)) {
-      $errors['password_verify'] = 'Passwords do not match.';
+      $errors['confirmPassword'] = 'Passwords do not match.';
     }
 
     // inspectAndDie($errors);
@@ -137,6 +138,74 @@ class UserManagementController
       $_SESSION['success_message'] = 'ADMIN USER CREATED SUCCESSFULLY';
 
       redirect('user-management');
+    }
+  }
+
+  public function login()
+  {
+    loadView('Admin/UserManagement/login');
+  }
+
+  /**
+   * Authenticate a admin user login
+   *
+   * @return void
+   */
+  public function authenticate()
+  {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $errors = [];
+
+    // check if entered email address complies with validation
+    if (!Validation::isEmail($email)) {
+      $errors['email'] = 'Please enter a valid email';
+    }
+
+    // check if entered password complies with validation
+    if (!Validation::isPassword($password)) {
+      $errors['password'] = 'Passwords must be at least 8 characters and have:<br> 
+      at least one lowercase letter;<br>and at least one uppercase letter;<br>and at least one number; 
+      <br>and at least one special character.';
+    }
+
+
+    if (!empty($errors)) {
+      // if either email or password doesn't comply with validation, display error
+      loadView('Admin/UserManagement/login', [
+        'errors' => $errors
+      ]);
+      exit;
+    } else {
+
+      $params = [
+        'username' => $email
+      ];
+
+      $adminUserRow = $this->administratorModel->getSingleUser($params);
+
+      // if both email and password comply with validation, check if email and password are correct and status is 1
+      if (!$adminUserRow || !password_verify($password, $adminUserRow->password)) {
+        $errors['credentials'] = 'Incorrect credentials';
+        loadView('Admin/UserManagement/login', [
+          'errors' => $errors
+        ]);
+        exit;
+      } elseif ($adminUserRow && password_verify($password, $adminUserRow->password) && $adminUserRow->status == 0) {
+        $errors['credentials'] = 'Account disabled, please contact admin manager';
+        loadView('Admin/UserManagement/login', [
+          'errors' => $errors
+        ]);
+        exit;
+      } elseif ($adminUserRow && password_verify($password, $adminUserRow->password) && $adminUserRow->status == 1) {
+        // set user session
+        Session::set('adminUser', [
+          'id' => $adminUserRow->user_id,
+          'email' => $adminUserRow->username,
+          'role' => $adminUserRow->user_role,
+        ]);
+        redirect(assetPath('admin/dashboard'));
+      }
     }
   }
 }

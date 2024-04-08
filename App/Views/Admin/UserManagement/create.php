@@ -38,7 +38,7 @@
         <label for="confirmPassword" class="form-label">Confirm
           Password</label>
         <input type="password" name="confirmPassword" id="confirmPassword" class="form-control <?= !empty($errors['password_verify']) ? 'is-invalid' : '' ?>">
-        <div class="text-danger"><?= $errors['password_verify'] ?? '' ?></div>
+        <div class="text-danger"><?= $errors['confirmPassword'] ?? '' ?></div>
       </div>
       <div class="col-12 col-md-8 col-lg-6 form-check form-switch">
         <label for="status" class="form-check-label">Enable this
