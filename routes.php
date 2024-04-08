@@ -27,26 +27,24 @@ $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
 $router->get('/themobilehour/products/{id}', 'ProductsController@show');
 
-$router->get('/themobilehour/admin/dashboard', 'Admin\DashboardController@index');
+$router->get('/themobilehour/admin/dashboard', 'Admin\DashboardController@index', ['authAdmin']);
 
-$router->get('/themobilehour/admin/product-management', 'Admin\ProductManagementController@index');
-$router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create');
-$router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store');
-$router->get('/themobilehour/admin/product-management/edit/{id}', 'Admin\ProductManagementController@edit');
-$router->post('/themobilehour/admin/product-management/update/{id}', 'Admin\ProductManagementController@update');
-$router->get('/themobilehour/admin/product-management/delete/{id}', 'Admin\ProductManagementController@delete');
-$router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\ProductManagementController@destroy');
+$router->get('/themobilehour/admin/product-management', 'Admin\ProductManagementController@index', ['authAdmin']);
+$router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create', ['authAdmin']);
+$router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store', ['authAdmin']);
+$router->get('/themobilehour/admin/product-management/edit/{id}', 'Admin\ProductManagementController@edit', ['authAdmin']);
+$router->post('/themobilehour/admin/product-management/update/{id}', 'Admin\ProductManagementController@update', ['authAdmin']);
+$router->get('/themobilehour/admin/product-management/delete/{id}', 'Admin\ProductManagementController@delete', ['authAdmin']);
+$router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\ProductManagementController@destroy', ['authAdmin']);
 
+$router->get('/themobilehour/admin/user-management', 'Admin\UserManagementController@index', ['authSuperAdmin']);
+$router->get('/themobilehour/admin/user-management/create', 'Admin\UserManagementController@create', ['authSuperAdmin']);
+$router->post('/themobilehour/admin/user-management', 'Admin\UserManagementController@store', ['authSuperAdmin']);
+$router->get('/themobilehour/admin/user-management/edit/{id}', 'Admin\UserManagementController@edit', ['authSuperAdmin']);
+$router->get('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update', ['authSuperAdmin']);
 
+$router->get('/themobilehour/admin/auth/login', 'Admin\UserManagementController@login', ['guest']);
+$router->post('/themobilehour/admin/auth/login', 'Admin\UserManagementController@authenticate', ['guest']);
+$router->post('/themobilehour/admin/auth/logout', 'Admin\UserManagementController@logout', ['authAdmin']);
 
-$router->get('/themobilehour/admin/user-management', 'Admin\UserManagementController@index');
-$router->get('/themobilehour/admin/user-management/create', 'Admin\UserManagementController@create');
-$router->post('/themobilehour/admin/user-management', 'Admin\UserManagementController@store');
-$router->get('/themobilehour/admin/user-management/edit/{id}', 'Admin\UserManagementController@edit');
-$router->get('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update');
-
-$router->get('/themobilehour/admin/auth/login', 'Admin\UserManagementController@login');
-$router->post('/themobilehour/admin/auth/login', 'Admin\UserManagementController@authenticate');
-$router->post('/themobilehour/admin/auth/logout', 'Admin\UserManagementController@logout');
-
-$router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index');
+$router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index', ['authAdmin']);

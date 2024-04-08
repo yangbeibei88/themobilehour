@@ -198,6 +198,10 @@ class UserManagementController
         ]);
         exit;
       } elseif ($adminUserRow && password_verify($password, $adminUserRow->password) && $adminUserRow->status == 1) {
+
+        // Update session id
+        session_regenerate_id(true);
+
         // set user session
         Session::set('adminUser', [
           'id' => $adminUserRow->user_id,
@@ -222,6 +226,6 @@ class UserManagementController
     Session::clearAll();
     $params = session_get_cookie_params();
     setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    redirect(assetPath('admin/auth/login'));
+    redirect(assetPath('home'));
   }
 }
