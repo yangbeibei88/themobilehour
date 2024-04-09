@@ -91,4 +91,14 @@ class Product
 
     return $this->db->query($query)->fetch();
   }
+
+  public function adminProductSearch($params)
+  {
+    $query = "SELECT * FROM product p 
+    LEFT JOIN feature f ON p.feature_id = f.feature_id  
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id WHERE sku LIKE :term OR product_name LIKE :term";
+    $products = $this->db->query($query, $params)->fetchAll();
+    return $products;
+  }
 }

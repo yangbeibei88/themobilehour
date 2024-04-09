@@ -204,14 +204,15 @@ class ProductManagementController
 
 
       // set flash message
-      $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
+      // $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
+      Session::setFlashMessage('success_message', 'PRODUCT UPDATED SUCCESSFULLY');
 
       redirect(assetPath('admin/product-management'));
     }
   }
 
   /**
-   * store data in a database
+   * store new product data to product table
    *
    * @return void
    */
@@ -355,7 +356,8 @@ class ProductManagementController
       $this->productModel->insert($productMetaFields, $productMetaValues, $newProductMetaData);
 
 
-      $_SESSION['success_message'] = 'PRODUCT CREATED SUCCESSFULLY';
+      Session::setFlashMessage('success_message', 'PRODUCT CREATED SUCCESSFULLY');
+      // $_SESSION['success_message'] = 'PRODUCT CREATED SUCCESSFULLY';
 
       redirect('product-management');
       // inspectAndDie($fields);
@@ -363,6 +365,12 @@ class ProductManagementController
     }
   }
 
+  /**
+   * Delete a product view
+   * 
+   * @param array $params
+   * @return void
+   */
   public function delete($params)
   {
     $id = $params['id'];
@@ -378,6 +386,12 @@ class ProductManagementController
     ]);
   }
 
+  /**
+   * Delete a product
+   * 
+   * @param array $params
+   * @return void
+   */
   public function destroy($params)
   {
     $id = $params['id'];
@@ -391,8 +405,36 @@ class ProductManagementController
     $this->productModel->delete($params);
 
     // set flash message
-    $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
+    Session::setFlashMessage('success_message', 'PRODUCT DELETED SUCCESSFULLY');
+    // $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
 
     redirect(assetPath('admin/product-management'));
+  }
+
+  /**
+   * search product by product sku or name
+   * 
+   * @return void
+   */
+  public function search()
+  {
+    // $term = filter_input(INPUT_GET, 'term', FILTER_SANITIZE_SPECIAL_CHARS);
+    $term = isset($_GET['term']) ? sanitize($_GET['term']) : '';
+    // inspectAndDie($term);
+    // inspectAndDie($_GET);
+
+    $params = [
+      'term' => "%{$term}%"
+    ];
+
+    $products = $this->productModel->adminProductSearch($params);
+
+    $count = count($products);
+
+    loadView('Admin/ProductManagement/index', [
+      'products' => $products,
+      'term' => $term,
+      'count' => $count
+    ]);
   }
 }

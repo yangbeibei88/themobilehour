@@ -1,14 +1,18 @@
+<?php
+
+use Framework\Session; ?>
+
 <div class="container">
-  <?php if (isset($_SESSION['success_message'])) : ?>
+  <?php $successMessage = Session::getFlashMessage('success_message'); ?>
+  <?php if ($successMessage !== null) : ?>
     <div class="alert alert-success" role="alert">
-      <?= $_SESSION['success_message'] ?>
+      <?= $successMessage ?>
     </div>
-    <?php unset($_SESSION['success_message']) ?>
   <?php endif; ?>
-  <?php if (isset($_SESSION['error_message'])) : ?>
+  <?php $errorMessage = Session::getFlashMessage('error_message'); ?>
+  <?php if ($errorMessage !== null) : ?>
     <div class="alert alert-danger" role="alert">
-      <?= $_SESSION['error_message'] ?>
+      <?= $errorMessage ?>
     </div>
-    <?php unset($_SESSION['error_message']) ?>
   <?php endif; ?>
 </div>
