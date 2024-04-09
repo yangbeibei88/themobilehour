@@ -1,6 +1,20 @@
 <?php
 
 /**
+ * Define timezone to 'Australia/Brisbane';
+ */
+date_default_timezone_set('Australia/Brisbane');
+
+/**
+ * Get formatted current date time
+ */
+
+function getDateTime()
+{
+  return date("Y-m-d H:i:s");
+}
+
+/**
  * Get the base path
  *
  * @param string $path

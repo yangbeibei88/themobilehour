@@ -1,6 +1,10 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', [
+  'pageTitle' => 'Product Changelog'
+]) ?>
 <?= loadPartial('navbar-admin') ?>
-<?= loadPartial('breadcrumb') ?>
+<?= loadPartial('pagetitle', [
+  'pageTitle' => 'Product Changelog'
+]) ?>
 
 <main id="changelogs">
   <div class="container my-4">

@@ -4,8 +4,10 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Category;
+use App\Models\Changelog;
 use App\Models\Feature;
 use App\Models\Product;
+use Framework\Session;
 use Framework\Validation;
 
 class ProductManagementController
@@ -13,6 +15,7 @@ class ProductManagementController
   protected $productModel;
   protected $categoryModel;
   protected $featureModel;
+  protected $changelogModel;
 
   public function __construct()
   {
@@ -27,8 +30,9 @@ class ProductManagementController
   public function index()
   {
     $products = $this->productModel->getAllProducts();
+
     loadView('Admin/ProductManagement/index', [
-      'products' => $products
+      'products' => $products,
     ]);
   }
 
@@ -55,6 +59,11 @@ class ProductManagementController
     return $this->featureModel = new Feature();
   }
 
+  public function getChangelog()
+  {
+    return $this->changelogModel = new Changelog();
+  }
+
   /**
    * show the product edit form
    *
@@ -63,6 +72,7 @@ class ProductManagementController
    */
   public function edit($params)
   {
+
     $id = $params['id'] ?? '';
 
     inspect($id);
@@ -92,14 +102,35 @@ class ProductManagementController
    */
   public function update($params)
   {
+
+
+    // $cmsUserId = $this->getChangelog()->testSessionVariable($userId);
+
+    // $cmsUserId = $this->getChangelog()->getSessionUserId();
+
+    // inspectAndDie($cmsUserId);
+    // inspectAndDie($userId);
+
+    $userId = Session::get('adminUser')['id'];
+
+    $this->productModel->setSessionUserId($userId);
+
     $id = $params['id'] ?? '';
 
     $params = [
       'id' => $id
     ];
 
+
+
     $product = $this->productModel->getSingleProduct($params);
     $categories = $this->getCategories();
+
+
+    /*-----------------------INSERT CHANGELOG START------------------------*/
+    // $this->getChangelog()->setSessionUserId($userId);
+
+    /*-----------------------INSERT CHANGELOG END------------------------*/
 
     $allowedFields = [
       'product_meta' => ["sku", "product_name", "category_id", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc"],
@@ -110,6 +141,7 @@ class ProductManagementController
     $updateProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
     $updateProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
     $updateProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
+
 
 
 
@@ -139,6 +171,7 @@ class ProductManagementController
       ]);
       exit;
     } else {
+
       // submit updated data to database
 
       /*-----------------------UPDATE PRODUCT META START------------------------*/
@@ -168,6 +201,8 @@ class ProductManagementController
       // inspectAndDie($updateProductFeatureFields);
       /*-----------------------UPDATE FEATURES END------------------------*/
 
+
+
       // set flash message
       $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
 
@@ -182,6 +217,10 @@ class ProductManagementController
    */
   public function store()
   {
+    $userId = Session::get('adminUser')['id'];
+
+    $this->productModel->setSessionUserId($userId);
+
     // Sanitizing data, only fields in $allowedFields can be submitted through $_POST
 
     $allowedFields = [
@@ -190,13 +229,17 @@ class ProductManagementController
       'product_imggallery' => ["imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"]
     ];
 
+
     // $newProductData = array_intersect_key($_POST, array_flip($allowedFields));
 
     $newProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
     $newProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
     $newProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
 
-    // $newProductData['user_id'] = 1;
+    $userId = Session::get('adminUser')['id'];
+    /*-----------------------INSERT CHANGELOG START------------------------*/
+    $this->getChangelog()->setSessionUserId($userId);
+    /*-----------------------INSERT CHANGELOG END------------------------*/
 
     $requiredFields = ["sku", "product_name", "list_price", "category_id"];
 
@@ -204,8 +247,6 @@ class ProductManagementController
 
 
     // $newProductData = array_map('sanitize', $newProductData);
-
-
 
 
     // $newProductMetaData = array_map('sanitize', array_filter($newProductMetaData, function($key) use ($excludeSanitizeFields) {
@@ -261,9 +302,9 @@ class ProductManagementController
       // inspectAndDie($productMetaValues);
 
       foreach ($newProductFeatureData as $field => $value) {
-        if ($value === '') {
-          $newProductFeatureData[$field] === null;
-        }
+        // if ($value === '') {
+        //   $newProductFeatureData[$field] === null;
+        // }
 
         $productFeatureValues[] = ':' . $field;
       }
@@ -273,14 +314,20 @@ class ProductManagementController
       // inspectAndDie($newProductFeatureData);
       // inspectAndDie(count(array_filter($newProductFeatureData, fn ($val) => !empty($val))));
 
-      if (count(array_filter($newProductFeatureData, fn ($val) => !empty($val))) > 0) {
-        $productFeatureValues = implode(', ', $productFeatureValues);
-        $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
-        $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
+      /*-------below logic is feature is only inserted when no feature empty fields-----------*/
 
-        // inspectAndDie($newProductMetaData['feature_id']);
-      }
+      // if (count(array_filter($newProductFeatureData, fn ($val) => !empty($val))) > 0) {
+      //   $productFeatureValues = implode(', ', $productFeatureValues);
+      //   $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
+      //   $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
 
+      //   // inspectAndDie($newProductMetaData['feature_id']);
+      // }
+      /*-------above logic is feature is only inserted when no feature empty fields-----------*/
+      $productFeatureValues = implode(', ', $productFeatureValues);
+      $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
+      $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
+      // inspectAndDie($newProductMetaData['feature_id']);
 
       $productMetaFields = [];
 
@@ -294,9 +341,9 @@ class ProductManagementController
 
       foreach ($newProductMetaData as $field => $value) {
 
-        if ($value === '') {
-          $newProductMetaData[$field] === null;
-        }
+        // if ($value === '') {
+        //   $newProductMetaData[$field] === null;
+        // }
 
         $productMetaValues[] = ':' . $field;
       }
@@ -306,6 +353,9 @@ class ProductManagementController
       // inspectAndDie($productMetaValues);
 
       $this->productModel->insert($productMetaFields, $productMetaValues, $newProductMetaData);
+
+
+      $_SESSION['success_message'] = 'PRODUCT CREATED SUCCESSFULLY';
 
       redirect('product-management');
       // inspectAndDie($fields);

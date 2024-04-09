@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Framework\Database;
 
+use PDO, Exception, PDOException;
+
 class Product
 {
 
@@ -58,5 +60,17 @@ class Product
   public function delete($params)
   {
     $this->db->query("DELETE FROM product WHERE product_id = :id", $params);
+  }
+
+  public function setSessionUserId($userId)
+  {
+    $query = "SET @cms_user_id = :userId";
+    try {
+      $stmt = $this->db->conn->prepare($query);
+      $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+      $stmt->execute();
+    } catch (PDOException $e) {
+      throw new Exception("Error setting session user ID: " . $e->getMessage());
+    }
   }
 }

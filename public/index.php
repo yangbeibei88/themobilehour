@@ -33,7 +33,9 @@ require '../functions.php';
 //   }
 // });
 
-
+// $now = date("Y-m-d H:i:s");
+echo '<br>';
+echo getDateTime();
 echo '<br>';
 echo 'basePath(): ' . basePath();
 echo '<br>';
@@ -55,6 +57,7 @@ echo 'parse_url: ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 echo '<br>';
 echo 'removed subfolder name URI: ' . getURI($_SERVER['REQUEST_URI']);
 echo '<br>';
+// inspectAndDie(Session::get('adminUser')['id']);
 
 
 // require '../config/config.php';

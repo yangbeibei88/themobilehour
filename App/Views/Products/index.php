@@ -1,12 +1,7 @@
 <?= loadPartial('header') ?>
 <?= loadPartial('navbar') ?>
 <?= loadPartial('breadcrumb') ?>
-<?php
 
-
-?>
-
-<!-- <?php inspect($products) ?> -->
 
 <main id="product-list-main">
   <div class="container-fluid py-3">
