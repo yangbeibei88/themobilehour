@@ -26,7 +26,7 @@ use Framework\Session;
   <div class="container">
     <div class="row align-items-center justify-content-between">
       <div class="col order-1">
-        <a href="#" class="navbar-brand">
+        <a href="<?= assetPath('home') ?>" class="navbar-brand">
           <img src="<?= assetPath('assets/logo/the mobile hour logo-3-logo.png') ?>" alt="logo" width="120" height="auto">
         </a>
       </div>
