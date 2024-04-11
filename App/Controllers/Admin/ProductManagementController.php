@@ -4,9 +4,9 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Category;
-use App\Models\Changelog;
 use App\Models\Feature;
 use App\Models\Product;
+use App\Models\ProductImageGallery;
 use Framework\Session;
 use Framework\Validation;
 
@@ -15,11 +15,12 @@ class ProductManagementController
   protected $productModel;
   protected $categoryModel;
   protected $featureModel;
-  protected $changelogModel;
+  protected $productImageGalleryModel;
 
   public function __construct()
   {
     $this->productModel = new Product();
+    $this->productImageGalleryModel = new ProductImageGallery();
   }
 
   /**
@@ -59,10 +60,6 @@ class ProductManagementController
     return $this->featureModel = new Feature();
   }
 
-  public function getChangelog()
-  {
-    return $this->changelogModel = new Changelog();
-  }
 
   /**
    * show the product edit form
@@ -104,16 +101,12 @@ class ProductManagementController
   {
 
 
-    // $cmsUserId = $this->getChangelog()->testSessionVariable($userId);
-
-    // $cmsUserId = $this->getChangelog()->getSessionUserId();
-
-    // inspectAndDie($cmsUserId);
-    // inspectAndDie($userId);
+    /*-----------------------INSERT CHANGELOG START------------------------*/
 
     $userId = Session::get('adminUser')['id'];
 
     $this->productModel->setSessionUserId($userId);
+    /*-----------------------INSERT CHANGELOG END------------------------*/
 
     $id = $params['id'] ?? '';
 
@@ -126,22 +119,17 @@ class ProductManagementController
     $product = $this->productModel->getSingleProduct($params);
     $categories = $this->getCategories();
 
+    $errors = [];
 
-    /*-----------------------INSERT CHANGELOG START------------------------*/
-    // $this->getChangelog()->setSessionUserId($userId);
-
-    /*-----------------------INSERT CHANGELOG END------------------------*/
 
     $allowedFields = [
       'product_meta' => ["sku", "product_name", "category_id", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc"],
-      'product_feature' => ["weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear_camera", "front_camera"],
-      'product_imggallery' => ["imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"]
+      'product_feature' => ["weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear_camera", "front_camera"]
     ];
 
     $updateProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
     $updateProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
-    $updateProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
-
+    $updateProductImgGalleryData = [];
 
 
 
@@ -152,15 +140,42 @@ class ProductManagementController
     }
 
     $updateProductFeatureData = array_map('sanitize', $updateProductFeatureData);
-    $updateProductImgGallery = array_map('sanitize', $updateProductImgGallery);
+
 
     $requiredFields = ["sku", "product_name", "list_price", "category_id"];
 
-    $errors = [];
 
     foreach ($requiredFields as $field) {
       if (empty($updateProductMetaData[$field])) {
         $errors[] = ucfirst($field) . ' is required';
+      }
+    }
+
+    // validate image data
+    foreach ($_FILES as $file => $data) {
+      // If file bigger than limit in php.ini
+      // $errors[$file] = ($data['error'] === 1) ? "$file is too big" : '';
+      if ($data['error'] === 1) {
+        $errors[$file] = "$file is too big";
+      }
+
+      if ($data['tmp_name'] && $data['error'] === 0) {
+        // convert file extension to lowercase
+        $extension = strtolower(pathinfo($data['name'], PATHINFO_EXTENSION));
+        switch (true) {
+            // validate file type
+          case !in_array(mime_content_type($data['tmp_name']), IMAGE_TYPES):
+            $errors[$file] = "$file is a wrong file type.";
+            break;
+            // validate file extension
+          case !in_array($extension, IMAGE_EXTENSIONS):
+            $errors[$file] = "$file has a wrong file extension.";
+            break;
+            // validate file size
+          case $data['size'] > IMAGE_MAX_SIZE:
+            $errors[$file] = "$file is too big.";
+            break;
+        }
       }
     }
 
@@ -201,7 +216,50 @@ class ProductManagementController
       // inspectAndDie($updateProductFeatureFields);
       /*-----------------------UPDATE FEATURES END------------------------*/
 
+      /*-----------------------UPDATE PRODUCT IMAGES START------------------------*/
 
+
+      // IMAGE DATA
+      // Initialise image uploads
+
+      $upload_path = 'uploads/images/';
+
+
+      foreach ($_FILES as $file => $data) {
+
+        if ($data['tmp_name']) {
+          $moved = false;
+          $filename = createFileName($data['name'], IMAGE_UPLOADS);
+          $destination = IMAGE_UPLOADS . $filename;
+          $moved = move_uploaded_file($data['tmp_name'], $destination);
+          if ($moved === true) {
+            $updateProductImgGalleryData[$file] = $upload_path . $filename;
+            $num = substr($file, -1);
+            $altKey = 'alt' . $num;
+            $updateProductImgGalleryData[$altKey] = sanitize($_POST[$altKey]);
+          }
+        }
+      }
+
+      $updateProductImgGalleryFields = [];
+
+
+      foreach (array_keys($updateProductImgGalleryData) as $field) {
+        $updateProductImgGalleryFields[] = "{$field} =:{$field}";
+      }
+
+      $updateProductImgGalleryFields = implode(', ', $updateProductImgGalleryFields);
+
+
+      // inspectAndDie($newProductImgGalleryData);
+
+
+      $updateProductImgGalleryData['id'] = $product->image_gallery_id;
+      $this->productImageGalleryModel->update($updateProductImgGalleryFields, $updateProductImgGalleryData);
+
+
+
+      /*-----------------------UPDATE PRODUCT IMAGES END------------------------*/
 
       // set flash message
       // $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
@@ -218,33 +276,32 @@ class ProductManagementController
    */
   public function store()
   {
+
+    /*--------------------INSERT CHANGELOG START--------------------*/
+    // capture admin user id
     $userId = Session::get('adminUser')['id'];
 
+    // push user id to changelog
     $this->productModel->setSessionUserId($userId);
+    /*--------------------INSERT CHANGELOG END--------------------*/
 
     // Sanitizing data, only fields in $allowedFields can be submitted through $_POST
-
     $allowedFields = [
       'product_meta' => ["sku", "product_name", "category_id", "product_model", "manufacturer", "list_price", "disc_pct", "stock_on_hand", "is_active", "product_desc"],
       'product_feature' => ["weight", "dimensions", "os", "screensize", "resolution", "storage", "colour", "ram", "cpu", "battery", "rear_camera", "front_camera"],
-      'product_imggallery' => ["imgpath1", "alt1", "imgpath2", "alt2", "imgpath3", "alt3", "imgpath4", "alt4", "imgpath5", "alt5"]
     ];
 
+    $errors = [];
 
     // $newProductData = array_intersect_key($_POST, array_flip($allowedFields));
 
     $newProductMetaData = array_intersect_key($_POST, array_flip($allowedFields['product_meta']));
     $newProductFeatureData = array_intersect_key($_POST, array_flip($allowedFields['product_feature']));
-    $newProductImgGallery = array_intersect_key($_POST, array_flip($allowedFields['product_imggallery']));
+    $newProductImgGalleryData = [];
 
-    $userId = Session::get('adminUser')['id'];
-    /*-----------------------INSERT CHANGELOG START------------------------*/
-    $this->getChangelog()->setSessionUserId($userId);
-    /*-----------------------INSERT CHANGELOG END------------------------*/
+
 
     $requiredFields = ["sku", "product_name", "list_price", "category_id"];
-
-    $errors = [];
 
 
     // $newProductData = array_map('sanitize', $newProductData);
@@ -263,7 +320,6 @@ class ProductManagementController
     }
 
     $newProductFeatureData = array_map('sanitize', $newProductFeatureData);
-    $newProductImgGallery = array_map('sanitize', $newProductImgGallery);
 
     foreach ($requiredFields as $field) {
       if (empty($newProductMetaData[$field])) {
@@ -271,49 +327,115 @@ class ProductManagementController
       }
     }
 
+    // validate image data
+    foreach ($_FILES as $file => $data) {
+      // If file bigger than limit in php.ini
+      // $errors[$file] = ($data['error'] === 1) ? "$file is too big" : '';
+      if ($data['error'] === 1) {
+        $errors[$file] = "$file is too big";
+      }
 
+      if ($data['tmp_name'] && $data['error'] === 0) {
+        // convert file extension to lowercase
+        $extension = strtolower(pathinfo($data['name'], PATHINFO_EXTENSION));
+        switch (true) {
+            // validate file type
+          case !in_array(mime_content_type($data['tmp_name']), IMAGE_TYPES):
+            $errors[$file] = "$file is a wrong file type.";
+            break;
+            // validate file extension
+          case !in_array($extension, IMAGE_EXTENSIONS):
+            $errors[$file] = "$file has a wrong file extension.";
+            break;
+            // validate file size
+          case $data['size'] > IMAGE_MAX_SIZE:
+            $errors[$file] = "$file is too big.";
+            break;
+        }
+      }
+    }
+
+    // inspectAndDie($errors);
     // inspectAndDie($newProductMetaData);
+    // inspectAndDie($imageTemps);
+    // inspectAndDie($errors);
+    // inspectAndDie($_FILES);
+    // inspectAndDie(pathinfo($_FILES['product-image1']['name'], PATHINFO_FILENAME));
 
     if (!empty($errors)) {
       // reload view with errors
       loadView('Admin/ProductManagement/create', [
         'errors' => $errors,
         'productMeta' => $newProductMetaData,
-        'productFeature' => $newProductFeatureData
+        'productFeature' => $newProductFeatureData,
+        'productImgGallery' => $newProductImgGalleryData
       ]);
       exit;
     } else {
-      // submit data
+
+      /*-------------------SUBMIT PRODUCT IMAGE DATA START------------------------ */
+
+      // IMAGE DATA
+      // Initialise image uploads
+
+      $upload_path = 'uploads/images/';
 
 
+      foreach ($_FILES as $file => $data) {
+
+        if ($data['tmp_name']) {
+          $moved = false;
+          $filename = createFileName($data['name'], IMAGE_UPLOADS);
+          $destination = IMAGE_UPLOADS . $filename;
+          $moved = move_uploaded_file($data['tmp_name'], $destination);
+          if ($moved === true) {
+            $newProductImgGalleryData[$file] = $upload_path . $filename;
+            $num = substr($file, -1);
+            $altKey = 'alt' . $num;
+            $newProductImgGalleryData[$altKey] = sanitize($_POST[$altKey]);
+          }
+        }
+      }
+
+      $productImgGalleryFields = [];
+      $productImgGalleryValues = [];
+
+      foreach ($newProductImgGalleryData as $field => $value) {
+        $productImgGalleryFields[] = $field;
+        $productImgGalleryValues[] = ':' . $field;
+      }
+
+      $productImgGalleryFields = implode(', ', $productImgGalleryFields);
+      $productImgGalleryValues = implode(', ', $productImgGalleryValues);
+
+      // inspectAndDie($newProductImgGalleryData);
+
+      $this->productImageGalleryModel->insert($productImgGalleryFields, $productImgGalleryValues, $newProductImgGalleryData);
+      $newProductMetaData['image_gallery_id'] = $this->productImageGalleryModel->getInsertID();
+
+
+      /*-------------------SUBMIT PRODUCT IMAGE DATA END------------------------ */
+
+      /*-------------------SUBMIT FEATURE DATA START------------------------ */
       $productFeatureFields = [];
+      $productFeatureValues = [];
 
       foreach ($newProductFeatureData as $field => $value) {
         $productFeatureFields[] = $field;
-      }
-
-
-
-      $productFeatureFields = implode(', ', $productFeatureFields);
-
-
-      $productFeatureValues = [];
-
-      // inspectAndDie($productMetaFields);
-      // inspectAndDie($productMetaValues);
-
-      foreach ($newProductFeatureData as $field => $value) {
         // if ($value === '') {
         //   $newProductFeatureData[$field] === null;
         // }
-
         $productFeatureValues[] = ':' . $field;
       }
 
-      // inspectAndDie($productFeatureValues);
 
-      // inspectAndDie($newProductFeatureData);
-      // inspectAndDie(count(array_filter($newProductFeatureData, fn ($val) => !empty($val))));
+      $productFeatureFields = implode(', ', $productFeatureFields);
+      $productFeatureValues = implode(', ', $productFeatureValues);
+
+      $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
+      $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
+      // inspectAndDie($newProductMetaData['feature_id']);
+
 
       /*-------below logic is feature is only inserted when no feature empty fields-----------*/
 
@@ -325,23 +447,19 @@ class ProductManagementController
       //   // inspectAndDie($newProductMetaData['feature_id']);
       // }
       /*-------above logic is feature is only inserted when no feature empty fields-----------*/
-      $productFeatureValues = implode(', ', $productFeatureValues);
-      $this->getFeatures()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
-      $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
-      // inspectAndDie($newProductMetaData['feature_id']);
+
+
+      /*-------------------SUBMIT FEATURE DATA END------------------------ */
+
+
+
+      /*-------------------SUBMIT PRODUCT META DATA START------------------------ */
 
       $productMetaFields = [];
-
-      foreach ($newProductMetaData as $field => $value) {
-        $productMetaFields[] = $field;
-      }
-
-      $productMetaFields = implode(', ', $productMetaFields);
-
       $productMetaValues = [];
 
       foreach ($newProductMetaData as $field => $value) {
-
+        $productMetaFields[] = $field;
         // if ($value === '') {
         //   $newProductMetaData[$field] === null;
         // }
@@ -349,6 +467,7 @@ class ProductManagementController
         $productMetaValues[] = ':' . $field;
       }
 
+      $productMetaFields = implode(', ', $productMetaFields);
       $productMetaValues = implode(', ', $productMetaValues);
 
       // inspectAndDie($productMetaValues);
@@ -358,6 +477,8 @@ class ProductManagementController
 
       Session::setFlashMessage('success_message', 'PRODUCT CREATED SUCCESSFULLY');
       // $_SESSION['success_message'] = 'PRODUCT CREATED SUCCESSFULLY';
+
+      /*-------------------SUBMIT PRODUCT META DATA END------------------------ */
 
       redirect('product-management');
       // inspectAndDie($fields);

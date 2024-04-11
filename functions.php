@@ -6,6 +6,27 @@
 date_default_timezone_set('Australia/Brisbane');
 
 /**
+ * Define image upload setting
+ */
+define('IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/gif']); // Allowed file types
+define('IMAGE_EXTENSIONS', ['jpeg', 'jpg', 'png', 'gif']);       // Allowed file extensions
+define('IMAGE_MAX_SIZE', '5000000');                                    // Max file size
+
+/**
+ * Define upload path
+ */
+define('IMAGE_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR);
+define('DOCUMENT_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR);
+define('AVATAR_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR);
+
+echo '<br>';
+echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
+echo '<br>';
+echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
+echo '<br>';
+echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
+
+/**
  * Get formatted current date time
  */
 
@@ -185,7 +206,7 @@ function redirect($url)
  * @param array $excludeKeys
  * @return array
  */
-function sanitizeArr($arr, $excludeKeys)
+function sanitizeArr($arr, $excludeKeys = [])
 {
   $sanitizedArr = [];
   foreach ($arr as $key => $value) {
@@ -196,4 +217,25 @@ function sanitizeArr($arr, $excludeKeys)
     }
   }
   return $sanitizedArr;
+}
+
+/**
+ * Create file name
+ *
+ * @param string $filename
+ * @param string $upload_path
+ * @return string
+ */
+function createFileName($filename, $upload_path)
+{
+  $basename = pathinfo($filename, PATHINFO_FILENAME); // get filename without extension
+  $extension = pathinfo($filename, PATHINFO_EXTENSION); // get the file's extension
+  $basename =  preg_replace('/[^a-zA-Z0-9_-]/', '_', $basename);
+  $filename = $basename . '.' . $extension;
+  $i = 1;
+  while (file_exists($upload_path . $filename)) {
+    $i++;
+    $filename = $basename . "_$i." . $extension;
+  }
+  return $filename;
 }

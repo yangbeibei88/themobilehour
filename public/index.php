@@ -57,6 +57,15 @@ echo 'parse_url: ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 echo '<br>';
 echo 'removed subfolder name URI: ' . getURI($_SERVER['REQUEST_URI']);
 echo '<br>';
+
+echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
+echo '<br>';
+echo 'image_path_db: ' . assetPath(IMAGE_UPLOADS);
+echo '<br>';
+echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
+echo '<br>';
+echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
+echo '<br>';
 // inspectAndDie(Session::get('adminUser')['id']);
 
 

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Framework\Database;
 
-class Feature
+class ProductImageGallery
 {
   protected $db;
 
@@ -20,22 +20,16 @@ class Feature
     return $conn->lastInsertId();
   }
 
-  public function getSingleFeature($params)
-  {
-    $feature = $this->db->query("SELECT * FROM feature WHERE feature_id = :id", $params)->fetch();
-    return $feature;
-  }
-
   public function insert($fields, $values, $params)
   {
 
-    $query = "INSERT INTO feature({$fields}) VALUES({$values})";
+    $query = "INSERT INTO product_image_gallery({$fields}) VALUES({$values})";
     $this->db->query($query, $params);
   }
 
   public function update($fields, $params)
   {
-    $query = "UPDATE feature SET {$fields} WHERE feature_id = :id";
+    $query = "UPDATE product_image_gallery SET {$fields} WHERE image_gallery_id = :id";
     $this->db->query($query, $params);
   }
 }

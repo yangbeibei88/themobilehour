@@ -7,9 +7,11 @@
     <form method="POST" action="/themobilehour/admin/product-management" enctype="multipart/form-data" id="form-product">
       <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
-          <div class="alert alert-danger" role="alert">
-            <?= $error ?>
-          </div>
+          <?php if (!empty($error)) : ?>
+            <div class="alert alert-danger" role="alert">
+              <?= $error ?>
+            </div>
+          <?php endif; ?>
         <?php endforeach; ?>
       <?php endif; ?>
       <div class="accordion" id="productAccordion">
@@ -117,6 +119,27 @@
           </div>
           <div id="productImagesPanel" class="accordion-collapse collapse show">
             <div class="accordion-body">
+              <div class="input-group mb-3">
+                <label class="input-group-text" for="product-image1">Image 1</label>
+                <input type="file" name="imgpath1" id="product-image1" class="form-control" accept="image/*">
+                <!-- <button type="button" class="btn btn-danger">Remove</button> -->
+                <label class="input-group-text" for="product-alt1">Alt-text</label>
+                <input type="text" name="alt1" id="product-alt1" class="form-control">
+
+              </div>
+              <div class="input-group mb-3">
+                <label class="input-group-text" for="product-image2">Image 2</label>
+                <input type="file" name="imgpath2" id="product-image2" class="form-control" accept="image/*">
+                <label class="input-group-text" for="product-alt2">Alt-text</label>
+                <input type="text" name="alt2" id="product-alt2" class="form-control">
+              </div>
+              <div class="input-group mb-3">
+                <label class="input-group-text" for="product-image3">Image 3</label>
+                <input type="file" name="imgpath3" id="product-image3" class="form-control" accept="image/*">
+                <label class="input-group-text" for="product-alt3">Alt-text</label>
+                <input type="text" name="alt3" id="product-alt3" class="form-control">
+              </div>
+
               <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product-image-upload-form-modal">Select
                 and upload images</button>
               <div class="modal fade" id="product-image-upload-form-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="product-image-upload-form-modal-label" aria-hidden="true">

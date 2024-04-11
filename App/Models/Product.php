@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Framework\Database;
 
-use PDO, Exception, PDOException;
-
 class Product
 {
 
@@ -65,13 +63,6 @@ class Product
   public function setSessionUserId($userId)
   {
     $query = "SET @cms_user_id = :userId";
-    // try {
-    //   $stmt = $this->db->conn->prepare($query);
-    //   $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-    //   $stmt->execute();
-    // } catch (PDOException $e) {
-    //   throw new Exception("Error setting session user ID: " . $e->getMessage());
-    // }
 
     $this->db->query($query, ['userId' => $userId]);
   }
@@ -80,14 +71,6 @@ class Product
     $this->setSessionUserId($userId);
 
     $query = "SELECT @cms_user_id";
-    // try {
-    //   $stmt = $this->db->conn->prepare($query);
-    //   $stmt->execute();
-    //   $result = $stmt->fetch(PDO::FETCH_NUM);
-    //   return $result ? $result[0] : 'Variable not set or is null';
-    // } catch (PDOException $e) {
-    //   throw new Exception("Error retrieving session variable: " . $e->getMessage());
-    // }
 
     return $this->db->query($query)->fetch();
   }

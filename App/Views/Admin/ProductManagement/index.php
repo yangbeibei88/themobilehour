@@ -46,16 +46,16 @@
                 <?php if (!is_null($product->image_gallery_id) && !is_null($product->imgpath1)) : ?>
                   <img src="<?= assetPath($product->imgpath1) ?>" alt="<?= $product->alt1 ?>" class="img-thumbnail" width="50" height="50">
                 <?php else : ?>
-                  <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="img-thumbnail" width="50" height="50">
+                  <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="img-thumbnail" width="50" height="auto">
                 <?php endif; ?>
               </td>
-              <td><a href="product-management/<?= $product->product_id ?>"><?= $product->sku ?></a></td>
-              <td><a href="product-management/<?= $product->product_id ?>"><?= $product->product_name ?></a></td>
-              <td><a href="category-management/<?= $product->category_id ?>"><?= $product->category_name ?></a></td>
+              <td><?= $product->sku ?></td>
+              <td><?= $product->product_name ?></td>
+              <td><a href="<?= assetPath('category-management/') . $product->category_id ?>"><?= $product->category_name ?></a></td>
               <td><?= formatPrice($product->list_price) ?></td>
               <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
-              <td><a href="product-management/edit/<?= $product->product_id ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
-              <td><a href="product-management/delete/<?= $product->product_id ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
+              <td><a href="<?= assetPath('admin/product-management/edit/' . $product->product_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
+              <td><a href="<?= assetPath('product-management/delete/' . $product->product_id) ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
             <?php endforeach; ?>
             </tr>
         </tbody>

@@ -7,8 +7,9 @@
 $imagePaths = [];
 
 foreach ((array) $product as $key => $value) {
-  if (strripos($key, 'imgpath') === 0 && !is_null($value)) {
+  if (strripos($key, 'imgpath') === 0 && !empty($value)) {
     $num = substr($key, -1);
+    $imgpathKey = 'imgpath' . $num;
     $altKey = 'alt' . $num;
     $imagePaths[] = [
       'imgpath' => $value,
