@@ -31,7 +31,7 @@
         </a>
       </div>
       <div class="col">
-        <a href="#" class="link-offset-2 link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
+        <a href="<?= assetPath('admin/category-management') ?>" class="link-offset-2 link-underline link-underline-opacity-0 link-underline-opacity-75-hover">
           <div class="card shadow p-3 mb-3 bg-body-tertiary rounded">
             <div class="card-body">
               <h2 class="card-title fs-5">

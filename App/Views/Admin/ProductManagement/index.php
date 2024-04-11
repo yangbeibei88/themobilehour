@@ -33,6 +33,7 @@
             <th scope="col">SKU</th>
             <th scope="col">Title</th>
             <th scope="col">Category</th>
+            <th scope="col">Stock</th>
             <th scope="col">List Price</th>
             <th scope="col">Sale Price</th>
             <th scope="col">Edit</th>
@@ -52,6 +53,7 @@
               <td><?= $product->sku ?></td>
               <td><?= $product->product_name ?></td>
               <td><a href="<?= assetPath('category-management/') . $product->category_id ?>"><?= $product->category_name ?></a></td>
+              <td><?= $product->stock_on_hand ?></td>
               <td><?= formatPrice($product->list_price) ?></td>
               <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
               <td><a href="<?= assetPath('admin/product-management/edit/' . $product->product_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
