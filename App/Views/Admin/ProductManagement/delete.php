@@ -1,9 +1,12 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', [
+  'pageTitle' => 'Delete Product'
+]) ?>
 <?= loadPartial('navbar-admin') ?>
-<?= loadPartial('breadcrumb') ?>
+<?= loadPartial('pagetitle', [
+  'pageTitle' => 'Delete Product'
+]) ?>
 <main id="product-delete">
   <div class="container my-4">
-
     <form method="POST" action="/themobilehour/admin/product-management/destroy/<?= $product->product_id ?>" id="product-delete-form">
       <h1>Delete Product</h1>
       <p>Click confirm to delete the product:
@@ -12,7 +15,7 @@
       <p>Product Name: <?= $product->product_name ?></p>
 
       <a href="<?= assetPath('admin/product-management') ?>" class="btn btn-secondary">Cancel</a>
-      <input type="submit" name="delete" value="confirm" class="btn btn-danger">
+      <button type="submit" class="btn btn-danger">Confirm</button>
     </form>
   </div>
 </main>

@@ -531,7 +531,7 @@ class ProductManagementController
     $this->productModel->delete($params);
 
     // set flash message
-    Session::setFlashMessage('success_message', 'PRODUCT DELETED SUCCESSFULLY');
+    Session::setFlashMessage('success_message', "PRODUCT: <strong>{$product->sku}</strong> DELETED SUCCESSFULLY");
     // $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
 
     redirect(assetPath('admin/product-management'));

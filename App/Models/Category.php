@@ -53,4 +53,9 @@ class Category
     $query = "UPDATE category SET {$fields} WHERE category_id = :id";
     $this->db->query($query, $params);
   }
+
+  public function delete($params)
+  {
+    $this->db->query("DELETE FROM category WHERE category_id = :id", $params);
+  }
 }

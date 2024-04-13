@@ -195,4 +195,35 @@ class CategoryManagementController
       redirect(assetPath('admin/category-management'));
     }
   }
+
+  /**
+   * Delete a category
+   *
+   * @param array $id
+   * @return void
+   */
+  public function delete($id)
+  {
+    $category = $this->categoryModel->getSingleCategory($id);
+    loadView('Admin/CategoryManagement/delete', [
+      'category' => $category
+    ]);
+  }
+
+  /**
+   * Delete a category
+   *
+   * @param array $id
+   * @return void
+   */
+  public function destroy($id)
+  {
+    $category = $this->categoryModel->getSingleCategory($id);
+
+    $this->categoryModel->delete($id);
+
+    Session::setFlashMessage('success_message', "CATEGORY: <strong>{$category->category_name}</strong> DELETED SUCCESSFULLY");
+
+    redirect(assetPath('admin/category-management'));
+  }
 }
