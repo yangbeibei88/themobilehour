@@ -12,7 +12,11 @@
         <div class="col">
           <div class="card">
             <a href="#">
-              <img src="<?= $category->category_img_path ?>" class="card-img" alt="<?= $category->category_img_alt ?>">
+              <?php if (!empty($category->category_img_path)) : ?>
+                <img src="<?= $category->category_img_path ?>" class="card-img" alt="<?= $category->category_img_alt ?>">
+              <?php else : ?>
+                <img src="<?= assetPath('uploads/images/product-placeholder.jpeg') ?>" class="card-img" alt="<?= $category->category_name ?>">
+              <?php endif; ?>
               <div class="card-img-overlay">
                 <h3 class="card-title"><?= $category->category_name ?></h3>
               </div>

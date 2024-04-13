@@ -24,9 +24,11 @@ foreach ((array) $product as $key => $value) {
     <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form">
       <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
-          <div class="alert alert-danger" role="alert">
-            <?= $error ?>
-          </div>
+          <?php if (!empty($error)) : ?>
+            <div class="alert alert-danger" role="alert">
+              <?= $error ?>
+            </div>
+          <?php endif; ?>
         <?php endforeach; ?>
       <?php endif; ?>
       <div class="accordion" id="productAccordion">

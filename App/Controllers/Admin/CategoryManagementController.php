@@ -104,8 +104,6 @@ class CategoryManagementController
       exit;
     } else {
 
-      unset($errors);
-
       /*----------------------SUBMIT NEW CATEGORY IMAGE-----------------  */
       $categoryFields = [];
       $categoryValues = [];
@@ -135,7 +133,66 @@ class CategoryManagementController
     }
   }
 
-  public function update()
+  /**
+   * Update a category
+   *
+   * @param array $id
+   * @return void
+   */
+  public function update($id)
   {
+    $userId = Session::get('adminUser')['id'];
+
+    $category = $this->categoryModel->getSingleCategory($id);
+
+    $allowedFields = ['category_name', 'category_desc', 'is_active'];
+    $errors = [];
+
+    $updateCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
+
+    $excludeSanitizeFields = ["category_desc"];
+
+    // sanatise input data except category_deesc
+    $updateCategoryData = sanitizeArr($updateCategoryData, $excludeSanitizeFields);
+    $updateCategoryData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+
+    // validate input data
+    $errors['category_name'] = Validation::text('Category name', $updateCategoryData['category_name'], 2, 50, TRUE);
+    $errors['category_desc'] = Validation::text('Category description', $updateCategoryData['category_desc'], 0, 254, FALSE);
+    // validate images
+    foreach ($_FILES as $file) {
+      $errors[$file['name']] = Validation::validateImage($file);
+    }
+
+    $invalid = implode($errors);
+
+    if ($invalid) {
+      loadView('Admin/CategoryManagement/edit', [
+        'errors' => $errors,
+        'category' => $category
+      ]);
+      exit;
+    } else {
+
+      $updatedCategoryFields = [];
+
+      moveFile($_FILES['category_img_path'], 'category_img_path', 'category_img_alt', $_POST['category_img_alt'], $updateCategoryData, 'uploads/images/');
+
+      foreach (array_keys($updateCategoryData) as $field) {
+        $updatedCategoryFields[] = "{$field} =:{$field}";
+      }
+
+      $updatedCategoryFields = implode(', ', $updatedCategoryFields);
+
+      $updateCategoryData['id'] = $id['id'];
+
+      // inspectAndDie($updateCategoryData);
+
+      $this->categoryModel->update($updatedCategoryFields, $updateCategoryData);
+
+      Session::setFlashMessage('success_message', "CATEGORY: <strong>{$updateCategoryData['category_name']}</strong>  UPDATED SUCCESSFULLY");
+
+      redirect(assetPath('admin/category-management'));
+    }
   }
 }

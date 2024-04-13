@@ -8,7 +8,16 @@
 <?= loadPartial('message') ?>
 <main id="edit-category">
   <div class="container my-4">
-    <form action="" method="post">
+    <form action="/themobilehour/admin/category-management/update/<?= $category->category_id ?>" method="POST" enctype="multipart/form-data" id="category-edit-form">
+      <?php if (isset($errors)) : ?>
+        <?php foreach ($errors as $error) : ?>
+          <?php if (!empty($error)) : ?>
+            <div class="alert alert-danger" role="alert">
+              <?= $error ?>
+            </div>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      <?php endif; ?>
       <div class="accordion" id="categoryAccordion">
         <div class="accordion-item">
           <div class="accordion-header">
@@ -47,7 +56,9 @@
                     <label class="input-group-text" for="category_img_alt">Alt-text</label>
                     <input type="text" name="category_img_alt" id="category_img_alt" class="form-control" value="<?= $category->category_img_alt ?? '' ?>">
                   </div>
-                  <img src="<?= assetPath($category->category_img_path) ?>" alt="<?= $category->category_img_alt ?>" width="300" height="auto">
+                  <?php if ($category->category_img_path) : ?>
+                    <img src="<?= assetPath($category->category_img_path) ?>" alt="<?= $category->category_img_alt ?? '' ?>" width="300" height="auto">
+                  <?php endif; ?>
                 </div>
               </div>
             </div>

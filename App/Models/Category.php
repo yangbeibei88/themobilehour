@@ -47,4 +47,10 @@ class Category
     $query = "INSERT INTO category({$fields}) VALUES({$values})";
     $this->db->query($query, $params);
   }
+
+  public function update($fields, $params)
+  {
+    $query = "UPDATE category SET {$fields} WHERE category_id = :id";
+    $this->db->query($query, $params);
+  }
 }
