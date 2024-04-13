@@ -21,4 +21,30 @@ class Category
 
     return $categories;
   }
+
+  public function getSingleCategory($params)
+  {
+    $query = "SELECT * FROM category WHERE category_id = :id";
+
+    $category = $this->db->query($query, $params)->fetch();
+    return $category;
+  }
+
+  public function productCountByCategory()
+  {
+
+    $categories = $this->db->query(
+      "SELECT c.*, COUNT(p.product_id) AS productCount, SUM(p.stock_on_hand) AS stock FROM category c
+      LEFT JOIN product p ON c.category_id = p. category_id
+      GROUP BY c.category_id"
+    )->fetchAll();
+
+    return $categories;
+  }
+
+  public function insert($fields, $values, $params)
+  {
+    $query = "INSERT INTO category({$fields}) VALUES({$values})";
+    $this->db->query($query, $params);
+  }
 }

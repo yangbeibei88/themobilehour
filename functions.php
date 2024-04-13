@@ -235,7 +235,23 @@ function createFileName($filename, $upload_path)
   $i = 1;
   while (file_exists($upload_path . $filename)) {
     $i++;
-    $filename = $basename . "_$i." . $extension;
+    $filename = $basename . "-$i." . $extension;
   }
   return $filename;
+}
+
+function moveFile($file, $fileFieldName, $altFieldName, $altValue, &$data, $upload_path)
+{
+  if ($file['tmp_name']) {
+    $moved = false;
+    $filename = createFileName($file['name'], IMAGE_UPLOADS);
+    $destination = IMAGE_UPLOADS . $filename;
+    $moved = move_uploaded_file($file['tmp_name'], $destination);
+
+    if ($moved === true) {
+      // if the file is successfully moved to upload_path, assign file field value and file alt text to corresponding data field
+      $data[$fileFieldName] = $upload_path . $filename;
+      $data[$altFieldName] = sanitize($altValue);
+    }
+  }
 }

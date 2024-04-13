@@ -23,6 +23,20 @@ class ProductManagementController
     $this->productImageGalleryModel = new ProductImageGallery();
   }
 
+  public function getCategories()
+  {
+
+    $this->categoryModel = new Category();
+    $categories = $this->categoryModel->getAllCategories();
+    return $categories;
+  }
+
+  public function getFeatures()
+  {
+    return $this->featureModel = new Feature();
+  }
+
+
   /**
    * Show all products in Product Management of Admin dashboard
    *
@@ -47,19 +61,6 @@ class ProductManagementController
     ]);
   }
 
-  public function getCategories()
-  {
-
-    $this->categoryModel = new Category();
-    $categories = $this->categoryModel->getAllCategories();
-    return $categories;
-  }
-
-  public function getFeatures()
-  {
-    return $this->featureModel = new Feature();
-  }
-
 
   /**
    * show the product edit form
@@ -79,6 +80,8 @@ class ProductManagementController
     ];
     $product = $this->productModel->getSingleProduct($params);
     $categories = $this->getCategories();
+
+    // inspectAndDie($product);
 
     if (!$product) {
       AdminErrorController::notFound('Product not found');
@@ -361,6 +364,7 @@ class ProductManagementController
     // inspectAndDie($errors);
     // inspectAndDie($_FILES);
     // inspectAndDie(pathinfo($_FILES['product-image1']['name'], PATHINFO_FILENAME));
+    $categories = $this->getCategories();
 
     if (!empty($errors)) {
       // reload view with errors
@@ -368,7 +372,8 @@ class ProductManagementController
         'errors' => $errors,
         'productMeta' => $newProductMetaData,
         'productFeature' => $newProductFeatureData,
-        'productImgGallery' => $newProductImgGalleryData
+        'productImgGallery' => $newProductImgGalleryData,
+        'categories' => $categories
       ]);
       exit;
     } else {
@@ -487,7 +492,7 @@ class ProductManagementController
   }
 
   /**
-   * Delete a product view
+   * Delete a product
    * 
    * @param array $params
    * @return void

@@ -6,6 +6,17 @@ class Validation
 {
 
   /**
+   * validate a required field
+   *
+   * @param string $field
+   * @return void
+   */
+  public static function required($fieldValue)
+  {
+    return empty($fieldValue) ? "$fieldValue is required" : true;
+  }
+
+  /**
    * Validate a string
    *
    * @param string $string
@@ -21,6 +32,27 @@ class Validation
       return $length >= $min && $length <= $max;
     }
     return false;
+  }
+
+  /**
+   * Validate a string
+   *
+   * @param string $name field name
+   * @param string $value field value
+   * @param integer $min field value min length
+   * @param integer $max field value max length
+   * @param boolean $required
+   * @return void return error text message if invalid, return null if valid
+   */
+  public static function text(string $name, string $value, int $min = 0, int $max = 1000, bool $required = TRUE)
+  {
+    if ($required && empty($value)) {
+      return "{$name} is required";
+    } elseif (strlen($value) < $min && !empty($value)) {
+      return "{$name} is too short, should be more than $min characters.";
+    } elseif (strlen($value) > $max) {
+      return "{$name} is too long, should not exceed $max characters.";
+    }
   }
 
   /**
@@ -85,5 +117,41 @@ class Validation
   public static function isMatch($val1, $val2): bool
   {
     return strcmp($val1, $val2) === 0 ? true : false;
+  }
+
+  /**
+   * Validate an image and return error message
+   *
+   * @param array $file
+   * @return void
+   */
+  public static function validateImage($file)
+  {
+
+    // If file bigger than limit in php.ini
+    if ($file['error'] === 1) {
+      return "{$file['name']} is too big";
+    }
+
+    if ($file['tmp_name'] && $file['error'] === 0) {
+      // convert file extension to lowercase
+      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+      switch (true) {
+          // validate file type
+        case !in_array(mime_content_type($file['tmp_name']), IMAGE_TYPES):
+          return "{$file['name']} is a wrong file type.";
+          break;
+          // validate file extension
+        case !in_array($extension, IMAGE_EXTENSIONS):
+          return "{$file['name']} has a wrong file extension.";
+          break;
+          // validate file size
+        case $file['size'] > IMAGE_MAX_SIZE:
+          return "{$file['name']} is too big.";
+          break;
+      }
+    }
+
+    // return true;
   }
 }

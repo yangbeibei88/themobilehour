@@ -47,12 +47,12 @@ use Framework\Session;
                 <ul class="navbar-nav flex-grow-1 justify-content-center">
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/user-management') ?>">Administrators</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link" href="#">Customers</a>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/customer-management') ?>">Customers</a>
                   </li>
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/product-management') ?>">Products</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Categories</a>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/category-management') ?>">Categories</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link" href="#">Orders</a></li>
+                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/order-management') ?>">Orders</a></li>
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/changelogs') ?>">Changelogs</a>
                   </li>
                 </ul>

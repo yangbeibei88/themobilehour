@@ -2,7 +2,10 @@
 
 namespace App\Controllers\Admin;
 
+use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Category;
+use Framework\Session;
+use Framework\Validation;
 
 class CategoryManagementController
 {
@@ -13,11 +16,126 @@ class CategoryManagementController
     $this->categoryModel = new Category();
   }
 
+  /**
+   * Show all categories in Categories Management of Admin dashboard
+   *
+   * @return void
+   */
   public function index()
   {
-    $categories = $this->categoryModel->getAllCategories();
+    $categories = $this->categoryModel->productCountByCategory();
     loadView('Admin/CategoryManagement/index', [
       'categories' => $categories
     ]);
+  }
+
+  public function create()
+  {
+    loadView('Admin/CategoryManagement/create');
+  }
+
+
+  /**
+   * Single category edit form
+   *
+   * @param array $id
+   * @return void
+   */
+  public function edit($id)
+  {
+    $category = $this->categoryModel->getSingleCategory($id);
+    // inspectAndDie($id);
+    // inspectAndDie($category);
+    if (!$category) {
+      AdminErrorController::notFound('Category not found');
+    } else {
+      loadView('Admin/CategoryManagement/edit', [
+        'category' => $category
+      ]);
+    }
+  }
+
+
+  /**
+   * Store new category to category table
+   *
+   * @return void
+   */
+  public function store()
+  {
+    // capture admin user id
+    $userId = Session::get('adminUser')['id'];
+
+    $allowedFields = ['category_name', 'category_desc', 'is_active'];
+    $errors = [];
+
+    $newCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
+
+    $excludeSanitizeFields = ["category_desc"];
+
+    // sanatise input data except category_deesc
+    $newCategoryData = sanitizeArr($newCategoryData, $excludeSanitizeFields);
+    $newCategoryData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+
+
+    // validate input data
+    $errors['category_name'] = Validation::text('Category name', $newCategoryData['category_name'], 2, 50, TRUE);
+    $errors['category_desc'] = Validation::text('Category description', $newCategoryData['category_desc'], 0, 254, FALSE);
+    // $errors['category_img_alt'] = Validation::text('Image alt text', $newCategoryData['category_img_alt'], 0, 50, FALSE);
+
+    // validate images
+    foreach ($_FILES as $file) {
+      $errors[$file['name']] = Validation::validateImage($file);
+    }
+
+    // inspectAndDie($newCategoryData);
+    // inspectAndDie($errors);
+
+    // inspectAndDie($_FILES);
+
+    $invalid = implode($errors);
+    // inspectAndDie($invalid);
+
+    if ($invalid) {
+      loadView('Admin/CategoryManagement/create', [
+        'errors' => $errors,
+        'categoryData' => $newCategoryData
+      ]);
+      exit;
+    } else {
+
+      unset($errors);
+
+      /*----------------------SUBMIT NEW CATEGORY IMAGE-----------------  */
+      $categoryFields = [];
+      $categoryValues = [];
+
+      /*---------------------MOVE IMAGE--------------------------*/
+
+      moveFile($_FILES['category_img_path'], 'category_img_path', 'category_img_alt', $_POST['category_img_alt'], $newCategoryData, 'uploads/images/');
+
+      // inspectAndDie($newCategoryData);
+
+      foreach ($newCategoryData as $field => $value) {
+        $categoryFields[] = $field;
+        $categoryValues[] = ':' . $field;
+      }
+
+      // inspectAndDie($ca/tegoryValues);
+
+      $categoryFields = implode(', ', $categoryFields);
+      $categoryValues = implode(', ', $categoryValues);
+
+      // inspectAndDie($categoryFields);
+
+
+      $this->categoryModel->insert($categoryFields, $categoryValues, $newCategoryData);
+      Session::setFlashMessage('success_message', 'CATEGORY CREATED SUCCESSFULLY');
+      redirect('category-management');
+    }
+  }
+
+  public function update()
+  {
   }
 }

@@ -281,7 +281,6 @@ foreach ((array) $product as $key => $value) {
       </div>
       <div class="row justify-content-center my-5 action-buttons">
         <div class="col-6 d-flex justify-content-end">
-          <!-- <input type="submit" value="Submit" name="submit" class="btn btn-primary w-25"> -->
           <button type="submit" class="btn btn-primary w-25">Save</button>
         </div>
         <div class="col-6 d-flex justify-content-start">

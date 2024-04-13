@@ -44,13 +44,19 @@ $router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\Pro
 /*------------------------------Admin Category Management Routes------------------------------------------*/
 
 $router->get('/themobilehour/admin/category-management', 'Admin\CategoryManagementController@index', ['authAdmin']);
+$router->get('/themobilehour/admin/category-management/create', 'Admin\CategoryManagementController@create', ['authAdmin']);
+$router->post('/themobilehour/admin/category-management', 'Admin\CategoryManagementController@store', ['authAdmin']);
+$router->get('/themobilehour/admin/category-management/edit/{id}', 'Admin\CategoryManagementController@edit', ['authAdmin']);
+$router->post('/themobilehour/admin/category-management/update/{id}', 'Admin\CategoryManagementController@update', ['authAdmin']);
+$router->get('/themobilehour/admin/category-management/delete/{id}', 'Admin\CategoryManagementController@delete', ['authAdmin']);
+$router->post('/themobilehour/admin/category-management/destroy/{id}', 'Admin\CategoryManagementController@destroy', ['authAdmin']);
 
 /*---------------------------Admin Management User Management Routes------------------------------------------*/
 $router->get('/themobilehour/admin/user-management', 'Admin\UserManagementController@index', ['authSuperAdmin']);
 $router->get('/themobilehour/admin/user-management/create', 'Admin\UserManagementController@create', ['authSuperAdmin']);
 $router->post('/themobilehour/admin/user-management', 'Admin\UserManagementController@store', ['authSuperAdmin']);
 $router->get('/themobilehour/admin/user-management/edit/{id}', 'Admin\UserManagementController@edit', ['authSuperAdmin']);
-$router->get('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update', ['authSuperAdmin']);
+$router->post('/themobilehour/admin/user-management/update/{id}', 'Admin\UserManagementController@update', ['authSuperAdmin']);
 
 /*---------------------------Admin changelog routes------------------------------------------*/
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index', ['authAdmin']);
