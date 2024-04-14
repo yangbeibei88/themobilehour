@@ -41,7 +41,6 @@ class Authorize
    */
   public function handle($role)
   {
-
     if ($role === 'guest' && $this->isCustomerAuthenticated()) {
       // if the route is meant to be for guest, but customer user is logged in, prevent logged in customer access to guest pages
       return redirect(assetPath('customer/dashboard'));
@@ -49,6 +48,8 @@ class Authorize
       return redirect(assetPath('admin/dashboard'));
     } elseif ($role === 'authSuperAdmin' && ($this->isAdminAuthenticated() && $this->getAdminRole() === 'Admin')) {
       return redirect(assetPath('admin/dashboard'));
+    } elseif ($role === 'authSuperAdmin' && !$this->isAdminAuthenticated()) {
+      return redirect(assetPath('admin/auth/login'));
     } elseif ($role === 'authCustomer' && !$this->isCustomerAuthenticated()) {
       // if the route is meant to be for logged-in customer, prevent guest to access
       return redirect(assetPath('customer/auth/login'));

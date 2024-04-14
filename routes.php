@@ -61,7 +61,15 @@ $router->post('/themobilehour/admin/user-management/update/{id}', 'Admin\UserMan
 /*---------------------------Admin changelog routes------------------------------------------*/
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index', ['authAdmin']);
 
-/*---------------------------Admin login routes------------------------------------------*/
-$router->get('/themobilehour/admin/auth/login', 'Admin\UserManagementController@login', ['guest']);
-$router->post('/themobilehour/admin/auth/login', 'Admin\UserManagementController@authenticate', ['guest']);
-$router->post('/themobilehour/admin/auth/logout', 'Admin\UserManagementController@logout', ['authAdmin']);
+/*---------------------------Admin account routes------------------------------------------*/
+$router->get('/themobilehour/admin/auth/login', 'Admin\AccountController@login', ['guest']);
+// $router->get('/themobilehour/admin/auth/login', 'Admin\UserManagementController@login', ['guest']);
+// $router->post('/themobilehour/admin/auth/login', 'Admin\UserManagementController@authenticate', ['guest']);
+// $router->post('/themobilehour/admin/auth/logout', 'Admin\UserManagementController@logout', ['authAdmin']);
+
+
+$router->post('/themobilehour/admin/auth/login', 'Admin\AccountController@authenticate', ['guest']);
+$router->post('/themobilehour/admin/auth/logout', 'Admin\AccountController@logout', ['authAdmin']);
+$router->get('/themobilehour/admin/auth/account/show/{id}', 'Admin\AccountController@show', ['authAdmin']);
+$router->get('/themobilehour/admin/auth/account/edit/{id}', 'Admin\AccountController@edit', ['authAdmin']);
+$router->post('/themobilehour/admin/auth/account/update/{id}', 'Admin\AccountController@update', ['authAdmin']);

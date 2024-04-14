@@ -8,7 +8,7 @@ use Framework\Session;
     <div class="container">
       <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-end">
         <?php if (Session::has('adminUser')) : ?>
-          <li class="nav-item"><a href="" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
+          <li class="nav-item"><a href="<?= assetPath("admin/auth/account/show/" . Session::get('adminUser')['id']) ?>" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
           </li>
           <div class="vr"></div>
           <li class="nav-item"><a href="<?= assetPath('admin/dashboard') ?>" class="nav-link"><?= Session::get('adminUser')['role'] ?></a>
