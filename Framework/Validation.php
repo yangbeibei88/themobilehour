@@ -42,9 +42,9 @@ class Validation
    * @param integer $min field value min length
    * @param integer $max field value max length
    * @param boolean $required
-   * @return void return error text message if invalid, return null if valid
+   * @return mixed return error text message if invalid, return null if valid
    */
-  public static function text(string $name, string $value, int $min = 0, int $max = 1000, bool $required = TRUE)
+  public static function text(string $name, string $value, int $min = 0, int $max = 254, bool $required = TRUE)
   {
     if ($required && empty($value)) {
       return "{$name} is required";
@@ -85,6 +85,30 @@ class Validation
     return filter_var($email, FILTER_VALIDATE_EMAIL);
   }
 
+
+  /**
+   * Validate an email, return error message if invalid email address
+   *
+   * @param string $name
+   * @param string $value
+   * @return void
+   */
+  public static function email(string $name, string $value, bool $required = TRUE)
+  {
+
+    if ($required && empty($value)) {
+      return "{$name} email is rquired";
+    } elseif (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      return "Please enter a valid email address";
+    } elseif (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      if (strlen($value) < 5) {
+        return "{$name} email must be more than 5 characters";
+      } elseif (strlen($value) > 254) {
+        return "{$name} email must not exceed 254 characters";
+      }
+    }
+  }
+
   /**
    * Validate an password, the password must be at least 8 chars, contains uppercase(s), lowercase(s), number(s) and special chars
    *
@@ -95,14 +119,36 @@ class Validation
   {
     if (
       strlen($password) >= 8                     // Length 8 or more chars
-      and preg_match('/[A-Z]/', $password)       // Contains uppercase A-Z
-      and preg_match('/[a-z]/', $password)       // Contains lowercase a-z
-      and preg_match('/[0-9]/', $password)       // Contains 0-9
-      and preg_match('/[\W_]/', $password)       // Contains special char(s)
+      && preg_match('/[A-Z]/', $password)       // Contains uppercase A-Z
+      && preg_match('/[a-z]/', $password)       // Contains lowercase a-z
+      && preg_match('/[0-9]/', $password)       // Contains 0-9
+      && preg_match('/[\W_]/', $password)       // Contains special char(s)
     ) {
       return true;                               // Passed all tests
     }
     return false;                                  // Invalid password
+  }
+
+
+  /**
+   * Validate an password, the password must be at least 8 chars, contains uppercase(s), lowercase(s), number(s) and special chars
+   *
+   * @param string $password
+   * @return mixed
+   */
+  public static function password($password)
+  {
+    if (
+      !(strlen($password) >= 8                     // Length 8 or more chars
+        && preg_match('/[A-Z]/', $password)       // Contains uppercase A-Z
+        && preg_match('/[a-z]/', $password)       // Contains lowercase a-z
+        && preg_match('/[0-9]/', $password)       // Contains 0-9
+        && preg_match('/[\W_]/', $password))      // Contains special char(s)
+    ) {
+      return 'Your password must be at least 8 characters and must contains uppercase, lowercase, number and special characters.';                               // Passed all tests
+    } elseif (strlen($password) > 254) {
+      return "Password must not exceed 254 characters.";
+    }
   }
 
 
@@ -117,6 +163,21 @@ class Validation
   public static function isMatch($val1, $val2): bool
   {
     return strcmp($val1, $val2) === 0 ? true : false;
+  }
+
+  /**
+   * Match a value against another, 
+   * use this function to compare if re-entered password match password
+   *
+   * @param string $val1
+   * @param string $val2
+   * @return boolean
+   */
+  public static function verify($val1, $val2)
+  {
+    if (strcmp($val1, $val2) !== 0) {
+      return "Passwords do not match.";
+    }
   }
 
   /**

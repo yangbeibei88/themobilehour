@@ -57,7 +57,7 @@
               <td><?= formatPrice($product->list_price) ?></td>
               <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
               <td><a href="<?= assetPath('admin/product-management/edit/' . $product->product_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
-              <td><a href="<?= assetPath('product-management/delete/' . $product->product_id) ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
+              <td><a href="<?= assetPath('admin/product-management/delete/' . $product->product_id) ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
             <?php endforeach; ?>
             </tr>
         </tbody>

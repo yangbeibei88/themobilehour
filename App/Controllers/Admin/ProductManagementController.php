@@ -145,7 +145,7 @@ class ProductManagementController
     $updateProductFeatureData = array_map('sanitize', $updateProductFeatureData);
 
 
-    $requiredFields = ["sku", "product_name", "list_price", "category_id"];
+    $requiredFields = ["sku", "product_name", "list_price"];
 
 
     foreach ($requiredFields as $field) {

@@ -44,7 +44,7 @@
             <td><?= $adminUser->user_role ?></td>
             <td><?= $adminUser->status == 1 ? 'active' : 'inactive' ?></td>
             <td><a href="#" class="btn btn-secondary btn-sm" role="button">View</a></td>
-            <td><a href="#" class="btn btn-primary btn-sm" role="button">Edit</a></td>
+            <td><a href="<?= assetPath('admin/user-management/edit/' . $adminUser->user_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
           </tr>
         <?php endforeach; ?>
 
