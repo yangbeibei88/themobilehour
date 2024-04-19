@@ -18,7 +18,9 @@ use Framework\Session;
           <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item">
             <button type="submit" class="nav-link">Logout</button>
           </form>
-        <?php endif; ?>
+        <?php else : ?>
+          <li class="nav-item"><a href="<?= assetPath('admin/auth/login') ?>" class="nav-link">Admin Login</a>
+          <?php endif; ?>
       </ul>
     </div>
   </nav>

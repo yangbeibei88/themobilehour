@@ -1,5 +1,5 @@
 <?= loadPartial('header', ['pageTitle' => 'Admin Login']) ?>
-<?= loadPartial('navbar-admin') ?>
+<?= loadPartial('navbar') ?>
 <main id="admin-login">
   <div class="container my-4">
     <div class="card">
