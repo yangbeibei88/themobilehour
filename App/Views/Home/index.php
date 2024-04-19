@@ -1,4 +1,4 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', ['pageTitle' => 'The Mobile Hour']) ?>
 <?= loadPartial('navbar') ?>
 <?= loadPartial('home-sliders') ?>
 

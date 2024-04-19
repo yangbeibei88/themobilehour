@@ -68,12 +68,12 @@
                         <?= formatPrice($product->list_price) ?>
                       </p>
                     <?php endif; ?>
-                    <?php if ($product->stock_on_hand > 0) : ?>
+                    <!-- <?php if ($product->stock_on_hand > 0) : ?>
                       <a href="#" class="btn btn-primary w-100" role="button">Add to
                         Cart</a>
                     <?php else : ?>
                       <a href="#" class="btn btn-secondary w-100 disabled" role="button" aria-disabled="true">Unavailable</a>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                     <?php if ($product->stock_on_hand > 0) : ?>
                       <p class="card-text text-success text-center mt-2">
                         In Stock</p>

@@ -22,7 +22,7 @@ class ProductsController
    */
   public function index()
   {
-    $products = $this->productModel->getAllProducts();
+    $products = $this->productModel->getAllActiveProducts();
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
 
@@ -36,22 +36,36 @@ class ProductsController
   }
 
   /**
-   * Show a single product
+   * Show a single product on public, only display is_active=1
    *
+   * @param array $params
    * @return void
    */
+  // public function show($params)
+  // {
+
+  //   // $id = $_GET['id'] ?? '';
+  //   $id = $params['id'] ?? '';
+
+  //   inspect($id);
+
+  //   $params = [
+  //     'id' => $id
+  //   ];
+  //   $product = $this->productModel->getSingleProduct($params);
+
+  //   if (!$product) {
+  //     ErrorController::notFound('Product not found');
+  //   } else {
+
+  //     loadView('Products/show', [
+  //       'product' => $product
+  //     ]);
+  //   }
+  // }
   public function show($params)
   {
-
-    // $id = $_GET['id'] ?? '';
-    $id = $params['id'] ?? '';
-
-    inspect($id);
-
-    $params = [
-      'id' => $id
-    ];
-    $product = $this->productModel->getSingleProduct($params);
+    $product = $this->productModel->getSingleActiveProduct($params);
 
     if (!$product) {
       ErrorController::notFound('Product not found');

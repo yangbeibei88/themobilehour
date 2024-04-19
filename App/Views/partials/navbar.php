@@ -16,7 +16,7 @@ use Framework\Session;
           </li>
           <div class="vr"></div>
           <!-- <li class="nav-item"><a href="" class="nav-link">Logout</a> -->
-          <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item">
+          <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item mb-0">
             <button type="submit" class="nav-link">Logout</button>
           </form>
         <?php else : ?>

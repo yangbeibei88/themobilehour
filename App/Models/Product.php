@@ -32,6 +32,36 @@ class Product
     return $products;
   }
 
+  public function getAllActiveProducts()
+  {
+    $params = [
+      'is_active' => 1
+    ];
+    $products = $this->db->query("SELECT * FROM product p 
+    LEFT JOIN feature f ON p.feature_id = f.feature_id  
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id
+    WHERE p.is_active = :is_active", $params)->fetchAll();
+
+    return $products;
+  }
+
+  public function getSingleActiveProduct($params)
+  {
+    $id = $params['id'];
+    $params = [
+      'id' =>  $id,
+      'is_active' => 1
+    ];
+    $product = $this->db->query("SELECT * FROM product p 
+                            LEFT JOIN feature f ON p.feature_id = f.feature_id  
+                            LEFT JOIN category c ON p.category_id = c.category_id
+                            LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id
+                            WHERE p.product_id = :id AND p.is_active = :is_active", $params)->fetch();
+
+    return $product;
+  }
+
   public function getSingleProduct($params)
   {
     $product = $this->db->query("SELECT * FROM product p 

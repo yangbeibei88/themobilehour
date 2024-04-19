@@ -15,7 +15,7 @@ use Framework\Session;
           </li>
           <div class="vr"></div>
           <!-- <li class="nav-item"><a href="" class="nav-link">Logout</a> -->
-          <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item">
+          <form method="POST" action="/themobilehour/admin/auth/logout" class="nav-item mb-0">
             <button type="submit" class="nav-link">Logout</button>
           </form>
         <?php else : ?>
@@ -49,12 +49,9 @@ use Framework\Session;
                 <ul class="navbar-nav flex-grow-1 justify-content-center">
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/user-management') ?>">Administrators</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/customer-management') ?>">Customers</a>
-                  </li>
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/product-management') ?>">Products</a></li>
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/category-management') ?>">Categories</a>
                   </li>
-                  <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/order-management') ?>">Orders</a></li>
                   <li class="nav-item"><a class="nav-link" href="<?= assetPath('admin/changelogs') ?>">Changelogs</a>
                   </li>
                 </ul>

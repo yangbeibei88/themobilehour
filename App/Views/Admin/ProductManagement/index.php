@@ -36,6 +36,7 @@
             <th scope="col">Stock</th>
             <th scope="col">List Price</th>
             <th scope="col">Sale Price</th>
+            <th scope="col">View</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
@@ -56,6 +57,7 @@
               <td><?= $product->stock_on_hand ?></td>
               <td><?= formatPrice($product->list_price) ?></td>
               <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
+              <td><a href="<?= assetPath('admin/product-management/show/' . $product->product_id) ?>" class="btn btn-info btn-sm" role="button">View</a></td>
               <td><a href="<?= assetPath('admin/product-management/edit/' . $product->product_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
               <td><a href="<?= assetPath('admin/product-management/delete/' . $product->product_id) ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
             <?php endforeach; ?>

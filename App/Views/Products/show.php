@@ -79,7 +79,7 @@ foreach ((array) $product as $key => $value) {
           </button>
         </div>
       </div>
-      <div class="col product-short-desc order-3">
+      <div class="col product-short-desc order-2">
         <?php if ($product->disc_pct > 0) : ?>
           <p class="mb-0">RRP: <s><?= formatPrice($product->list_price) ?></s></p>
           <span class="fs-2 fw-bold"><?= getSalePrice($product->list_price, $product->disc_pct) ?></span>
@@ -90,8 +90,15 @@ foreach ((array) $product as $key => $value) {
 
         <p>Colour: <?= $product->colour ?></p>
         <p>Storage: <?= getInteger($product->storage) ?>GB</p>
-        <input type="number" name="product-qty" class="form-control w-auto my-4" value="1">
-        <a href="#" class="btn btn-primary d-block w-100" role="button">Add to Cart</a>
+        <!-- <input type="number" name="product-qty" class="form-control w-auto my-4" value="1">
+        <a href="#" class="btn btn-primary d-block w-100" role="button">Add to Cart</a> -->
+        <?php if ($product->stock_on_hand > 0) : ?>
+          <p class="card-text text-success mt-2">
+            In Stock</p>
+        <?php else : ?>
+          <p class="card-text text-danger mt-2">
+            Out of Stock</p>
+        <?php endif; ?>
       </div>
     </section>
     <section class="row my-4 product-details">

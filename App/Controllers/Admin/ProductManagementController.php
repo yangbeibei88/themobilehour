@@ -61,6 +61,21 @@ class ProductManagementController
     ]);
   }
 
+  public function show($params)
+  {
+    $id = $params['id'];
+    $params = ['id' => $id];
+    $product = $this->productModel->getSingleProduct($params);
+
+    if (!$product) {
+      AdminErrorController::notFound();
+    } else {
+      loadView('Admin/ProductManagement/show', [
+        'product' => $product
+      ]);
+    }
+  }
+
 
   /**
    * show the product edit form

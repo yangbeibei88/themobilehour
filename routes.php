@@ -36,6 +36,7 @@ $router->get('/themobilehour/admin/product-management', 'Admin\ProductManagement
 $router->get('/themobilehour/admin/product-management/search', 'Admin\ProductManagementController@search', ['authAdmin']);
 $router->get('/themobilehour/admin/product-management/create', 'Admin\ProductManagementController@create', ['authAdmin']);
 $router->post('/themobilehour/admin/product-management', 'Admin\ProductManagementController@store', ['authAdmin']);
+$router->get('/themobilehour/admin/product-management/show/{id}', 'Admin\ProductManagementController@show', ['authAdmin']);
 $router->get('/themobilehour/admin/product-management/edit/{id}', 'Admin\ProductManagementController@edit', ['authAdmin']);
 $router->post('/themobilehour/admin/product-management/update/{id}', 'Admin\ProductManagementController@update', ['authAdmin']);
 $router->get('/themobilehour/admin/product-management/delete/{id}', 'Admin\ProductManagementController@delete', ['authAdmin']);
