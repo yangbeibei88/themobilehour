@@ -1,6 +1,10 @@
 <?php
 
 use Framework\Session;
+use App\Models\Category;
+
+$categoryModel = new Category();
+$categories = $categoryModel->getAllCategories();
 ?>
 <!-- top nav for user login / register -->
 <div class="bg-dark border-bottom">
@@ -41,8 +45,15 @@ use Framework\Session;
         </div>
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-center me-3">
-            <li class="nav-item"><a class="nav-link" href="#">All
-                Brands</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                AllBrands</a>
+              <ul class="dropdown-menu">
+                <?php foreach ($categories as $category) : ?>
+                  <li><a href="#" class="dropdown-item"><?= $category->category_name ?></a></li>
+                <?php endforeach; ?>
+              </ul>
+            </li>
             <li class="nav-item"><a class="nav-link" href=""> Shop</a>
             </li>
           </ul>

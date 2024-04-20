@@ -1,4 +1,4 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', ['pageTitle' => $product->product_name]) ?>
 <?= loadPartial('navbar') ?>
 <?= loadPartial('breadcrumb-notitle') ?>
 <?php
@@ -24,7 +24,7 @@ foreach ((array) $product as $key => $value) {
 <main id="single-product-page-detail">
   <div class="container py-4">
     <section class="row product-info">
-      <div class="col order-1 order-md-2 product-title">
+      <div class="order-1 order-md-2 product-title">
         <h1 class="fs-2"><?= $product->product_name ?></h1>
         <p>SKU: <?= $product->sku ?></p>
       </div>
