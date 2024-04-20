@@ -271,9 +271,10 @@ class ProductManagementController
 
       // inspectAndDie($newProductImgGalleryData);
 
-
-      $updateProductImgGalleryData['id'] = $product->image_gallery_id;
-      $this->productImageGalleryModel->update($updateProductImgGalleryFields, $updateProductImgGalleryData);
+      if ($product->image_gallery_id) {
+        $updateProductImgGalleryData['id'] = $product->image_gallery_id;
+        $this->productImageGalleryModel->update($updateProductImgGalleryFields, $updateProductImgGalleryData);
+      }
 
 
 

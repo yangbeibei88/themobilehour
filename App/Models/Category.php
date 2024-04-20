@@ -22,11 +22,36 @@ class Category
     return $categories;
   }
 
+  public function getAllActiveCategories()
+  {
+    $params = ['is_active' => 1];
+    $categories = $this->db->query('SELECT * FROM category WHERE is_active = :is_active', $params);
+    return $categories;
+  }
+
   public function getSingleCategory($params)
   {
+    $id = $params['id'];
+    $params = ['id' => $id];
+
     $query = "SELECT * FROM category WHERE category_id = :id";
 
     $category = $this->db->query($query, $params)->fetch();
+    return $category;
+  }
+
+  public function getSingleCategoryCount($params)
+  {
+    $id = $params['id'];
+    $params = ['id' => $id];
+
+    $query = "SELECT c.*, COUNT(p.product_id) AS productCount FROM category c 
+    LEFT JOIN product p ON c.category_id = p.category_id
+    WHERE c.category_id = :id
+    GROUP BY c.category_id";
+
+    $category = $this->db->query($query, $params)->fetch();
+
     return $category;
   }
 
@@ -35,7 +60,7 @@ class Category
 
     $categories = $this->db->query(
       "SELECT c.*, COUNT(p.product_id) AS productCount, SUM(p.stock_on_hand) AS stock FROM category c
-      LEFT JOIN product p ON c.category_id = p. category_id
+      LEFT JOIN product p ON c.category_id = p.category_id
       GROUP BY c.category_id"
     )->fetchAll();
 
@@ -56,6 +81,8 @@ class Category
 
   public function delete($params)
   {
+    $id = $params['id'];
+    $params = ['id' => $id];
     $this->db->query("DELETE FROM category WHERE category_id = :id", $params);
   }
 }

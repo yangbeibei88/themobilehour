@@ -34,16 +34,28 @@ class CategoryManagementController
     loadView('Admin/CategoryManagement/create');
   }
 
+  public function show($params)
+  {
+    $category = $this->categoryModel->getSingleCategory($params);
+
+    if (!$category) {
+      AdminErrorController::notFound('Category not found');
+    } else {
+      loadView('Admin/CategoryManagement/show', [
+        'category' => $category
+      ]);
+    }
+  }
 
   /**
    * Single category edit form
    *
-   * @param array $id
+   * @param array $params
    * @return void
    */
-  public function edit($id)
+  public function edit($params)
   {
-    $category = $this->categoryModel->getSingleCategory($id);
+    $category = $this->categoryModel->getSingleCategory($params);
     // inspectAndDie($id);
     // inspectAndDie($category);
     if (!$category) {
@@ -136,14 +148,14 @@ class CategoryManagementController
   /**
    * Update a category
    *
-   * @param array $id
+   * @param array $params
    * @return void
    */
-  public function update($id)
+  public function update($params)
   {
     $userId = Session::get('adminUser')['id'];
 
-    $category = $this->categoryModel->getSingleCategory($id);
+    $category = $this->categoryModel->getSingleCategory($params);
 
     $allowedFields = ['category_name', 'category_desc', 'is_active'];
     $errors = [];
@@ -184,7 +196,7 @@ class CategoryManagementController
 
       $updatedCategoryFields = implode(', ', $updatedCategoryFields);
 
-      $updateCategoryData['id'] = $id['id'];
+      $updateCategoryData['id'] = $params['id'];
 
       // inspectAndDie($updateCategoryData);
 
@@ -199,31 +211,47 @@ class CategoryManagementController
   /**
    * Delete a category
    *
-   * @param array $id
+   * @param array $params
    * @return void
    */
-  public function delete($id)
+  public function delete($params)
   {
-    $category = $this->categoryModel->getSingleCategory($id);
-    loadView('Admin/CategoryManagement/delete', [
-      'category' => $category
-    ]);
+    $category = $this->categoryModel->getSingleCategory($params);
+
+    if (!$category) {
+      AdminErrorController::notFound('Category not found');
+    } else {
+      loadView('Admin/CategoryManagement/delete', [
+        'category' => $category
+      ]);
+    }
   }
 
   /**
    * Delete a category
    *
-   * @param array $id
+   * @param array $params
    * @return void
    */
-  public function destroy($id)
+  public function destroy($params)
   {
-    $category = $this->categoryModel->getSingleCategory($id);
+    // $category = $this->categoryModel->getSingleCategory($params);
+    $category = $this->categoryModel->getSingleCategoryCount($params);
+    // inspectAndDie($category);
+    if (!$category) {
+      AdminErrorController::notFound('Category not found');
+    } else {
+      if ($category->productCount > 0) {
+        Session::setFlashMessage('error_message', "CATEGORY: <strong>{$category->category_name}</strong> contains products that must be deleted before you can delete the category.");
 
-    $this->categoryModel->delete($id);
+        redirect(assetPath('admin/category-management'));
+      } else {
+        $this->categoryModel->delete($params);
 
-    Session::setFlashMessage('success_message', "CATEGORY: <strong>{$category->category_name}</strong> DELETED SUCCESSFULLY");
+        Session::setFlashMessage('success_message', "CATEGORY: <strong>{$category->category_name}</strong> DELETED SUCCESSFULLY");
 
-    redirect(assetPath('admin/category-management'));
+        redirect(assetPath('admin/category-management'));
+      }
+    }
   }
 }

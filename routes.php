@@ -45,6 +45,7 @@ $router->post('/themobilehour/admin/product-management/destroy/{id}', 'Admin\Pro
 /*------------------------------Admin Category Management Routes------------------------------------------*/
 
 $router->get('/themobilehour/admin/category-management', 'Admin\CategoryManagementController@index', ['authAdmin']);
+$router->get('/themobilehour/admin/category-management/show/{id}', 'Admin\CategoryManagementController@show', ['authAdmin']);
 $router->get('/themobilehour/admin/category-management/create', 'Admin\CategoryManagementController@create', ['authAdmin']);
 $router->post('/themobilehour/admin/category-management', 'Admin\CategoryManagementController@store', ['authAdmin']);
 $router->get('/themobilehour/admin/category-management/edit/{id}', 'Admin\CategoryManagementController@edit', ['authAdmin']);

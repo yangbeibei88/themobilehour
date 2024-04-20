@@ -32,7 +32,7 @@
               <td><?= $category->category_name ?></td>
               <td><?= $category->productCount ?></td>
               <td><?= $category->stock ?></td>
-              <td><a href="#" class="btn btn-secondary btn-sm" role="button">View</a></td>
+              <td><a href="<?= assetPath('admin/category-management/show/' . $category->category_id) ?>" class="btn btn-secondary btn-sm" role="button">View</a></td>
               <td><a href="<?= assetPath('admin/category-management/edit/' . $category->category_id) ?>" class="btn btn-primary btn-sm" role="button">Edit</a></td>
               <td><a href="<?= assetPath('admin/category-management/delete/' . $category->category_id) ?>" class="btn btn-danger btn-sm" role="button">Delete</a></td>
             </tr>

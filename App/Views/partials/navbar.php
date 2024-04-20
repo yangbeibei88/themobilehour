@@ -4,7 +4,7 @@ use Framework\Session;
 use App\Models\Category;
 
 $categoryModel = new Category();
-$categories = $categoryModel->getAllCategories();
+$categories = $categoryModel->getAllActiveCategories();
 ?>
 <!-- top nav for user login / register -->
 <div class="bg-dark border-bottom">
@@ -54,7 +54,7 @@ $categories = $categoryModel->getAllCategories();
                 <?php endforeach; ?>
               </ul>
             </li>
-            <li class="nav-item"><a class="nav-link" href=""> Shop</a>
+            <li class="nav-item"><a class="nav-link" href="<?= assetPath('products') ?>"> Shop</a>
             </li>
           </ul>
           <form class="d-flex flex-grow-1 justify-content-center" data-bs-theme="light" role="search">
