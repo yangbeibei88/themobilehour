@@ -68,7 +68,8 @@ class Product
     $params = [
       'id' =>  $id
     ];
-    $product = $this->db->query("SELECT * FROM product p 
+    $product = $this->db->query("SELECT 
+                            p.*, f.*, c.*, g.*, p.is_active AS product_is_active, c.is_active AS category_is_active FROM product p 
                             LEFT JOIN feature f ON p.feature_id = f.feature_id  
                             LEFT JOIN category c ON p.category_id = c.category_id
                             LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id

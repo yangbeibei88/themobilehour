@@ -21,7 +21,7 @@ foreach ((array) $product as $key => $value) {
 
 ?>
 
-<main id="add-product">
+<main id="edit-product">
   <div class="container my-4">
     <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form" novalidate>
       <!-- <?php if (isset($errors)) : ?>
@@ -63,15 +63,15 @@ foreach ((array) $product as $key => $value) {
                     <option selected value="">Select a
                       Category</option>
                     <?php foreach ($categories as $category) : ?>
-                      <?php if ($category->category_id === $product->category_id) : ?>
+                      <?php if ($category->category_id == $product->category_id) : ?>
                         <option selected value="<?= $category->category_id ?>"><?= $category->category_name ?>
                         </option>
                       <?php else : ?>
                         <option value="<?= $category->category_id ?>"><?= $category->category_name ?></option>
                       <?php endif; ?>
                     <?php endforeach; ?>
-                    <div class="text-danger"><?= $errors['category_id'] ?? '' ?></div>
                   </select>
+                  <div class="text-danger"><?= $errors['category_id'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
@@ -114,7 +114,7 @@ foreach ((array) $product as $key => $value) {
                 <div class="col-10">
                   <label for="displayOnline" class="form-check-label">Display
                     Online</label>
-                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="is_active" value="1" <?= isset($product->is_active) && $product->is_active == 1 ? 'checked' : '' ?>>
+                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="is_active" value="1" <?= (isset($product->product_is_active) && $product->product_is_active == 1) ? 'checked' : '' ?>>
                 </div>
               </div>
             </div>
@@ -175,7 +175,6 @@ foreach ((array) $product as $key => $value) {
                     </th>
                     <th scope="col">File Name
                     </th>
-                    <th scope="col">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -184,8 +183,6 @@ foreach ((array) $product as $key => $value) {
                       <tr>
                         <td><img src="<?= assetPath($value['imgpath']) ?>" alt="<?= $value['alt'] ?>" width="50" height="auto"></td>
                         <td><?= basename(assetPath($value['imgpath'])) ?></td>
-                        <td><button type="button" class="btn btn-danger">Delete</button>
-                        </td>
                       <?php endforeach; ?>
                       </tr>
                     <?php endif; ?>

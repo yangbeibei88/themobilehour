@@ -162,6 +162,7 @@ class CategoryManagementController
     $allowedFields = ['category_name', 'category_desc', 'is_active'];
     $errors = [];
 
+    // $updateCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
     $updateCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
 
     $excludeSanitizeFields = ["category_desc"];
@@ -169,6 +170,7 @@ class CategoryManagementController
     // sanatise input data except category_deesc
     $updateCategoryData = sanitizeArr($updateCategoryData, $excludeSanitizeFields);
     $updateCategoryData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+    // $updateCategoryData['is_active'] = $updateCategoryData['is_active'] ? 1 : 0;
 
     // validate input data
     $errors['category_name'] = Validation::text('Category name', $updateCategoryData['category_name'], 2, 50, TRUE);

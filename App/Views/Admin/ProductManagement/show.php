@@ -79,7 +79,7 @@ foreach ((array) $product as $key => $value) {
                 </tr>
                 <tr>
                   <th scope="row">Display Online</th>
-                  <td><?= isset($product->is_active) && $product->is_active == 1 ? 'active' : 'inactive' ?></td>
+                  <td><?= (isset($product->product_is_active) && $product->product_is_active == 1) ? 'active' : 'inactive' ?></td>
                 </tr>
               </tbody>
             </table>

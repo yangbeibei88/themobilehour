@@ -45,7 +45,7 @@
               <div class="row mb-3 form-check form-switch">
                 <div class="col-10">
                   <label for="displayOnNav" class="form-check-label">Display on navigation</label>
-                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnNav" name="is_active" value="1" <?= ($category->is_active == 1) ? 'checked' : '' ?>>
+                  <input type="checkbox" class="form-check-input" role="switch" id="displayOnNav" name="is_active" value="1" <?= (isset($category->is_active) && $category->is_active == 1) ? 'checked' : '' ?>>
                 </div>
               </div>
               <div class="row mb-3">
