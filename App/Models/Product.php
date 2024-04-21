@@ -73,6 +73,14 @@ class Product
     return $product;
   }
 
+  public function getSingleProductBySku($params)
+  {
+    $product = $this->db->query("SELECT * FROM product
+                            WHERE product.sku = :sku", $params)->fetch();
+
+    return $product;
+  }
+
   public function insert($fields, $values, $params)
   {
     $query = "INSERT INTO product({$fields}) VALUES({$values})";

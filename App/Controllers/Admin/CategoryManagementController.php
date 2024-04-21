@@ -24,6 +24,8 @@ class CategoryManagementController
   public function index()
   {
     $categories = $this->categoryModel->productCountByCategory();
+
+    // inspectAndDie($categories);
     loadView('Admin/CategoryManagement/index', [
       'categories' => $categories
     ]);

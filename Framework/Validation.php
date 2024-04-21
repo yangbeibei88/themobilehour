@@ -56,6 +56,74 @@ class Validation
   }
 
   /**
+   * Validate a category id
+   *
+   * @param string $name
+   * @param integer $value
+   * @param array $categories
+   * @param boolean $required
+   * @return void
+   */
+  public static function categoryId(string $name, $value, array $categories, bool $required = TRUE)
+  {
+    if ($required && empty($value)) {
+      return "{$name} is required.";
+    } elseif (!empty($value)) {
+      foreach ($categories as $category) {
+        if (isset($category->category_id) && $category->category_id == $value) {
+          return null;
+        }
+      }
+      return "Not a valid category";
+    }
+  }
+
+  public static function number(string $name, $value, $min = NULL, $max = NULL, $required = TRUE)
+  {
+    if ($required && empty($value)) {
+      return "{$name} is required.";
+    } elseif (!empty($value)) {
+      if (!is_numeric($value)) {
+        return "{$name} must be a valid number";
+      } else {
+        if (isset($min) && $value < $min) {
+          return "{$name} must be not less than $min.";
+        } elseif (isset($max) && $value > $max) {
+          return "{$name} must not exceed $max";
+        }
+      }
+    }
+  }
+
+  /**
+   * pattern for sku
+   *
+   * @param string $name
+   * @param string $value
+   * @param integer $min
+   * @param mixed $max
+   * @param boolean $required
+   * @return void
+   */
+  public static function codePattern(string $name, $value, $min = 1, $max = NULL, $required = TRUE)
+  {
+    $pattern = "/^[a-zA-Z0-9][a-zA-Z0-9\-_.\/]*$/";
+    if ($required && empty($value)) {
+      return "{$name} is required.";
+    } elseif (!empty($value)) {
+      if (!preg_match($pattern, $value)) {
+        return "{$name} should only contain 'a-z', 'A-Z', '0-9', '-', '_', '.', and '/'. {$name} must start with an alphanumeric character.";
+      } else {
+        if (strlen($value) < $min) {
+          return "{$name} must be not less than $min.";
+        } elseif (isset($max) && strlen($value) > $max) {
+          return "{$name} must not exceed $max";
+        }
+      }
+    }
+  }
+
+  /**
    * Validate a number
    *
    * @param mixed $number
@@ -72,6 +140,8 @@ class Validation
     }
     return false;
   }
+
+
 
   /**
    * Validate an email, return valid email if true, false otherwise

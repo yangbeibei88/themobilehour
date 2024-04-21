@@ -250,7 +250,7 @@ function moveFile($file, $fileFieldName, $altFieldName, $altValue, &$data, $uplo
 
     if ($moved === true) {
       // if the file is successfully moved to upload_path, assign file field value and file alt text to corresponding data field
-      $data[$fileFieldName] = $upload_path . $filename;
+      $data[$fileFieldName] = sanitize($upload_path . $filename);
       $data[$altFieldName] = sanitize($altValue);
     }
   }

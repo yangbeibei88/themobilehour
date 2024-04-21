@@ -1,6 +1,8 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', [
+  'pageTitle' => 'Edit Product ' . $product->sku
+]) ?>
 <?= loadPartial('navbar-admin') ?>
-<?= loadPartial('breadcrumb') ?>
+<?= loadPartial('pagetitle', ['pageTitle' => 'Edit Product ' . $product->sku]) ?>
 <?php
 // push each product's not-null image paths to a new array
 $imagePaths = [];
