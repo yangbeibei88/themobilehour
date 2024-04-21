@@ -23,8 +23,8 @@ foreach ((array) $product as $key => $value) {
 
 <main id="add-product">
   <div class="container my-4">
-    <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form">
-      <?php if (isset($errors)) : ?>
+    <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form" novalidate>
+      <!-- <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <?php if (!empty($error)) : ?>
             <div class="alert alert-danger" role="alert">
@@ -32,7 +32,7 @@ foreach ((array) $product as $key => $value) {
             </div>
           <?php endif; ?>
         <?php endforeach; ?>
-      <?php endif; ?>
+      <?php endif; ?> -->
       <div class="accordion" id="productAccordion">
         <div class="accordion-item">
           <div class="accordion-header">
@@ -45,19 +45,21 @@ foreach ((array) $product as $key => $value) {
               <div class="row mb-3">
                 <label for="sku" class="col-2 col-form-label">SKU</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="sku" id="sku" class="form-control" value="<?= $product->sku ?? '' ?>">
+                  <input type="text" name="sku" id="sku" class="form-control <?= !empty($errors['sku']) ? 'is-invalid' : '' ?>" value="<?= $product->sku ?? '' ?>">
+                  <div class="text-danger"><?= $errors['sku'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="title" class="col-2 col-form-label">Title</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="product_name" id="title" class="form-control" value="<?= $product->product_name ?? '' ?>">
+                  <input type="text" name="product_name" id="title" class="form-control <?= !empty($errors['product_name']) ? 'is-invalid' : '' ?>" value="<?= $product->product_name ?? '' ?>">
+                  <div class="text-danger"><?= $errors['product_name'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="category" class="col-2 col-form-label">Category</label>
                 <div class="col-10 col-md-6">
-                  <select name="category_id" id="category" class="form-select">
+                  <select name="category_id" id="category" class="form-select <?= !empty($errors['category_id']) ? 'is-invalid' : '' ?>">
                     <option selected value="">Select a
                       Category</option>
                     <?php foreach ($categories as $category) : ?>
@@ -68,38 +70,44 @@ foreach ((array) $product as $key => $value) {
                         <option value="<?= $category->category_id ?>"><?= $category->category_name ?></option>
                       <?php endif; ?>
                     <?php endforeach; ?>
+                    <div class="text-danger"><?= $errors['category_id'] ?? '' ?></div>
                   </select>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="product_model" class="col-2 col-form-label">Model</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="product_model" id="product_model" class="form-control" value="<?= $product->product_model ?? '' ?>">
+                  <input type="text" name="product_model" id="product_model" class="form-control <?= !empty($errors['product_model']) ? 'is-invalid' : '' ?>" value="<?= $product->product_model ?? '' ?>">
+                  <div class="text-danger"><?= $errors['product_model'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="manufacturer" class="col-2 col-form-label">Manufacturer</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="manufacturer" id="manufacturer" class="form-control" value="<?= $product->manufacturer ?? '' ?>">
+                  <input type="text" name="manufacturer" id="manufacturer" class="form-control <?= !empty($errors['manufacturer']) ? 'is-invalid' : '' ?>" value="<?= $product->manufacturer ?? '' ?>">
+                  <div class="text-danger"><?= $errors['manufacturer'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="list_price" class="col-2 col-form-label">List
                   Price</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="list_price" id="list_price" class="form-control" step="0.01" value="<?= $product->list_price ?? 0 ?>">
+                  <input type="number" name="list_price" id="list_price" class="form-control <?= !empty($errors['list_price']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->list_price ?? 0 ?>">
+                  <div class="text-danger"><?= $errors['list_price'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="discount" class="col-2 col-form-label">Discount</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="disc_pct" id="discount" class="form-control" step="0.01" value="<?= $product->disc_pct ?? 0 ?>">
+                  <input type="number" name="disc_pct" id="discount" class="form-control <?= !empty($errors['disc_pct']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->disc_pct ?? 0 ?>">
+                  <div class="text-danger"><?= $errors['disc_pct'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="stock" class="col-2 col-form-label">Stock</label>
                 <div class="col-10 col-md-6">
-                  <input type="number" name="stock_on_hand" id="stock" class="form-control" value="<?= $product->stock_on_hand ?? 0 ?>">
+                  <input type="number" name="stock_on_hand" id="stock" class="form-control <?= !empty($errors['stock_on_hand']) ? 'is-invalid' : '' ?>" value="<?= $product->stock_on_hand ?? 0 ?>">
+                  <div class="text-danger"><?= $errors['stock_on_hand'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3 form-check form-switch">
@@ -123,9 +131,8 @@ foreach ((array) $product as $key => $value) {
             <div class="accordion-body">
               <label for="description" class="form-label">Product
                 Description</label>
-              <textarea name="product_desc" id="description" rows="15" class="form-control">
-              <?= $product->product_desc ?? '' ?>
-              </textarea>
+              <textarea name="product_desc" id="description" rows="15" class="form-control <?= !empty($errors['product_desc']) ? 'is-invalid' : '' ?>"><?= $product->product_desc ?? '' ?></textarea>
+              <div class="text-danger"><?= $errors['product_desc'] ?? '' ?></div>
             </div>
           </div>
         </div>
@@ -140,48 +147,27 @@ foreach ((array) $product as $key => $value) {
             <div class="accordion-body">
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image1">Image 1</label>
-                <input type="file" name="imgpath1" id="product-image1" class="form-control" accept="image/*" value="<?= basename($product->imgpath1) ?? '' ?>">
-                <!-- <button type="button" class="btn btn-danger">Remove</button> -->
+                <input type="file" name="imgpath1" id="product-image1" class="form-control <?= !empty($errors['imgpath1']) ? 'is-invalid' : '' ?>" accept="image/*" value="<?= basename($product->imgpath1) ?? '' ?>">
+                <div class="text-danger"><?= $errors['imgpath1'] ?? '' ?></div>
                 <label class="input-group-text" for="product-alt1">Alt-text</label>
-                <input type="text" name="alt1" id="product-alt1" class="form-control" value="<?= $product->alt1 ?? '' ?>">
-
+                <input type="text" name="alt1" id="product-alt1" class="form-control <?= !empty($errors['alt1']) ? 'is-invalid' : '' ?>" value="<?= $product->alt1 ?? '' ?>">
+                <div class="text-danger"><?= $errors['alt1'] ?? '' ?></div>
               </div>
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image2">Image 2</label>
-                <input type="file" name="imgpath2" id="product-image2" class="form-control" accept="image/*">
+                <input type="file" name="imgpath2" id="product-image2" class="form-control <?= !empty($errors['imgpath2']) ? 'is-invalid' : '' ?>" accept="image/*">
+                <div class="text-danger"><?= $errors['imgpath2'] ?? '' ?></div>
                 <label class="input-group-text" for="product-alt2">Alt-text</label>
-                <input type="text" name="alt2" id="product-alt2" class="form-control" value="<?= $product->alt2 ?? '' ?>">
+                <input type="text" name="alt2" id="product-alt2" class="form-control <?= !empty($errors['alt2']) ? 'is-invalid' : '' ?>" value="<?= $product->alt2 ?? '' ?>">
+                <div class="text-danger"><?= $errors['alt2'] ?? '' ?></div>
               </div>
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image3">Image 3</label>
-                <input type="file" name="imgpath3" id="product-image3" class="form-control" accept="image/*">
+                <input type="file" name="imgpath3" id="product-image3" class="form-control <?= !empty($errors['imgpath3']) ? 'is-invalid' : '' ?>" accept="image/*">
                 <label class="input-group-text" for="product-alt3">Alt-text</label>
                 <input type="text" name="alt3" id="product-alt3" class="form-control" value="<?= $product->alt3 ?? '' ?>">
+                <div class="text-danger"><?= $errors['alt3'] ?? '' ?></div>
               </div>
-
-              <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product-image-upload-form-modal">Select
-                and upload images</button>
-              <div class="modal fade" id="product-image-upload-form-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="product-image-upload-form-modal-label" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="product-image-upload-form-modal-label">
-                        Select and upload
-                        product images</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form method="POST" action="" enctype="multipart/form-data">
-                        <label for="productImages" class="form-label">Upload
-                          Multiple
-                          Images</label>
-                        <input class="form-control" type="file" id="productImages" multiple accept="image/*">
-                        <button type="submit" class="btn btn-primary" id="btn-productImageUpload">Upload</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <table class="table" id="product-imagegallery-table">
                 <thead>
                   <tr>
@@ -220,63 +206,75 @@ foreach ((array) $product as $key => $value) {
               <div class="row row-cols-1 row-cols-md-2 g-3">
                 <div class="col">
                   <label for="weight" class="form-label">Weight(kg)</label>
-                  <input type="number" name="weight" id="weight" class="form-control" step="0.001" value="<?= $product->weight ?>">
+                  <input type="number" name="weight" id="weight" class="form-control <?= !empty($errors['weight']) ? 'is-invalid' : '' ?>" step="0.001" value="<?= $product->weight ?>">
+                  <div class="text-danger"><?= $errors['weight'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="dimensions" class="form-label">Dimensions</label>
-                  <input type="text" name="dimensions" id="dimensions" class="form-control" value="<?= $product->dimensions ?? '' ?>">
+                  <input type="text" name="dimensions" id="dimensions" class="form-control <?= !empty($errors['dimensions']) ? 'is-invalid' : '' ?>" value="<?= $product->dimensions ?? '' ?>">
+                  <div class="text-danger"><?= $errors['dimensions'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="os" class="form-label">OS</label>
-                  <input type="text" name="os" id="os" class="form-control" value="<?= $product->os ?? '' ?>">
+                  <input type="text" name="os" id="os" class="form-control <?= !empty($errors['os']) ? 'is-invalid' : '' ?>" value="<?= $product->os ?? '' ?>">
+                  <div class="text-danger"><?= $errors['os'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="screensize" class="form-label">Screensize
                     (inches)</label>
-                  <input type="number" name="screensize" id="screensize" class="form-control" step="0.01" value="<?= $product->screensize ?? '' ?>">
+                  <input type="number" name="screensize" id="screensize" class="form-control <?= !empty($errors['screensize']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->screensize ?? '' ?>">
+                  <div class="text-danger"><?= $errors['screensize'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="resolution" class="form-label">Resolution
                     (Pixels)</label>
-                  <input type="text" name="resolution" id="resolution" class="form-control" value="<?= $product->resolution ?? '' ?>">
+                  <input type="text" name="resolution" id="resolution" class="form-control <?= !empty($errors['resolution']) ? 'is-invalid' : '' ?>" value="<?= $product->resolution ?? '' ?>">
+                  <div class="text-danger"><?= $errors['resolution'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="storage" class="form-label">Storage
                     (GB)</label>
-                  <input type="number" name="storage" id="storage" class="form-control" step="0.01" value="<?= $product->storage ?? '' ?>">
+                  <input type="number" name="storage" id="storage" class="form-control <?= !empty($errors['storage']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->storage ?? '' ?>">
+                  <div class="text-danger"><?= $errors['storage'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="colour" class="form-label">Colour
                     (GB)</label>
-                  <input type="text" name="colour" id="colour" class="form-control" value="<?= $product->colour ?? '' ?>">
+                  <input type="text" name="colour" id="colour" class="form-control <?= !empty($errors['colour']) ? 'is-invalid' : '' ?>" value="<?= $product->colour ?? '' ?>">
+                  <div class="text-danger"><?= $errors['colour'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="ram" class="form-label">RAM
                     (GB)</label>
-                  <input type="number" name="ram" id="ram" class="form-control" step="0.01" value="<?= $product->ram ?? '' ?>">
+                  <input type="number" name="ram" id="ram" class="form-control <?= !empty($errors['ram']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->ram ?? '' ?>">
+                  <div class="text-danger"><?= $errors['ram'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="cpu" class="form-label">CPU
                   </label>
-                  <input type="text" name="cpu" id="cpu" class="form-control" value="<?= $product->cpu ?? '' ?>">
+                  <input type="text" name="cpu" id="cpu" class="form-control <?= !empty($errors['cpu']) ? 'is-invalid' : '' ?>" value="<?= $product->cpu ?? '' ?>">
+                  <div class="text-danger"><?= $errors['cpu'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="battery" class="form-label">Battery
                     (mAh)
                   </label>
-                  <input type="number" name="battery" id="battery" class="form-control" step="0.01" value="<?= $product->battery ?>">
+                  <input type="number" name="battery" id="battery" class="form-control <?= !empty($errors['battery']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $product->battery ?>">
+                  <div class="text-danger"><?= $errors['battery'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="rear-camera" class="form-label">Rear
                     Camera
                   </label>
-                  <input type="text" name="rear_camera" id="rear_camera" class="form-control" value="<?= $product->rear_camera ?? '' ?>">
+                  <input type="text" name="rear_camera" id="rear_camera" class="form-control <?= !empty($errors['rear_camera']) ? 'is-invalid' : '' ?>" value="<?= $product->rear_camera ?? '' ?>">
+                  <div class="text-danger"><?= $errors['rear_camera'] ?? '' ?></div>
                 </div>
                 <div class="col">
                   <label for="front-camera" class="form-label">Front
                     Camera
                   </label>
-                  <input type="text" name="front_camera" id="front_camera" class="form-control" value="<?= $product->front_camera ?? '' ?>">
+                  <input type="text" name="front_camera" id="front_camera" class="form-control <?= !empty($errors['front_camera']) ? 'is-invalid' : '' ?>" value="<?= $product->front_camera ?? '' ?>">
+                  <div class="text-danger"><?= $errors['front_camera'] ?? '' ?></div>
                 </div>
               </div>
             </div>

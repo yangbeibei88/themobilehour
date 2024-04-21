@@ -6,7 +6,7 @@
 
 <main id="add-product">
   <div class="container my-4">
-    <form method="POST" action="/themobilehour/admin/product-management" enctype="multipart/form-data" id="form-product">
+    <form method="POST" action="/themobilehour/admin/product-management" enctype="multipart/form-data" id="product-create-form" novalidate>
       <!-- <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <?php if (!empty($error)) : ?>

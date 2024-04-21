@@ -64,6 +64,10 @@ class Product
 
   public function getSingleProduct($params)
   {
+    $id = $params['id'];
+    $params = [
+      'id' =>  $id
+    ];
     $product = $this->db->query("SELECT * FROM product p 
                             LEFT JOIN feature f ON p.feature_id = f.feature_id  
                             LEFT JOIN category c ON p.category_id = c.category_id
@@ -77,6 +81,14 @@ class Product
   {
     $product = $this->db->query("SELECT * FROM product
                             WHERE product.sku = :sku", $params)->fetch();
+
+    return $product;
+  }
+
+  public function getSingleProductBySkuAndId($params)
+  {
+    $product = $this->db->query("SELECT * FROM product
+    WHERE sku = :sku AND product_id <> :id", $params)->fetch();
 
     return $product;
   }
