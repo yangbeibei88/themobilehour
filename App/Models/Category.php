@@ -40,6 +40,20 @@ class Category
     return $category;
   }
 
+  public function getSingleCategoryByName($params)
+  {
+    $query = "SELECT * FROM category WHERE category_name = :category_name";
+    $category = $this->db->query($query, $params)->fetch();
+    return $category;
+  }
+
+  public function getSingleCategoryByNameAndId($params)
+  {
+    $query = "SELECT * FROM category WHERE category_name = :category_name AND category_id <> :id";
+    $category = $this->db->query($query, $params)->fetch();
+    return $category;
+  }
+
   public function getSingleCategoryCount($params)
   {
     $id = $params['id'];

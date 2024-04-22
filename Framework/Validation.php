@@ -46,11 +46,11 @@ class Validation
    */
   public static function text(string $name, string $value, int $min = 0, int $max = 254, bool $required = TRUE)
   {
-    if ($required && empty($value)) {
+    if ($required && empty(trim($value))) {
       return "{$name} is required";
-    } elseif (strlen($value) < $min && !empty($value)) {
+    } elseif (strlen(trim($value)) < $min && !empty(trim($value))) {
       return "{$name} is too short, should be more than $min characters.";
-    } elseif (strlen($value) > $max) {
+    } elseif (strlen(trim($value)) > $max) {
       return "{$name} is too long, should not exceed $max characters.";
     }
   }
@@ -247,6 +247,20 @@ class Validation
   {
     if (strcmp($val1, $val2) !== 0) {
       return "Passwords do not match.";
+    }
+  }
+
+  /**
+   * Check if the input value already exists in database, case-insenstive, trimed
+   *
+   * @param string $inputVal
+   * @param string $compVal
+   * @return mixed
+   */
+  public static function compareStrCi($inputVal, $compVal)
+  {
+    if (strcasecmp(trim($inputVal), trim($compVal)) == 0) {
+      return "$inputVal already exists";
     }
   }
 

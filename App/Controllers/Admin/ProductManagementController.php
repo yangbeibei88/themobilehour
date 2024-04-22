@@ -172,11 +172,6 @@ class ProductManagementController
       'alt3' => filter_var($productImgGalleryData['alt3'], FILTER_SANITIZE_SPECIAL_CHARS),
     ];
 
-    // update image path and according alt-text if a new image is successfully uploaded, no update otherwise
-    // moveFile($_FILES['imgpath1'], 'imgpath1', 'alt1', $inputProductImgGalleryData['alt1'], $sanitizeInputProductImgGalleryData, 'uploads/images/');
-    // moveFile($_FILES['imgpath2'], 'imgpath2', 'alt2', $inputProductImgGalleryData['alt2'], $sanitizeInputProductImgGalleryData, 'uploads/images/');
-    // moveFile($_FILES['imgpath3'], 'imgpath3', 'alt3', $inputProductImgGalleryData['alt3'], $sanitizeInputProductImgGalleryData, 'uploads/images/');
-
     return [
       'productMetaData' => $sanitizeInputProductMetaData,
       'productFeatureData' => $sanitizeInputProductFeatureData,
@@ -287,85 +282,13 @@ class ProductManagementController
     // ];
     $product = $this->productModel->getSingleProduct($params);
     $categories = $this->getCategories();
-    // $errors = [];
 
-
-
-    // $inputProductMetaData = filter_input_array(INPUT_POST, [
-    //   'sku' => FILTER_DEFAULT,
-    //   'product_name' => FILTER_DEFAULT,
-    //   'category_id' => FILTER_DEFAULT,
-    //   'product_model' => FILTER_DEFAULT,
-    //   'manufacturer' => FILTER_DEFAULT,
-    //   'list_price' => FILTER_DEFAULT,
-    //   'disc_pct' => FILTER_DEFAULT,
-    //   'stock_on_hand' => FILTER_DEFAULT,
-    //   'is_active' => FILTER_VALIDATE_BOOLEAN,
-    //   'product_desc' => FILTER_DEFAULT
-    // ]);
 
     $inputProductMetaData = $this->getInputProductMetaData();
 
-    // // Convert Boolean is_active to TINYINT for MySQL
-    // $inputProductMetaData['is_active'] = $inputProductMetaData['is_active'] ? 1 : 0;
-
-    // inspectAndDie($inputProductMetaData['is_active']);
-
-    // $inputProductFeatureData = filter_input_array(INPUT_POST, [
-    //   'weight' => FILTER_DEFAULT,
-    //   'dimensions' => FILTER_DEFAULT,
-    //   'os' => FILTER_DEFAULT,
-    //   'screensize' => FILTER_DEFAULT,
-    //   'resolution' => FILTER_DEFAULT,
-    //   'storage' => FILTER_DEFAULT,
-    //   'colour' => FILTER_DEFAULT,
-    //   'ram' => FILTER_DEFAULT,
-    //   'cpu' => FILTER_DEFAULT,
-    //   'battery' => FILTER_DEFAULT,
-    //   'rear_camera' => FILTER_DEFAULT,
-    //   'front_camera' => FILTER_DEFAULT,
-    // ]);
-
     $inputProductFeatureData = $this->getInputProductFeatureData();
 
-    // $inputProductImgGalleryData = filter_input_array(INPUT_POST, [
-    //   'alt1' => FILTER_DEFAULT,
-    //   'alt2' => FILTER_DEFAULT,
-    //   'alt3' => FILTER_DEFAULT,
-    // ]);
-
     $inputProductImgGalleryData = $this->getInputProductImgGalleryData();
-
-    // VALIDATION
-    // $errors = [
-    //   // product meta data validation
-    //   'sku' => Validation::codePattern('sku', $inputProductMetaData['sku'], 2, 254, TRUE),
-    //   'product_name' => Validation::text('product_name', $inputProductMetaData['product_name'], 2, 50, TRUE),
-    //   'category_id' => Validation::categoryId('category_id', $inputProductMetaData['category_id'], $categories, FALSE),
-    //   'product_model' => Validation::codePattern('product_model', $inputProductMetaData['product_model'], 2, 254, FALSE),
-    //   'manufacturer' => Validation::text('manufacturer', $inputProductMetaData['manufacturer'], 2, 50, FALSE),
-    //   'list_price' => Validation::number('list_price', $inputProductMetaData['list_price'], 0, NULL, TRUE),
-    //   'disc_pct' => Validation::number('disc_pct', $inputProductMetaData['disc_pct'], 0, 100, FALSE),
-    //   'stock_on_hand' => Validation::number('stock_on_hand', $inputProductMetaData['stock_on_hand'], 0, NULL, FALSE),
-    //   'product_desc' => Validation::text('product_desc', $inputProductMetaData['product_desc'], 2, 100000, FALSE),
-    //   // product feature data validation
-    //   'weight' => Validation::number('weight', $inputProductFeatureData['weight'], 0, NULL, FALSE),
-    //   'dimensions' => Validation::text('dimensions', $inputProductFeatureData['dimensions'], 2, 50, FALSE),
-    //   'os' => Validation::text('os', $inputProductFeatureData['os'], 2, 20, FALSE),
-    //   'screensize' => Validation::number('screensize', $inputProductFeatureData['screensize'], 0, NULL, FALSE),
-    //   'resolution' => Validation::text('resolution', $inputProductFeatureData['resolution'], 2, 50, FALSE),
-    //   'storage' => Validation::number('storage', $inputProductFeatureData['storage'], 0, NULL, FALSE),
-    //   'colour' => Validation::text('colour', $inputProductFeatureData['colour'], 2, 50, FALSE),
-    //   'ram' => Validation::number('ram', $inputProductFeatureData['ram'], 0, NULL, FALSE),
-    //   'cpu' => Validation::text('cpu', $inputProductFeatureData['cpu'], 2, 50, FALSE),
-    //   'battery' => Validation::number('battery', $inputProductFeatureData['battery'], 0, NULL, FALSE),
-    //   'rear_camera' => Validation::text('rear_camera', $inputProductFeatureData['rear_camera'], 2, 100, FALSE),
-    //   'front_camera' => Validation::text('front_camera', $inputProductFeatureData['front_camera'], 2, 100, FALSE),
-    //   // product image gallery alt-text validation
-    //   'alt1' => Validation::text('alt1', $inputProductImgGalleryData['alt1'], 2, 100, FALSE),
-    //   'alt2' => Validation::text('alt2', $inputProductImgGalleryData['alt2'], 2, 100, FALSE),
-    //   'alt3' => Validation::text('alt3', $inputProductImgGalleryData['alt3'], 2, 100, FALSE),
-    // ];
 
     $errors = $this->validateProductInputData();
 
@@ -377,11 +300,6 @@ class ProductManagementController
     if ($productBySkuAndIdRow) {
       $errors['sku'] = 'The SKU already exists.';
     }
-
-    // validate images
-    // foreach ($_FILES as $file) {
-    //   $errors[$file['name']] = Validation::validateImage($file);
-    // }
 
     // Filter out any non-errors
     $errors = array_filter($errors);
@@ -398,61 +316,24 @@ class ProductManagementController
       ]);
       exit;
     } else {
-      // proceed data sanitization after all checks
-      // $updateProductMetaData = [
-      //   'sku' => filter_var($inputProductMetaData['sku'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'product_name' => filter_var($inputProductMetaData['product_name'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'category_id' => filter_var($inputProductMetaData['category_id'], FILTER_SANITIZE_NUMBER_INT),
-      //   'product_model' => filter_var($inputProductMetaData['product_model'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'manufacturer' => filter_var($inputProductMetaData['manufacturer'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'list_price' => filter_var($inputProductMetaData['list_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'disc_pct' => filter_var($inputProductMetaData['disc_pct'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'stock_on_hand' => filter_var($inputProductMetaData['stock_on_hand'], FILTER_SANITIZE_NUMBER_INT),
-      //   'is_active' => $inputProductMetaData['is_active'],
-      //   'product_desc' => $inputProductMetaData['product_desc']
-      // ];
+
       $sanitizedData = $this->sanitizeProductInputData($inputProductMetaData, $inputProductFeatureData, $inputProductImgGalleryData);
 
       $updateProductMetaData = $sanitizedData['productMetaData'];
       // inspectAndDie($updateProductMetaData);
 
-      // $updateProductFeatureData = [
-      //   'weight' => filter_var($inputProductFeatureData['weight'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'dimensions' => filter_var($inputProductFeatureData['dimensions'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'os' => filter_var($inputProductFeatureData['os'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'screensize' => filter_var($inputProductFeatureData['screensize'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'resolution' => filter_var($inputProductFeatureData['resolution'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'storage' => filter_var($inputProductFeatureData['storage'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'colour' => filter_var($inputProductFeatureData['colour'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'ram' => filter_var($inputProductFeatureData['ram'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'cpu' => filter_var($inputProductFeatureData['cpu'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'battery' => filter_var($inputProductFeatureData['battery'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
-      //   'rear_camera' => filter_var($inputProductFeatureData['rear_camera'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'front_camera' => filter_var($inputProductFeatureData['front_camera'], FILTER_SANITIZE_SPECIAL_CHARS),
-      // ];
       $updateProductFeatureData = $sanitizedData['productFeatureData'];
       // inspectAndDie($updateProductFeatureData);
-
-      // $updateProductImgGalleryData = [
-      //   'alt1' => filter_var($inputProductImgGalleryData['alt1'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'alt2' => filter_var($inputProductImgGalleryData['alt2'], FILTER_SANITIZE_SPECIAL_CHARS),
-      //   'alt3' => filter_var($inputProductImgGalleryData['alt3'], FILTER_SANITIZE_SPECIAL_CHARS),
-      // ];
 
       $updateProductImgGalleryData = $sanitizedData['productImgGalleryData'];
 
 
       $this->moveAndUpdateFiles($_FILES, $updateProductImgGalleryData);
 
-      // update image path and according alt-text if a new image is successfully uploaded, no update otherwise
-      // moveFile($_FILES['imgpath1'], 'imgpath1', 'alt1', $inputProductImgGalleryData['alt1'], $updateProductImgGalleryData, 'uploads/images/');
-      // moveFile($_FILES['imgpath2'], 'imgpath2', 'alt2', $inputProductImgGalleryData['alt2'], $updateProductImgGalleryData, 'uploads/images/');
-      // moveFile($_FILES['imgpath3'], 'imgpath3', 'alt3', $inputProductImgGalleryData['alt3'], $updateProductImgGalleryData, 'uploads/images/');
-
-      // submit updated data to database
 
       // inspectAndDie($updateProductImgGalleryData);
 
+      // submit updated data to database
 
       /*-----------------------UPDATE PRODUCT META START------------------------*/
 
@@ -1175,21 +1056,30 @@ class ProductManagementController
    */
   public function destroy($params)
   {
-    $id = $params['id'];
+    // $id = $params['id'];
 
-    $params = [
-      'id' => $id
-    ];
+    // $params = [
+    //   'id' => $id
+    // ];
 
     $product = $this->productModel->getSingleProduct($params);
 
-    $this->productModel->delete($params);
+    if (!$product) {
+      AdminErrorController::notFound('Category not found');
+    } else {
+      if ($product->stock_on_hand > 0) {
+        Session::setFlashMessage('error_message', "PRODUCT: <strong>{$product->sku}</strong> CANNOT BE DELETED. YOU STILL HAVE $product->stock_on_hand X {$product->sku}.");
+        redirect(assetPath('admin/product-management'));
+      } else {
+        $this->productModel->delete($params);
 
-    // set flash message
-    Session::setFlashMessage('success_message', "PRODUCT: <strong>{$product->sku}</strong> DELETED SUCCESSFULLY");
-    // $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
+        // set flash message
+        Session::setFlashMessage('success_message', "PRODUCT: <strong>{$product->sku}</strong> DELETED SUCCESSFULLY");
+        // $_SESSION['success_message'] = 'PRODUCT DELETED SUCCESSFULLY';
 
-    redirect(assetPath('admin/product-management'));
+        redirect(assetPath('admin/product-management'));
+      }
+    }
   }
 
   /**

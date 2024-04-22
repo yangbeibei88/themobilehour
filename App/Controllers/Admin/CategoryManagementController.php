@@ -16,6 +16,55 @@ class CategoryManagementController
     $this->categoryModel = new Category();
   }
 
+  private function getInputCategoryData()
+  {
+    $inputCategoryData = filter_input_array(INPUT_POST, [
+      'category_name' => FILTER_DEFAULT,
+      'category_desc' => FILTER_DEFAULT,
+      'is_active' => FILTER_VALIDATE_BOOLEAN,
+      'category_img_alt' => FILTER_DEFAULT,
+    ]);
+
+    // Convert Boolean is_active to TINYINT for MySQL
+    $inputCategoryData['is_active'] = $inputCategoryData['is_active'] ? 1 : 0;
+
+    return $inputCategoryData;
+  }
+
+  private function validateInputCategoryData($inputData)
+  {
+    $errors = [];
+    $errors = [
+      'category_name' => Validation::text('Category name', $inputData['category_name'], 2, 50, TRUE),
+      'category_desc' => Validation::text('Category description', $inputData['category_desc'], 0, 200, FALSE),
+      'category_img_alt' => Validation::text('category_img_alt', $inputData['category_img_alt'], 2, 50, FALSE),
+    ];
+
+    // validate images
+    foreach ($_FILES as $inputName => $fileInfo) {
+      $errors[$inputName] = Validation::validateImage($fileInfo);
+    }
+
+    return $errors;
+  }
+
+  private function sanitizeCategoryInputData($inputData)
+  {
+    $sanitizeData = [
+      'category_name' => filter_var($inputData['category_name'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'category_desc' => $inputData['category_desc'],
+      'category_img_alt' => filter_var($inputData['category_img_alt'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'is_active' => $inputData['is_active']
+    ];
+
+    return $sanitizeData;
+  }
+
+  private function moveAndUpdateFiles($fileArray, &$categoryData)
+  {
+    moveFile($fileArray['category_img_path'], 'category_img_path', 'category_img_alt', $categoryData['category_img_alt'], $categoryData, 'uploads/images/');
+  }
+
   /**
    * Show all categories in Categories Management of Admin dashboard
    *
@@ -77,54 +126,45 @@ class CategoryManagementController
    */
   public function store()
   {
-    // capture admin user id
-    $userId = Session::get('adminUser')['id'];
 
-    $allowedFields = ['category_name', 'category_desc', 'is_active'];
-    $errors = [];
+    // Get input data
+    $inputCategoryData = $this->getInputCategoryData();
 
-    $newCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
-
-    $excludeSanitizeFields = ["category_desc"];
-
-    // sanatise input data except category_deesc
-    $newCategoryData = sanitizeArr($newCategoryData, $excludeSanitizeFields);
-    $newCategoryData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
+    // validate data
+    $errors = $this->validateInputCategoryData($inputCategoryData);
 
 
-    // validate input data
-    $errors['category_name'] = Validation::text('Category name', $newCategoryData['category_name'], 2, 50, TRUE);
-    $errors['category_desc'] = Validation::text('Category description', $newCategoryData['category_desc'], 0, 254, FALSE);
-    // $errors['category_img_alt'] = Validation::text('Image alt text', $newCategoryData['category_img_alt'], 0, 50, FALSE);
 
-    // validate images
-    foreach ($_FILES as $file) {
-      $errors[$file['name']] = Validation::validateImage($file);
+    // transform to UPPERCASE after validation
+    $inputCategoryData['category_name'] = strtoupper(trim($inputCategoryData['category_name']));
+    // check if category name exists
+    $categoryByNameRow = $this->categoryModel->getSingleCategoryByName(['category_name' => $inputCategoryData['category_name']]);
+    if ($categoryByNameRow) {
+      $errors['category_name'] = "{$inputCategoryData['category_name']} already exists.";
     }
 
-    // inspectAndDie($newCategoryData);
-    // inspectAndDie($errors);
 
-    // inspectAndDie($_FILES);
+    // Filter out any non-errors
+    $errors = array_filter($errors);
 
-    $invalid = implode($errors);
-    // inspectAndDie($invalid);
 
-    if ($invalid) {
+    if (!empty($errors)) {
       loadView('Admin/CategoryManagement/create', [
         'errors' => $errors,
-        'categoryData' => $newCategoryData
+        'categoryData' => $inputCategoryData
       ]);
       exit;
     } else {
 
-      /*----------------------SUBMIT NEW CATEGORY IMAGE-----------------  */
+      // Sanitize data
+      $newCategoryData = $this->sanitizeCategoryInputData($inputCategoryData);
+
+      // move file and sanitize image path
+      $this->moveAndUpdateFiles($_FILES, $newCategoryData);
+
       $categoryFields = [];
       $categoryValues = [];
 
-      /*---------------------MOVE IMAGE--------------------------*/
-
-      moveFile($_FILES['category_img_path'], 'category_img_path', 'category_img_alt', $_POST['category_img_alt'], $newCategoryData, 'uploads/images/');
 
       // inspectAndDie($newCategoryData);
 
@@ -155,34 +195,33 @@ class CategoryManagementController
    */
   public function update($params)
   {
-    $userId = Session::get('adminUser')['id'];
 
+    // get the current category data
     $category = $this->categoryModel->getSingleCategory($params);
 
-    $allowedFields = ['category_name', 'category_desc', 'is_active'];
-    $errors = [];
-
-    // $updateCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
-    $updateCategoryData = array_intersect_key($_POST, array_flip($allowedFields));
-
-    $excludeSanitizeFields = ["category_desc"];
-
-    // sanatise input data except category_deesc
-    $updateCategoryData = sanitizeArr($updateCategoryData, $excludeSanitizeFields);
-    $updateCategoryData['is_active'] = isset($_POST['is_active']) ? 1 : 0;
-    // $updateCategoryData['is_active'] = $updateCategoryData['is_active'] ? 1 : 0;
+    // get input data
+    $inputCategoryData = $this->getInputCategoryData();
 
     // validate input data
-    $errors['category_name'] = Validation::text('Category name', $updateCategoryData['category_name'], 2, 50, TRUE);
-    $errors['category_desc'] = Validation::text('Category description', $updateCategoryData['category_desc'], 0, 254, FALSE);
-    // validate images
-    foreach ($_FILES as $file) {
-      $errors[$file['name']] = Validation::validateImage($file);
+    $errors = $this->validateInputCategoryData($inputCategoryData);
+
+    // transform to UPPERCASE after validation
+    $inputCategoryData['category_name'] = strtoupper(trim($inputCategoryData['category_name']));
+
+    // check if input category name already exists
+    $categoryByNameIdRow = $this->categoryModel->getSingleCategoryByNameAndId([
+      'category_name' => $inputCategoryData['category_name'],
+      'id' => $category->category_id
+    ]);
+
+    if ($categoryByNameIdRow) {
+      $errors['category_name'] = "{$inputCategoryData['category_name']} already exists";
     }
 
-    $invalid = implode($errors);
+    // Filter out any non-errors
+    $errors = array_filter($errors);
 
-    if ($invalid) {
+    if (!empty($errors)) {
       loadView('Admin/CategoryManagement/edit', [
         'errors' => $errors,
         'category' => $category
@@ -190,9 +229,15 @@ class CategoryManagementController
       exit;
     } else {
 
+      // sanitize data
+      $updateCategoryData = $this->sanitizeCategoryInputData($inputCategoryData);
+
+      // move file and sanitize path
+      $this->moveAndUpdateFiles($_FILES, $updateCategoryData);
+
+      /**----------------SUBMIT DATA START------------------------------------ */
       $updatedCategoryFields = [];
 
-      moveFile($_FILES['category_img_path'], 'category_img_path', 'category_img_alt', $_POST['category_img_alt'], $updateCategoryData, 'uploads/images/');
 
       foreach (array_keys($updateCategoryData) as $field) {
         $updatedCategoryFields[] = "{$field} =:{$field}";

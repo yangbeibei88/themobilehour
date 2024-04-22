@@ -17,7 +17,7 @@
         <?php endif; ?>
       <?php endforeach; ?>
     <?php endif; ?>
-    <form action="/themobilehour/admin/category-management" method="POST" enctype="multipart/form-data" id="form-category">
+    <form action="/themobilehour/admin/category-management" method="POST" enctype="multipart/form-data" id="add-new-category-form">
       <div class="accordion" id="categoryAccordion">
         <div class="accordion-item">
           <div class="accordion-header">
@@ -32,14 +32,16 @@
                 <label for="category-name" class="col-2 col-form-label">Category
                   Name</label>
                 <div class="col-10 col-md-6">
-                  <input type="text" name="category_name" id="category-name" class="form-control" value="<?= $categoryData['category_name'] ?? '' ?>">
+                  <input type="text" name="category_name" id="category-name" class="form-control <?= !empty($errors['category_name']) ? 'is-invalid' : '' ?>" value="<?= $categoryData['category_name'] ?? '' ?>">
+                  <div class="text-danger"><?= $errors['category_name'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
                 <label for="category-desc" class="col-2 col-form-label">Category
                   Description</label>
                 <div class="col-10 col-md-6">
-                  <textarea name="category_desc" id="category-desc" rows="15" class="form-control"><?= $categoryData['category_desc'] ?? '' ?></textarea>
+                  <textarea name="category_desc" id="category-desc" rows="15" class="form-control <?= !empty($errors['category_desc']) ? 'is-invalid' : '' ?>"><?= $categoryData['category_desc'] ?? '' ?></textarea>
+                  <div class="text-danger"><?= $errors['category_desc'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3 form-check form-switch">
@@ -50,6 +52,8 @@
               </div>
               <div class="row mb-3">
                 <div class="col-10">
+                  <div class="text-danger"><?= $errors['category_img_path'] ?? '' ?></div>
+                  <div class="text-danger"><?= $errors['category_img_alt'] ?? '' ?></div>
                   <div class="input-group">
                     <label for="category-image" class="input-group-text">Upload Category Image</label>
                     <input type="file" name="category_img_path" id="category-image" accept="image/*" class="form-control">

@@ -287,7 +287,7 @@
           <button type="submit" class="btn btn-primary w-25">Submit</button>
         </div>
         <div class="col-6 d-flex justify-content-start">
-          <a href="<?= assetPath("admin/product-management/index") ?>" class="btn btn-secondary w-25">Cancel</a>
+          <a href="<?= assetPath("admin/product-management") ?>" class="btn btn-secondary w-25">Cancel</a>
         </div>
       </div>
     </form>
