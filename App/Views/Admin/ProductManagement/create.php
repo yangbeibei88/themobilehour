@@ -128,30 +128,32 @@
           </div>
           <div id="productImagesPanel" class="accordion-collapse collapse show">
             <div class="accordion-body">
+              <div class="text-danger"><?= $errors['imgpath1'] ?? '' ?></div>
+              <div class="text-danger"><?= $errors['alt1'] ?? '' ?></div>
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image1">Image 1</label>
                 <input type="file" name="imgpath1" id="product-image1" class="form-control <?= !empty($errors['imgpath1']) ? 'is-invalid' : '' ?>" accept="image/*">
-                <div class="text-danger"><?= $errors['imgpath1'] ?? '' ?></div>
+
                 <!-- <button type="button" class="btn btn-danger">Remove</button> -->
                 <label class="input-group-text" for="product-alt1">Alt-text</label>
                 <input type="text" name="alt1" id="product-alt1" class="form-control <?= !empty($errors['alt1']) ? 'is-invalid' : '' ?>">
-                <div class="text-danger"><?= $errors['alt1'] ?? '' ?></div>
+
               </div>
+              <div class="text-danger"><?= $errors['imgpath2'] ?? '' ?></div>
+              <div class="text-danger"><?= $errors['alt2'] ?? '' ?></div>
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image2">Image 2</label>
                 <input type="file" name="imgpath2" id="product-image2" class="form-control <?= !empty($errors['imgpath2']) ? 'is-invalid' : '' ?>" accept="image/*">
-                <div class="text-danger"><?= $errors['imgpath2'] ?? '' ?></div>
                 <label class="input-group-text" for="product-alt2">Alt-text</label>
                 <input type="text" name="alt2" id="product-alt2" class="form-control <?= !empty($errors['alt2']) ? 'is-invalid' : '' ?>">
-                <div class="text-danger"><?= $errors['alt2'] ?? '' ?></div>
               </div>
+              <div class="text-danger"><?= $errors['imgpath3'] ?? '' ?></div>
+              <div class="text-danger"><?= $errors['alt3'] ?? '' ?></div>
               <div class="input-group mb-3">
                 <label class="input-group-text" for="product-image3">Image 3</label>
                 <input type="file" name="imgpath3" id="product-image3" class="form-control <?= !empty($errors['imgpath3']) ? 'is-invalid' : '' ?>" accept="image/*">
-                <div class="text-danger"><?= $errors['imgpath3'] ?? '' ?></div>
                 <label class="input-group-text" for="product-alt3">Alt-text</label>
                 <input type="text" name="alt3" id="product-alt3" class="form-control <?= !empty($errors['alt3']) ? 'is-invalid' : '' ?>">
-                <div class="text-danger"><?= $errors['alt3'] ?? '' ?></div>
               </div>
 
               <table class="table" id="product-imagegallery-table">
