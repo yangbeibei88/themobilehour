@@ -28,6 +28,8 @@ class Administrator
 
   public function getSingleUserById($params)
   {
+    $id = $params['id'];
+    $params = ['id' => $id];
     $adminUser = $this->db->query("SELECT * FROM administrator WHERE user_id = :id", $params)->fetch();
     return $adminUser;
   }

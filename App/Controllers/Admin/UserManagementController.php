@@ -16,6 +16,67 @@ class UserManagementController
     $this->administratorModel = new Administrator();
   }
 
+  private function getAdminUserInputData()
+  {
+    $inputData = filter_input_array(INPUT_POST, [
+      'firstname' => FILTER_DEFAULT,
+      'lastname' => FILTER_DEFAULT,
+      'username' => FILTER_DEFAULT,
+      'password' => FILTER_DEFAULT,
+      'status' => FILTER_VALIDATE_BOOLEAN,
+      'confirmPassword' => FILTER_DEFAULT
+    ]);
+
+    // Convert Boolean status to TINYINT for MySQL
+    $inputData['status'] = $inputData['status'] ? 1 : 0;
+
+    return $inputData;
+  }
+
+  private function validateAdminUserInputData($inputData, $action)
+  {
+    $errors = [];
+    $errors = [
+      'firstname' => Validation::text('firstname', $inputData['firstname'], 2, 50, TRUE),
+      'lastname' => Validation::text('lastname', $inputData['lastname'], 2, 50, TRUE),
+      'username' => Validation::email('username', $inputData['username'], TRUE),
+    ];
+
+    //   'password' => (!empty($inputData['password'])) ? Validation::password($inputData['password']) : null,
+    //   'confirmPassword' => (!empty(filter_input(INPUT_POST, 'confirmPassword'))) ? Validation::verify($inputData['password'], $inputData['confirmPassword']) : null,
+
+    if ($action === 'create') {
+      $errors['password'] = Validation::password($inputData['password'], TRUE);
+      $errors['confirmPassword'] = Validation::verify($inputData['password'], $inputData['confirmPassword']);
+    } elseif ($action === 'update') {
+      $errors['password'] = Validation::password($inputData['password'], FALSE);
+      $errors['confirmPassword'] = Validation::verify($inputData['password'], $inputData['confirmPassword']);
+    }
+
+
+    return $errors;
+  }
+
+  private function sanitizeAdminUserInputData($inputData)
+  {
+    $trimmedInputData = trimAndConvertNumericValues($inputData);
+    $sanitizeData = [
+      'firstname' => filter_var($trimmedInputData['firstname'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'lastname' => filter_var($trimmedInputData['lastname'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'username' => filter_var(strtolower($trimmedInputData['username']), FILTER_SANITIZE_EMAIL),
+      'status' => $trimmedInputData['status'],
+    ];
+
+    return $sanitizeData;
+  }
+
+  private function sanitizePasswordInput($password)
+  {
+    $password = trim($password);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    return $hashedPassword;
+  }
+
   /**
    * Display all admin users
    *
@@ -34,18 +95,15 @@ class UserManagementController
     }
   }
 
-  public function show()
-  {
-    loadView('Admin/UserManagement/show');
-  }
-
   public function create()
   {
     loadView('Admin/UserManagement/create');
   }
-  public function edit($id)
+
+
+  public function edit($params)
   {
-    $adminUser = $this->administratorModel->getSingleUserById($id);
+    $adminUser = $this->administratorModel->getSingleUserById($params);
     if (!$adminUser) {
       AdminErrorController::notFound('Admin User not found');
     } else {
@@ -62,76 +120,53 @@ class UserManagementController
    */
   public function store()
   {
-    $adminUser = [];
-    $errors = [];
 
-    $adminUser['firstname'] = $_POST['firstname'];
-    $adminUser['lastname'] = $_POST['lastname'];
-    $adminUser['username'] = $_POST['username'];
-    $adminUser['password'] = $_POST['password'];
-    $adminUser['status'] = isset($_POST['status']) ? 1 : 0;
-    $confirmPassword = $_POST['confirmPassword'];
-    // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //   $adminUser['status'] = isset($_POST['status']) ? 1 : 0;
-    // }
+    // Retrieve and filter input data
+    $inputAdminUserData = $this->getAdminUserInputData();
 
-    // Validate first name
-    if (!Validation::isString($adminUser['firstname'], 2, 50)) {
-      $errors['firstname'] = 'First name must be between 2 and 50 characters.';
-    }
-
-    // Validate last name
-    if (!Validation::isString($adminUser['lastname'], 2, 50)) {
-      $errors['lastname'] = 'Last name must be between 2 and 50 characters.';
-    }
-
-    // Validate email
-    if (!Validation::isEmail($adminUser['username'])) {
-      $errors['username'] = 'Please enter a valid email address';
-    }
+    // Validate data
+    $errors = $this->validateAdminUserInputData($inputAdminUserData, 'create');
 
     // check if email exists
     $params = [
-      'username' => $adminUser['username']
+      'username' => trimAndLowerCase($inputAdminUserData['username'])
     ];
 
     $adminUserRow = $this->administratorModel->getSingleUserByEmail($params);
 
     if ($adminUserRow) {
-      $errors['username'] = 'This email/username already exists.';
-    }
-
-    // Validate password
-    if (!Validation::isPassword($adminUser['password'])) {
-      $errors['password'] = 'Your password must be at least 8 characters and must contains uppercase, lowercase, number and special characters.';
-    }
-
-    // validate password match
-    if (!Validation::isMatch($adminUser['password'], $confirmPassword)) {
-      $errors['confirmPassword'] = 'Passwords do not match.';
+      $errors['username'] = 'This email/username you entered already exists.';
     }
 
     // inspectAndDie($errors);
-    // inspectAndDie($adminUser);
+
+    // Filter out any non-errors
+    $errors = array_filter($errors);
 
     if (!empty($errors)) {
       loadView('Admin/UserManagement/create', [
         'errors' => $errors,
-        'adminUser' => $adminUser
+        'adminUser' => $inputAdminUserData
       ]);
       exit;
     } else {
-      // create user account
+
+      // sanitize data
+      $adminUser = $this->sanitizeAdminUserInputData($inputAdminUserData);
 
       // hash password
-      $adminUser['password'] = password_hash($adminUser['password'], PASSWORD_DEFAULT);
+      $adminUser['password'] = $this->sanitizePasswordInput($inputAdminUserData['password']);
 
-      $adminUserFields = implode(', ', array_keys($adminUser));
 
+      $adminUserFields = [];
       $adminUserValues = [];
+
       foreach ($adminUser as $key => $value) {
+        $adminUserFields[] = $key;
         $adminUserValues[] = ':' . $key;
       }
+
+      $adminUserFields = implode(', ', $adminUserFields);
       $adminUserValues = implode(', ', $adminUserValues);
 
       // inspectAndDie($adminUserValues);
@@ -141,8 +176,9 @@ class UserManagementController
 
       $this->administratorModel->insert($adminUserFields, $adminUserValues, $adminUser);
 
+
       // set flash message
-      $_SESSION['success_message'] = 'ADMIN USER CREATED SUCCESSFULLY';
+      Session::setFlashMessage('success_message', "ADMIN USER <strong>{$adminUser['username']}</strong> UPDATED SUCCESSFULLY");
 
       redirect('user-management');
     }
@@ -153,51 +189,29 @@ class UserManagementController
    *
    * @return void
    */
-  public function update($id)
+  public function update($params)
   {
 
-    // inspectAndDie($id);
+    // inspectAndDie($prams);
 
-    // inspectAndDie($id);
-    $adminUser = $this->administratorModel->getSingleUserById($id);
-
-    $errors = [];
-    // $allowedFields = ['firstname', 'lastname', 'username', 'password', 'status'];
+    // get current user data
+    $adminUser = $this->administratorModel->getSingleUserById($params);
 
     // Retrieve and filter input data
-    $inputData = filter_input_array(INPUT_POST, [
-      'firstname' => FILTER_DEFAULT,
-      'lastname' => FILTER_DEFAULT,
-      'username' => FILTER_DEFAULT,
-      'password' => FILTER_DEFAULT,
-      'status' => FILTER_VALIDATE_BOOLEAN,
-      'confirmPassword' => FILTER_DEFAULT
-    ]);
-
-    // Convert Boolean status to TINYINT for MySQL
-    $inputData['status'] = $inputData['status'] ? 1 : 0;
-
-    // inspectAndDie($updateAdminUserData['username']);
-
+    $inputAdminUserData = $this->getAdminUserInputData();
 
     // validation
-    $errors = [
-      'firstname' => Validation::text('firstname', $inputData['firstname'], 2, 50, TRUE),
-      'lastname' => Validation::text('lastname', $inputData['lastname'], 2, 50, TRUE),
-      'username' => Validation::email('username', $inputData['username'], TRUE),
-      'password' => (!empty($inputData['password'])) ? Validation::password($inputData['password']) : null,
-      'confirmPassword' => (!empty(filter_input(INPUT_POST, 'confirmPassword'))) ? Validation::verify($inputData['password'], $inputData['confirmPassword']) : null,
-    ];
+    $errors = $this->validateAdminUserInputData($inputAdminUserData, 'update');
 
     // check if email exists
-    $params = [
-      'username' => $inputData['username'],
-      'id' => $id['id']           // Extracting the 'id' from the array
+    $checkParams = [
+      'username' => trimAndLowerCase($inputAdminUserData['username']),
+      'id' => $adminUser->user_id          // exclude the updating user id
     ];
 
     // inspectAndDie($params);
 
-    $adminUserRow = $this->administratorModel->getSingleUserByEmailAndId($params);
+    $adminUserRow = $this->administratorModel->getSingleUserByEmailAndId($checkParams);
 
     // inspectAndDie($adminUserRow);
 
@@ -217,21 +231,12 @@ class UserManagementController
       ]);
       exit;
     } else {
-
       // proceed data sanitization after all checks
-      $updateAdminUserData = [
-        'firstname' => filter_var($inputData['firstname'], FILTER_SANITIZE_SPECIAL_CHARS),
-        'lastname' => filter_var($inputData['lastname'], FILTER_SANITIZE_SPECIAL_CHARS),
-        'username' => filter_var($inputData['username'], FILTER_SANITIZE_EMAIL),
-        'status' => $inputData['status'] // already converted to 0 or 1
-      ];
+      $updateAdminUserData = $this->sanitizeAdminUserInputData($inputAdminUserData);
 
-      // inspectAndDie('success');
-      // create user account
-
-      // hash password
-      if (!empty($inputData['password'])) {
-        $updateAdminUserData['password'] = password_hash($inputData['password'], PASSWORD_DEFAULT);
+      // hash password, only hash if it's not empty
+      if (!empty(trim($inputAdminUserData['password']))) {
+        $updateAdminUserData['password'] = $this->sanitizePasswordInput($inputAdminUserData['password']);
       }
 
       $updateAdminUserFields = [];
@@ -241,7 +246,7 @@ class UserManagementController
       }
 
       $updateAdminUserFields = implode(', ', $updateAdminUserFields);
-      $updateAdminUserData['id'] = $id['id'];
+      $updateAdminUserData['id'] = $params['id'];
 
 
       // inspectAndDie($updateAdminUserData);

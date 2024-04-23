@@ -31,7 +31,7 @@
       </div>
       <div class="col-12 col-md-8 col-lg-6">
         <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" id="password" class="form-control <?= !empty($errors['password']) ? 'is-invalid' : '' ?>" value="<?= $adminUser['password'] ?? '' ?>">
+        <input type="password" name="password" id="password" class="form-control <?= !empty($errors['password']) ? 'is-invalid' : '' ?>">
         <div class="text-danger"><?= $errors['password'] ?? '' ?></div>
       </div>
       <div class="col-12 col-md-8 col-lg-6">

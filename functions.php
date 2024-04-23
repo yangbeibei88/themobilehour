@@ -255,3 +255,56 @@ function moveFile($file, $fileFieldName, $altFieldName, $altValue, &$data, $uplo
     }
   }
 }
+
+/**
+ * trim and lowercase a string
+ *
+ * @param string $value
+ * @return string
+ */
+function trimAndLowerCase($value)
+{
+  return strtolower(trim($value));
+}
+
+/**
+ * trim and lowercase a string
+ *
+ * @param string $value
+ * @return string
+ */
+function trimAndUpperCase($value)
+{
+  return strtoupper(trim($value));
+}
+
+/**
+ * trim and capitalise first letter of each word
+ *
+ * @param string $value
+ * @return string
+ */
+function trimAndUcWords($value)
+{
+  return ucwords(trim($value));
+}
+
+function trimAndConvertNumericValues($array)
+{
+  foreach ($array as $key => $value) {
+    if ($value === null) {
+      // Keep null values as they are
+      $array[$key] = null;
+    } elseif (is_numeric($value)) {
+      // Convert numeric strings to numbers
+      $array[$key] = $value + 0;
+    } else {
+      $array[$key] = trim($value);
+      // // Trim the value if it's not numeric and not null
+      // $trimmedValue = trim($value);
+      // // Convert empty strings to null after trimming
+      // $array[$key] = $trimmedValue === '' ? null : $trimmedValue;
+    }
+  }
+  return $array;
+}

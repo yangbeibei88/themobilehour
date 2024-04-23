@@ -51,7 +51,7 @@ class CategoryManagementController
   private function sanitizeCategoryInputData($inputData)
   {
     $sanitizeData = [
-      'category_name' => filter_var($inputData['category_name'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'category_name' => filter_var(trim(strtoupper($inputData['category_name'])), FILTER_SANITIZE_SPECIAL_CHARS),
       'category_desc' => $inputData['category_desc'],
       'category_img_alt' => filter_var($inputData['category_img_alt'], FILTER_SANITIZE_SPECIAL_CHARS),
       'is_active' => $inputData['is_active']
@@ -134,11 +134,11 @@ class CategoryManagementController
     $errors = $this->validateInputCategoryData($inputCategoryData);
 
 
-
-    // transform to UPPERCASE after validation
-    $inputCategoryData['category_name'] = strtoupper(trim($inputCategoryData['category_name']));
+    $params = [
+      ['category_name' => strtoupper(trim($inputCategoryData['category_name']))]
+    ];
     // check if category name exists
-    $categoryByNameRow = $this->categoryModel->getSingleCategoryByName(['category_name' => $inputCategoryData['category_name']]);
+    $categoryByNameRow = $this->categoryModel->getSingleCategoryByName($params);
     if ($categoryByNameRow) {
       $errors['category_name'] = "{$inputCategoryData['category_name']} already exists.";
     }
@@ -205,12 +205,9 @@ class CategoryManagementController
     // validate input data
     $errors = $this->validateInputCategoryData($inputCategoryData);
 
-    // transform to UPPERCASE after validation
-    $inputCategoryData['category_name'] = strtoupper(trim($inputCategoryData['category_name']));
-
     // check if input category name already exists
     $categoryByNameIdRow = $this->categoryModel->getSingleCategoryByNameAndId([
-      'category_name' => $inputCategoryData['category_name'],
+      'category_name' => strtoupper($inputCategoryData['category_name']),
       'id' => $category->category_id
     ]);
 
