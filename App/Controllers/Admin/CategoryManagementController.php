@@ -6,6 +6,8 @@ use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Category;
 use Framework\Session;
 use Framework\Validation;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 class CategoryManagementController
 {
@@ -51,13 +53,27 @@ class CategoryManagementController
   private function sanitizeCategoryInputData($inputData)
   {
     $sanitizeData = [
-      'category_name' => filter_var(trim(strtoupper($inputData['category_name'])), FILTER_SANITIZE_SPECIAL_CHARS),
-      'category_desc' => $inputData['category_desc'],
-      'category_img_alt' => filter_var($inputData['category_img_alt'], FILTER_SANITIZE_SPECIAL_CHARS),
+      'category_name' => filter_var(trim(strtoupper($inputData['category_name'])), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+      // 'category_desc' => $inputData['category_desc'],
+      'category_desc' => $this->purifierTextarea()->purify(trim($inputData['category_desc'])),
+      'category_img_alt' => filter_var($inputData['category_img_alt'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
       'is_active' => $inputData['is_active']
     ];
 
     return $sanitizeData;
+  }
+
+  private function purifierTextarea()
+  {
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true]);
+    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,span[style],a[href]');
+    $config->set('URI.DisableExternalResources', true);
+    $config->set('AutoFormat.RemoveEmpty', true);
+
+    $purifer = new HTMLPurifier($config);
+
+    return $purifer;
   }
 
   private function moveAndUpdateFiles($fileArray, &$categoryData)
@@ -130,12 +146,14 @@ class CategoryManagementController
     // Get input data
     $inputCategoryData = $this->getInputCategoryData();
 
+    // inspectAndDie($inputCategoryData);
+
     // validate data
     $errors = $this->validateInputCategoryData($inputCategoryData);
 
 
     $params = [
-      ['category_name' => strtoupper(trim($inputCategoryData['category_name']))]
+      'category_name' => strtoupper(trim($inputCategoryData['category_name']))
     ];
     // check if category name exists
     $categoryByNameRow = $this->categoryModel->getSingleCategoryByName($params);
@@ -146,6 +164,8 @@ class CategoryManagementController
 
     // Filter out any non-errors
     $errors = array_filter($errors);
+
+    // inspectAndDie($errors);
 
 
     if (!empty($errors)) {

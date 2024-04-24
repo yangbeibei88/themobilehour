@@ -9,6 +9,7 @@ use Framework\Validation;
 class AccountController
 {
   protected $administratorModel;
+
   public function __construct()
   {
     $this->administratorModel = new Administrator;
@@ -43,7 +44,7 @@ class AccountController
     // VALIDATION
     $errors = [
       'email' => Validation::email('email', $inputData['email'], TRUE),
-      'password' => Validation::password($inputData['password'])
+      'password' => Validation::password($inputData['password'], TRUE)
     ];
 
     $errors = array_filter($errors);
@@ -57,17 +58,24 @@ class AccountController
     } else {
 
       $loginData = [
-        'email' => filter_var($inputData['email'], FILTER_SANITIZE_EMAIL),
-        'password' => $inputData['password']
+        'email' => filter_var(trimAndLowerCase($inputData['email']), FILTER_SANITIZE_EMAIL),
+        'password' => trim($inputData['password'])
       ];
 
+      // check if the username exists
       $params = [
         'username' => $loginData['email']
       ];
 
       $adminUserRow = $this->administratorModel->getSingleUserByEmail($params);
 
-      // if both email and password comply with validation, check if email and password are correct and status is 1
+
+      /**
+       * AUTHENTICATE USER LOGIN
+       * 1. first check if login info match,if username doesn't exist or incorrect password, prevent from login
+       * 2. if login info match, but if user is disabled (status == 0), prevent from login
+       * 3. if  login info match, and user is enabled (status == 1), login and create user session and redirect
+       */
       if (!$adminUserRow || !password_verify($loginData['password'], $adminUserRow->password)) {
         $errors['credentials'] = 'Incorrect credentials';
         loadView('Admin/Account/login', [
@@ -137,6 +145,13 @@ class AccountController
       ]);
     }
   }
+
+  /**
+   * Load admin account profile edit view
+   *
+   * @param [type] $params
+   * @return void
+   */
   public function edit($params)
   {
     $userId = Session::get('adminUser')['id'];
@@ -150,6 +165,7 @@ class AccountController
       'adminUser' => $adminUser
     ]);
   }
+
   public function update($params)
   {
     $userId = Session::get('adminUser')['id'];
@@ -174,8 +190,8 @@ class AccountController
     $errors = [
       'firstname' => Validation::text('firstname', $inputData['firstname'], 2, 50, TRUE),
       'lastname' => Validation::text('lastname', $inputData['lastname'], 2, 50, TRUE),
-      'password' => (!empty($inputData['password'])) ? Validation::password($inputData['password']) : null,
-      'confirmPassword' => (!empty(filter_input(INPUT_POST, 'confirmPassword'))) ? Validation::verify($inputData['password'], $inputData['confirmPassword']) : null,
+      'password' => Validation::password($inputData['password'], FALSE),
+      'confirmPassword' => Validation::verify($inputData['password'], $inputData['confirmPassword']),
     ];
 
     $errors = array_filter($errors);
@@ -189,8 +205,8 @@ class AccountController
     } else {
       // proceed data sanitization after all checks
       $updateAdminUserData = [
-        'firstname' => filter_var($inputData['firstname'], FILTER_SANITIZE_SPECIAL_CHARS),
-        'lastname' => filter_var($inputData['lastname'], FILTER_SANITIZE_SPECIAL_CHARS),
+        'firstname' => filter_var(trim($inputData['firstname']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+        'lastname' => filter_var(trim($inputData['lastname']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
       ];
 
       // hash password

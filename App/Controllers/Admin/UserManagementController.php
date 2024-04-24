@@ -42,9 +42,6 @@ class UserManagementController
       'username' => Validation::email('username', $inputData['username'], TRUE),
     ];
 
-    //   'password' => (!empty($inputData['password'])) ? Validation::password($inputData['password']) : null,
-    //   'confirmPassword' => (!empty(filter_input(INPUT_POST, 'confirmPassword'))) ? Validation::verify($inputData['password'], $inputData['confirmPassword']) : null,
-
     if ($action === 'create') {
       $errors['password'] = Validation::password($inputData['password'], TRUE);
       $errors['confirmPassword'] = Validation::verify($inputData['password'], $inputData['confirmPassword']);

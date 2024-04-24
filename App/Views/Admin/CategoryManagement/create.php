@@ -40,7 +40,7 @@
                 <label for="category-desc" class="col-2 col-form-label">Category
                   Description</label>
                 <div class="col-10 col-md-6">
-                  <textarea name="category_desc" id="category-desc" rows="15" class="form-control <?= !empty($errors['category_desc']) ? 'is-invalid' : '' ?>"><?= $categoryData['category_desc'] ?? '' ?></textarea>
+                  <textarea name="category_desc" id="category-desc" rows="15" class="quill-editor form-control <?= !empty($errors['category_desc']) ? 'is-invalid' : '' ?>"><?= $categoryData['category_desc'] ?? '' ?></textarea>
                   <div class="text-danger"><?= $errors['category_desc'] ?? '' ?></div>
                 </div>
               </div>

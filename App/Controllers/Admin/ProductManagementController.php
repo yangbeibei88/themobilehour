@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\ProductImageGallery;
 use Framework\Session;
 use Framework\Validation;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 class ProductManagementController
 {
@@ -184,6 +186,19 @@ class ProductManagementController
     moveFile($fileArray['imgpath1'], 'imgpath1', 'alt1', $imgGalleryData['alt1'], $imgGalleryData, 'uploads/images/');
     moveFile($fileArray['imgpath2'], 'imgpath2', 'alt2', $imgGalleryData['alt2'], $imgGalleryData, 'uploads/images/');
     moveFile($fileArray['imgpath3'], 'imgpath3', 'alt3', $imgGalleryData['alt3'], $imgGalleryData, 'uploads/images/');
+  }
+
+  private function purifierTextarea()
+  {
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true]);
+    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,span[style],a[href]');
+    $config->set('URI.DisableExternalResources', true);
+    $config->set('AutoFormat.RemoveEmpty', true);
+
+    $purifer = new HTMLPurifier($config);
+
+    return $purifer;
   }
 
   /**
@@ -756,7 +771,7 @@ class ProductManagementController
       $productImgGalleryFields = implode(', ', $productImgGalleryFields);
       $productImgGalleryValues = implode(', ', $productImgGalleryValues);
 
-      inspectAndDie($newProductImgGalleryData);
+      // inspectAndDie($newProductImgGalleryData);
 
       $this->productImageGalleryModel->insert($productImgGalleryFields, $productImgGalleryValues, $newProductImgGalleryData);
       $newProductMetaData['image_gallery_id'] = $this->productImageGalleryModel->getInsertID();

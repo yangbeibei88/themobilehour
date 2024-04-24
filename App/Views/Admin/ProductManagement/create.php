@@ -46,7 +46,7 @@
                     <option selected value="">Select a
                       Category</option>
                     <?php foreach ($categories as $category) : ?>
-                      <?php if ($category->category_id === $productMeta['category_id']) : ?>
+                      <?php if (isset($productMeta['category_id']) && $category->category_id == $productMeta['category_id']) : ?>
                         <option selected value="<?= $category->category_id ?>"><?= $category->category_name ?>
                         </option>
                       <?php else : ?>
@@ -114,7 +114,7 @@
             <div class="accordion-body">
               <label for="description" class="form-label">Product
                 Description</label>
-              <textarea name="product_desc" id="description" rows="15" class="form-control <?= !empty($errors['product_desc']) ? 'is-invalid' : '' ?>"><?= $productMeta['product_desc'] ?? '' ?></textarea>
+              <textarea name="product_desc" id="description" rows="15" class="quill-editor form-control <?= !empty($errors['product_desc']) ? 'is-invalid' : '' ?>"><?= $productMeta['product_desc'] ?? '' ?></textarea>
               <div class="text-danger"><?= $errors['product_desc'] ?? '' ?></div>
             </div>
           </div>
@@ -206,7 +206,7 @@
               <div class="row row-cols-1 row-cols-md-2 g-3">
                 <div class="col">
                   <label for="weight" class="form-label">Weight(kg)</label>
-                  <input type="number" name="weight" id="weight" class="form-control <?= !empty($errors['weight']) ? 'is-invalid' : '' ?>" step="0.001" value="<?= $productFeature['weight'] ?>">
+                  <input type="number" name="weight" id="weight" class="form-control <?= !empty($errors['weight']) ? 'is-invalid' : '' ?>" step="0.001" value="<?= $productFeature['weight'] ?? 0 ?>">
                   <div class="text-danger"><?= $errors['weight'] ?? '' ?></div>
                 </div>
                 <div class="col">
@@ -259,7 +259,7 @@
                   <label for="battery" class="form-label">Battery
                     (mAh)
                   </label>
-                  <input type="number" name="battery" id="battery" class="form-control <?= !empty($errors['battery']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $productFeature['battery'] ?>">
+                  <input type="number" name="battery" id="battery" class="form-control <?= !empty($errors['battery']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $productFeature['battery'] ?? '' ?>">
                   <div class="text-danger"><?= $errors['battery'] ?? '' ?></div>
                 </div>
                 <div class="col">

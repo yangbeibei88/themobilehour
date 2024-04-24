@@ -131,7 +131,7 @@ foreach ((array) $product as $key => $value) {
             <div class="accordion-body">
               <label for="description" class="form-label">Product
                 Description</label>
-              <textarea name="product_desc" id="description" rows="15" class="form-control <?= !empty($errors['product_desc']) ? 'is-invalid' : '' ?>"><?= $product->product_desc ?? '' ?></textarea>
+              <textarea name="product_desc" id="description" rows="15" class="quill-editor form-control <?= !empty($errors['product_desc']) ? 'is-invalid' : '' ?>"><?= $product->product_desc ?? '' ?></textarea>
               <div class="text-danger"><?= $errors['product_desc'] ?? '' ?></div>
             </div>
           </div>
