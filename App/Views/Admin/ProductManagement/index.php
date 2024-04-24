@@ -53,7 +53,7 @@
               </td>
               <td><?= $product->sku ?></td>
               <td><?= $product->product_name ?></td>
-              <td><a href="<?= assetPath('category-management/') . $product->category_id ?>"><?= $product->category_name ?></a></td>
+              <td><a href="<?= assetPath('admin/category-management/show/') . $product->category_id ?>"><?= $product->category_name ?></a></td>
               <td><?= $product->stock_on_hand ?></td>
               <td><?= formatPrice($product->list_price) ?></td>
               <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>

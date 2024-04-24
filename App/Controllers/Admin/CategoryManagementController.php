@@ -53,7 +53,7 @@ class CategoryManagementController
   private function sanitizeCategoryInputData($inputData)
   {
     $sanitizeData = [
-      'category_name' => filter_var(trim(strtoupper($inputData['category_name'])), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+      'category_name' => filter_var(trimAndUpperCase($inputData['category_name']), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
       // 'category_desc' => $inputData['category_desc'],
       'category_desc' => $this->purifierTextarea()->purify(trim($inputData['category_desc'])),
       'category_img_alt' => filter_var($inputData['category_img_alt'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
