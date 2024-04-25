@@ -40,6 +40,18 @@ class Category
     return $category;
   }
 
+  public function getAllProductsByCategory($params)
+  {
+    $id = $params['id'];
+    $params = ['id' => $id];
+
+    $query = "SELECT * FROM product WHERE category_id = :id";
+
+    $products = $this->db->query($query, $params)->fetchAll();
+
+    return $products;
+  }
+
   public function getSingleCategoryByName($params)
   {
     $query = "SELECT * FROM category WHERE category_name = :category_name";

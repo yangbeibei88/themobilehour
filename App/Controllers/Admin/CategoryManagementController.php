@@ -38,7 +38,7 @@ class CategoryManagementController
     $errors = [];
     $errors = [
       'category_name' => Validation::text('Category name', $inputData['category_name'], 2, 50, TRUE),
-      'category_desc' => Validation::text('Category description', $inputData['category_desc'], 0, 200, FALSE),
+      'category_desc' => Validation::text('Category description', $inputData['category_desc'], 0, 254, FALSE),
       'category_img_alt' => Validation::text('category_img_alt', $inputData['category_img_alt'], 2, 50, FALSE),
     ];
 
@@ -67,7 +67,7 @@ class CategoryManagementController
   {
     $config = HTMLPurifier_Config::createDefault();
     $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true]);
-    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,span[style],a[href]');
+    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,a[href]');
     $config->set('URI.DisableExternalResources', true);
     $config->set('AutoFormat.RemoveEmpty', true);
 
@@ -104,12 +104,14 @@ class CategoryManagementController
   public function show($params)
   {
     $category = $this->categoryModel->getSingleCategory($params);
+    $products = $this->categoryModel->getAllProductsByCategory($params);
 
     if (!$category) {
       AdminErrorController::notFound('Category not found');
     } else {
       loadView('Admin/CategoryManagement/show', [
-        'category' => $category
+        'category' => $category,
+        'products' => $products
       ]);
     }
   }

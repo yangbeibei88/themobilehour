@@ -58,7 +58,51 @@
           </div>
         </div>
       </div>
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryProductsPanel" aria-expanded="true" aria-controls="categoryProductsPanel">
+            <h2 class="fs-5">Category
+              Products</h2>
+          </button>
+          <div id="categoryProductsPanel" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+              <?php if (!$products) : ?>
+                <p>This category has no products yet.</p>
+              <?php else : ?>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">SKU</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">List Price</th>
+                        <th scope="col">Sale Price</th>
+                        <th scope="col">View</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($products as $product) : ?>
+                        <tr>
+                          <td><?= $product->sku ?></td>
+                          <td><?= $product->product_name ?></td>
+
+                          <td><?= $product->stock_on_hand ?></td>
+                          <td><?= formatPrice($product->list_price) ?></td>
+                          <td><?= getSalePrice($product->list_price, $product->disc_pct) ?></td>
+                          <td><a href="<?= assetPath('admin/product-management/show/' . $product->product_id) ?>" class="btn btn-info btn-sm" role="button">View</a></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    <?php endif; ?>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 </main>
 <?= loadPartial('footer') ?>

@@ -1,6 +1,5 @@
-<?= loadPartial('header') ?>
+<?= loadPartial('header', ['pageTitle' => 'All Products']) ?>
 <?= loadPartial('navbar') ?>
-<?= loadPartial('breadcrumb') ?>
 
 
 <main id="product-list-main">
@@ -8,27 +7,13 @@
     <div class="row">
       <section class="col-12 col-md-9 order-2" id="productlist-and-sort">
         <div class="container" id="product-sort-and-count">
-          <div class="row align-items-center">
-            <div class="col">20 Products</div>
-            <div class="col">
-              Sort by:
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Best Sellers
-                </option>
-                <option value="1">Newest to
-                  Oldest
-                </option>
-                <option value="2">Oldest to
-                  Newest
-                </option>
-                <option value="3">Price Low to
-                  High
-                </option>
-                <option value="4">Price High to
-                  Low
-                </option>
-              </select>
+          <?php if (isset($term)) : ?>
+            <div class="row align-items-center">
+              <div class="text-center border border-1 rounded py-2 bg-light">Search Result for: <strong><?= "'{$term}'" ?></strong>. Matches Found: <strong><?= $count ?></strong></div>
             </div>
+          <?php endif; ?>
+          <div class="row align-items-center">
+            <div class="col"><?= count($products) ?> Products</div>
           </div>
         </div>
         <div class="container" id="product-list">
@@ -43,16 +28,16 @@
                     </span>
                   <?php endif; ?>
 
-                  <a href="products/<?= $product->product_id ?>">
+                  <a href="<?= assetPath('products/' . $product->product_id) ?>">
                     <?php if (!is_null($product->image_gallery_id) && !is_null($product->imgpath1)) : ?>
-                      <img src="<?= $product->imgpath1 ?>" alt="<?= $product->alt1 ?>" class="card-img-top p-4">
+                      <img src="<?= assetPath($product->imgpath1) ?>" alt="<?= $product->alt1 ?>" class="card-img-top p-4">
                     <?php else : ?>
-                      <img src="uploads/images/product-placeholder.jpeg" alt="<?= $product->product_name ?>" class="card-img-top p-4">
+                      <img src="<?php assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="card-img-top p-4">
                     <?php endif; ?>
                   </a>
                   <div class="card-body">
                     <h5 class="card-title">
-                      <a href="products/<?= $product->product_id ?>" class="link-underline link-underline-opacity-0">
+                      <a href="<?= assetPath('products/' . $product->product_id) ?>" class="link-underline link-underline-opacity-0">
                         <?= $product->product_name ?>
                       </a>
                     </h5>
@@ -91,60 +76,48 @@
       </section>
       <aside class="col-12 col-md-3 order-1">
         <div class="container">
-          <div class="accordion accordion-flush" id="productfilters">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
-                  By Brand
-                </button>
-              </h2>
-              <div id="categoryFilter" class="accordion-collapse collapse show">
-                <div class="accordion-body">
-                  <div class="form-check">
-                    <input type="checkbox" name="brandfilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">Apple
-                      (5)</label>
+          <form method="GET" action="<?= assetPath("products/filter") ?>" id="product-filters">
+            <div class="accordion accordion-flush" id="productfilters">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
+                    By Brand
+                  </button>
+                </h2>
+                <div id="categoryFilter" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <?php foreach ($categories as $category) : ?>
+                      <div class="form-check">
+                        <input type="checkbox" name="category_id[]" id="<?= $category->category_name ?>" class="form-check-input" value="<?= $category->category_id  ?>" <?= in_array($category->category_id, $_GET['category_id'] ?? []) ? 'checked' : '' ?>>
+                        <label for="<?= $category->category_name ?>" class="form-check-label"><?= $category->category_name . ' (' . $category->productCount . ')' ?></label>
+                      </div>
+                    <?php endforeach; ?>
+
                   </div>
-                  <div class="form-check">
-                    <input type="checkbox" name="brandfilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">Apple
-                      (5)</label>
-                  </div>
-                  <div class="form-check">
-                    <input type="checkbox" name="brandfilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">Apple
-                      (5)</label>
+                </div>
+
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
+                    By Storage
+                  </button>
+                </h2>
+                <div id="storageFilter" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <?php foreach ($storages as $storage) : ?>
+                      <div class="form-check">
+                        <input type="checkbox" name="storage[]" id="<?= number_format($storage->storage, 0) . 'GB' ?>" class="form-check-input" value="<?= $storage->storage ?>" <?= in_array($storage->storage, $_GET['storage'] ?? []) ? 'checked' : '' ?>>
+                        <label for="<?= number_format($storage->storage, 0) . 'GB' ?>" class="form-check-label"><?= number_format($storage->storage, 0) . 'GB' ?></label>
+                      </div>
+                    <?php endforeach; ?>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
-                  By Storage
-                </button>
-              </h2>
-              <div id="categoryFilter" class="accordion-collapse collapse show">
-                <div class="accordion-body">
-                  <div class="form-check">
-                    <input type="checkbox" name="storagefilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">64GB
-                      (5)</label>
-                  </div>
-                  <div class="form-check">
-                    <input type="checkbox" name="storagefilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">128GB
-                      (5)</label>
-                  </div>
-                  <div class="form-check">
-                    <input type="checkbox" name="storagefilter" id="apple" class="form-check-input">
-                    <label for="apple" class="form-check-label">256GB
-                      (5)</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            <a type="reset" class="btn btn-secondary" href="<?= assetPath('products') ?>">Reset</a>
+            <button type="submit" class="btn btn-primary">Apply</button>
+          </form>
         </div>
       </aside>
     </div>

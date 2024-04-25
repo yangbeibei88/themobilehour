@@ -195,7 +195,7 @@ class ProductManagementController
   {
     $config = HTMLPurifier_Config::createDefault();
     $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true]);
-    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,span[style],a[href]');
+    $config->set('HTML.Allowed', 'p,br,strong,em,u,div,ul,ol,li,a[href]');
     $config->set('URI.DisableExternalResources', true);
     $config->set('AutoFormat.RemoveEmpty', true);
 

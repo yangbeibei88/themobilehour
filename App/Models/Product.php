@@ -46,6 +46,41 @@ class Product
     return $products;
   }
 
+  public function getActiveProductCountByCategory()
+  {
+    $params = [
+      'product_is_active' => 1,
+      'category_is_active' => 1,
+    ];
+
+    $query = "SELECT c.*, COUNT(p.product_id) AS productCount, c.is_active AS category_is_active, p.is_active AS product_is_active 
+              FROM category c
+              LEFT JOIN product p ON c.category_id = p.category_id
+              WHERE p.is_active = :product_is_active AND c.is_active = :category_is_active
+              GROUP BY c.category_id";
+
+    $categories = $this->db->query($query, $params)->fetchAll();
+
+    return $categories;
+  }
+
+  public function getActiveProductCountByStorage()
+  {
+    $params = [
+      'product_is_active' => 1,
+    ];
+
+    $query = "SELECT p.*, f.*, COUNT(p.product_id) AS productCount, p.is_active AS product_is_active 
+              FROM product p
+              LEFT JOIN feature f ON p.feature_id = f.feature_id
+              WHERE p.is_active = :product_is_active
+              GROUP BY f.storage";
+
+    $storages = $this->db->query($query, $params)->fetchAll();
+
+    return $storages;
+  }
+
   public function getSingleActiveProduct($params)
   {
     $id = $params['id'];
@@ -132,7 +167,71 @@ class Product
     LEFT JOIN feature f ON p.feature_id = f.feature_id  
     LEFT JOIN category c ON p.category_id = c.category_id
     LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id WHERE sku LIKE :term OR product_name LIKE :term";
+
     $products = $this->db->query($query, $params)->fetchAll();
+    return $products;
+  }
+
+  public function publicProductSearch($params)
+  {
+    $query = "SELECT p.*, f.*, c.*, g.*, p.is_active AS product_is_active, c.is_active AS category_is_active FROM product p 
+    LEFT JOIN feature f ON p.feature_id = f.feature_id  
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id
+    WHERE p.is_active = :product_is_active AND (sku LIKE :term OR product_name LIKE :term)";
+
+    $products = $this->db->query($query, $params)->fetchAll();
+
+    return $products;
+  }
+
+  public function getPublicFilterProducts($params)
+  {
+    $conditions = [];
+    $allParams = [];
+
+    if (!empty($params['category_id'])) {
+      $categoryIdsParams = array_combine(
+        array_map(function ($key) {
+          return 'cat' . $key;
+        }, array_keys($params['category_id'])),
+        $params['category_id']
+      );
+      $conditions[] = 'c.category_id IN (' . implode(', ', array_map(function ($key) {
+        return ':' . $key;
+      }, array_keys($categoryIdsParams))) . ')';
+      $allParams = array_merge($allParams, $categoryIdsParams);
+    }
+
+    if (!empty($params['storage'])) {
+      $storageParams = array_combine(
+        array_map(function ($key) {
+          return 'stor' . $key;
+        }, array_keys($params['storage'])),
+        $params['storage']
+      );
+      $conditions[] = 'f.storage IN (' . implode(', ', array_map(function ($key) {
+        return ':' . $key;
+      }, array_keys($storageParams))) . ')';
+      $allParams = array_merge($allParams, $storageParams);
+    }
+
+    if (empty($conditions)) {
+      return []; // No filters selected, could return all or none based on requirements
+    }
+
+    $query = "SELECT p.*, f.*, c.*, g.*, p.is_active AS product_is_active, c.is_active AS category_is_active FROM product p 
+    LEFT JOIN feature f ON p.feature_id = f.feature_id  
+    LEFT JOIN category c ON p.category_id = c.category_id
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id
+    WHERE p.is_active = 1 AND (" . implode(' AND ', $conditions) . ")";
+
+
+    // inspectAndDie($query);
+
+    // Execute the query using your query function which handles the binding
+    $products = $this->db->query($query, $allParams)->fetchAll();
+
     return $products;
   }
 }

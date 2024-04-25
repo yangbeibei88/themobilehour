@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Product;
+use Framework\Validation;
 
 class ProductsController
 {
@@ -23,6 +24,8 @@ class ProductsController
   public function index()
   {
     $products = $this->productModel->getAllActiveProducts();
+    $categories = $this->productModel->getActiveProductCountByCategory();
+    $storages = $this->productModel->getActiveProductCountByStorage();
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
 
@@ -30,39 +33,14 @@ class ProductsController
       ErrorController::notFound('Products not found');
     } else {
       loadView('Products/index', [
-        'products' => $products
+        'products' => $products,
+        'categories' => $categories,
+        'storages' => $storages
       ]);
     }
   }
 
-  /**
-   * Show a single product on public, only display is_active=1
-   *
-   * @param array $params
-   * @return void
-   */
-  // public function show($params)
-  // {
 
-  //   // $id = $_GET['id'] ?? '';
-  //   $id = $params['id'] ?? '';
-
-  //   inspect($id);
-
-  //   $params = [
-  //     'id' => $id
-  //   ];
-  //   $product = $this->productModel->getSingleProduct($params);
-
-  //   if (!$product) {
-  //     ErrorController::notFound('Product not found');
-  //   } else {
-
-  //     loadView('Products/show', [
-  //       'product' => $product
-  //     ]);
-  //   }
-  // }
   public function show($params)
   {
     $product = $this->productModel->getSingleActiveProduct($params);
@@ -75,5 +53,82 @@ class ProductsController
         'product' => $product
       ]);
     }
+  }
+
+  /**
+   * Search product by SKU or product name
+   *
+   * @return void
+   */
+  public function search()
+  {
+    // inspect($_GET);
+    $categories = $this->productModel->getActiveProductCountByCategory();
+    $storages = $this->productModel->getActiveProductCountByStorage();
+
+    $term = filter_input(INPUT_GET, 'term', FILTER_DEFAULT);
+
+    $errors = [];
+
+    // VALIDATE SEARCH INPUT TERM
+    $errors['term'] = Validation::text('term', $term, 0, 50, FALSE);
+
+    // Filter out any non-errors
+    // $errors = array_filter($errors);
+
+    // Sanitize
+    $term = filter_var(trimAndLowerCase($term), FILTER_SANITIZE_SPECIAL_CHARS);
+
+    $params = [
+      'product_is_active' => 1,
+      'term' => "%{$term}%"
+    ];
+
+    $products = $this->productModel->publicProductSearch($params);
+
+    $count = count($products);
+
+    loadView('products/index', [
+      'products' => $products,
+      'term' => $term,
+      'count' => $count,
+      'categories' => $categories,
+      'storages' => $storages
+    ]);
+  }
+
+  public function filter()
+  {
+    // inspectAndDie($_GET);
+    $categories = $this->productModel->getActiveProductCountByCategory();
+    $storages = $this->productModel->getActiveProductCountByStorage();
+
+    $args = [
+      'category_id' => [
+        'filter' => FILTER_SANITIZE_NUMBER_INT,
+        'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ],
+      'storage' => [
+        'filter' => FILTER_SANITIZE_NUMBER_FLOAT,
+        'flags'  => FILTER_FLAG_ALLOW_FRACTION | FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ]
+    ];
+
+    $inputData = filter_input_array(INPUT_GET, $args);
+
+    // Check and use the filtered data
+    // Ensure both category_id and storage are set and are arrays
+    $inputData['category_id'] = $inputData['category_id'] ?? [];
+    $inputData['storage'] = $inputData['storage'] ?? [];
+
+    $products = $this->productModel->getPublicFilterProducts($inputData);
+
+    // inspectAndDie($inputData);
+
+    loadView('products/index', [
+      'products' => $products,
+      'categories' => $categories,
+      'storages' => $storages
+    ]);
   }
 }

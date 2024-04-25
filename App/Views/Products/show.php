@@ -1,6 +1,5 @@
 <?= loadPartial('header', ['pageTitle' => $product->product_name]) ?>
 <?= loadPartial('navbar') ?>
-<?= loadPartial('breadcrumb-notitle') ?>
 <?php
 
 // push each product's not-null image paths to a new array

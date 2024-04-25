@@ -26,6 +26,8 @@
 $router->get('/themobilehour/', 'HomeController@index');
 $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
+$router->get('/themobilehour/products/search', 'ProductsController@search');
+$router->get('/themobilehour/products/filter', 'ProductsController@filter');
 $router->get('/themobilehour/products/{id}', 'ProductsController@show');
 
 /*-------------------------------------admin dashboard route-----------------------------*/
