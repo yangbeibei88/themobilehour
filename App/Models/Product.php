@@ -192,39 +192,33 @@ class Product
 
     if (!empty($params['category_id'])) {
       $categoryIdsParams = array_combine(
-        array_map(function ($key) {
-          return 'cat' . $key;
-        }, array_keys($params['category_id'])),
+        array_map(fn ($key) => 'cat' . $key, array_keys($params['category_id'])),
         $params['category_id']
       );
-      $conditions[] = 'c.category_id IN (' . implode(', ', array_map(function ($key) {
-        return ':' . $key;
-      }, array_keys($categoryIdsParams))) . ')';
+      $conditions[] = 'c.category_id IN (' . implode(', ', array_map(fn ($key) =>
+      ':' . $key, array_keys($categoryIdsParams))) . ')';
       $allParams = array_merge($allParams, $categoryIdsParams);
     }
 
     if (!empty($params['storage'])) {
       $storageParams = array_combine(
-        array_map(function ($key) {
-          return 'stor' . $key;
-        }, array_keys($params['storage'])),
+        array_map(fn ($key) => 'stor' . $key, array_keys($params['storage'])),
         $params['storage']
       );
-      $conditions[] = 'f.storage IN (' . implode(', ', array_map(function ($key) {
-        return ':' . $key;
-      }, array_keys($storageParams))) . ')';
+      $conditions[] = 'f.storage IN (' . implode(', ', array_map(fn ($key) => ':' . $key, array_keys($storageParams))) . ')';
       $allParams = array_merge($allParams, $storageParams);
     }
 
-    if (empty($conditions)) {
-      return []; // No filters selected, could return all or none based on requirements
-    }
 
     $query = "SELECT p.*, f.*, c.*, g.*, p.is_active AS product_is_active, c.is_active AS category_is_active FROM product p 
     LEFT JOIN feature f ON p.feature_id = f.feature_id  
     LEFT JOIN category c ON p.category_id = c.category_id
     LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id
-    WHERE p.is_active = 1 AND (" . implode(' AND ', $conditions) . ")";
+    WHERE p.is_active = 1";
+
+    if (!empty($conditions)) {
+      $query .= " AND (" . implode(' AND ', $conditions) . ")";
+    }
 
 
     // inspectAndDie($query);

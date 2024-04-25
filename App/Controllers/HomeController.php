@@ -26,7 +26,7 @@ class HomeController
   public function index()
   {
 
-    $categories = $this->categoryModel->getAllActiveCategories();
+    $categories = $this->categoryModel->getFourActiveCategories();
 
 
     loadView('Home/index', [

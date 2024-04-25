@@ -1,34 +1,15 @@
 <?php
 
-// create $routes associative array to map url to controller
-// $routes = [
-//   '/themobilehour/' => 'App/Controllers/HomeController.php',
-//   '/themobilehour/home' => 'App/Controllers/HomeController.php',
-//   '/themobilehour/products' => 'App/Controllers/ProductsController.php',
-//   '/themobilehour/categories' => 'App/Controllers/CategoriesController.php',
-//   '404' => 'App/Controllers/ErrorController.php'
-// ];
-
-// return $routes;
-
-
-// ------------------------------------------//
-
-
-// $router->get('/themobilehour/', 'Controllers/HomeController.php');
-// $router->get('/themobilehour/home', 'Controllers/HomeController.php');
-// $router->get('/themobilehour/products', 'Controllers/ProductsController.php');
-// $router->get('/themobilehour/product', 'Controllers/ProductShowController.php');
-
-// ------------------------------------------//
-
 /*---------------------------------public uri routes--------------------------*/
 $router->get('/themobilehour/', 'HomeController@index');
 $router->get('/themobilehour/home', 'HomeController@index');
 $router->get('/themobilehour/products', 'ProductsController@index');
+$router->get('/themobilehour/categories', 'CategoriesController@index');
 $router->get('/themobilehour/products/search', 'ProductsController@search');
 $router->get('/themobilehour/products/filter', 'ProductsController@filter');
 $router->get('/themobilehour/products/{id}', 'ProductsController@show');
+$router->get('/themobilehour/categories/{id}', 'CategoriesController@show');
+$router->get('/themobilehour/categories/filter/{id}', 'CategoriesController@filter');
 
 /*-------------------------------------admin dashboard route-----------------------------*/
 $router->get('/themobilehour/admin/dashboard', 'Admin\DashboardController@index', ['authAdmin']);

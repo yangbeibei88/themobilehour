@@ -1,13 +1,11 @@
-<?= loadPartial('header', ['pageTitle' => 'The Mobile Hour']) ?>
+<?= loadPartial('header', ['pageTitle' => 'All Brands | The Mobile Hour']) ?>
 <?= loadPartial('navbar') ?>
-<?= loadPartial('home-sliders') ?>
+<?= loadPartial('pagetitle', ['pageTitle' => 'All Brands']) ?>
 
 <!-- categories -->
 <section id="categories">
-
   <div class="container my-5 text-center">
-    <h2>Shop By Brand</h2>
-    <div class="row row-cols-1 row-cols-sm-2 g-5">
+    <div class="row row-cols-2 row-cols-md-3 g-5">
       <?php foreach ($categories as $category) : ?>
         <div class="col">
           <div class="card">
@@ -25,8 +23,6 @@
         </div>
       <?php endforeach; ?>
     </div>
-    <a href="categories" class="btn btn-primary d-block my-5" role="button">All
-      Brands</a>
   </div>
 </section>
 <?= loadPartial('footer') ?>

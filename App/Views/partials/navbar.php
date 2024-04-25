@@ -50,7 +50,7 @@ $categories = $categoryModel->getAllActiveCategories();
                 All Brands</a>
               <ul class="dropdown-menu">
                 <?php foreach ($categories as $category) : ?>
-                  <li><a href="#" class="dropdown-item"><?= $category->category_name ?></a></li>
+                  <li><a href="<?= assetPath("categories/" . $category->category_id) ?>" class="dropdown-item"><?= $category->category_name ?></a></li>
                 <?php endforeach; ?>
               </ul>
             </li>

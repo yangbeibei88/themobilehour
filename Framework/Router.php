@@ -162,8 +162,8 @@ class Router
           $controllerInstance = new $controller();
           $controllerInstance->$action($params);
 
-          inspect($controller);
-          inspect($action);
+          // inspect($controller);
+          // inspect($action);
 
           return;
         }
