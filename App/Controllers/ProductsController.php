@@ -26,6 +26,8 @@ class ProductsController
     $products = $this->productModel->getAllActiveProducts();
     $categories = $this->productModel->getActiveProductCountByCategory();
     $storages = $this->productModel->getActiveProductCountByStorage();
+    $priceRanges = $this->productModel->getProductCountPriceRanges();
+    // inspect($priceRanges);
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
 
@@ -35,7 +37,8 @@ class ProductsController
       loadView('Products/index', [
         'products' => $products,
         'categories' => $categories,
-        'storages' => $storages
+        'storages' => $storages,
+        'priceRanges' => $priceRanges
       ]);
     }
   }
@@ -102,6 +105,7 @@ class ProductsController
     // inspectAndDie($_GET);
     $categories = $this->productModel->getActiveProductCountByCategory();
     $storages = $this->productModel->getActiveProductCountByStorage();
+    $priceRanges = $this->productModel->getProductCountPriceRanges();
 
     $args = [
       'category_id' => [
@@ -111,6 +115,10 @@ class ProductsController
       'storage' => [
         'filter' => FILTER_SANITIZE_NUMBER_FLOAT,
         'flags'  => FILTER_FLAG_ALLOW_FRACTION | FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ],
+      'priceRange' => [
+        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
       ]
     ];
 
@@ -120,6 +128,16 @@ class ProductsController
     // Ensure both category_id and storage are set and are arrays
     $inputData['category_id'] = $inputData['category_id'] ?? [];
     $inputData['storage'] = $inputData['storage'] ?? [];
+    $inputData['priceRange'] = $inputData['priceRange'] ?? [];
+
+    // Extract price range filter values if any
+    if (!empty($inputData['priceRange'])) {
+      $selectedPriceRange = $priceRanges[$inputData['priceRange'][0]] ?? null; // Assumes the first selected range; adjust if multiple selections are allowed
+      if ($selectedPriceRange) {
+        $inputData['minPrice'] = $selectedPriceRange['min'];
+        $inputData['maxPrice'] = $selectedPriceRange['max'];
+      }
+    }
 
     $products = $this->productModel->getPublicFilterProducts($inputData);
 
@@ -128,7 +146,8 @@ class ProductsController
     loadView('products/index', [
       'products' => $products,
       'categories' => $categories,
-      'storages' => $storages
+      'storages' => $storages,
+      'priceRanges' => $priceRanges
     ]);
   }
 }

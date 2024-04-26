@@ -96,14 +96,12 @@
                         <label for="<?= $category->category_name ?>" class="form-check-label"><?= $category->category_name . ' (' . $category->productCount . ')' ?></label>
                       </div>
                     <?php endforeach; ?>
-
                   </div>
                 </div>
-
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#storageFilter" aria-expanded="true" aria-controls="collapseOne">
                     By Storage
                   </button>
                 </h2>
@@ -113,6 +111,23 @@
                       <div class="form-check">
                         <input type="checkbox" name="storage[]" id="<?= number_format($storage->storage, 0) . 'GB' ?>" class="form-check-input" value="<?= $storage->storage ?>" <?= in_array($storage->storage, $_GET['storage'] ?? []) ? 'checked' : '' ?>>
                         <label for="<?= number_format($storage->storage, 0) . 'GB' ?>" class="form-check-label"><?= number_format($storage->storage, 0) . 'GB' ?></label>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#priceFilter" aria-expanded="true" aria-controls="collapseOne">
+                    By Price
+                  </button>
+                </h2>
+                <div id="priceFilter" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <?php foreach ($priceRanges as $key => $range) : ?>
+                      <div class="form-check">
+                        <input type="checkbox" name="priceRange[]" id="<?= $key ?>" class="form-check-input" value="<?= $key ?>" <?= in_array($key, $_GET['priceRange'] ?? []) ? 'checked' : '' ?>>
+                        <label for="<?= $key ?>" class="form-check-label"><?= "{$range['label']} ({$range['count']})" ?></label>
                       </div>
                     <?php endforeach; ?>
                   </div>

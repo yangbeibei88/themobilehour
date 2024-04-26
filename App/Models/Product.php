@@ -161,6 +161,68 @@ class Product
     return $this->db->query($query)->fetch();
   }
 
+  public function getMinSalePrice()
+  {
+
+    $query = "SELECT MIN(ROUND(list_price * (1 - disc_pct / 100),2)) AS minSalePrice FROM product";
+
+    return $this->db->query($query)->fetch();
+  }
+
+  public function getMaxSalePrice()
+  {
+    $query = "SELECT MAX(ROUND(list_price * (1 - disc_pct / 100),2)) AS maxSalePrice FROM product";
+
+    return $this->db->query($query)->fetch();
+  }
+
+  public function priceRanges()
+  {
+    $minSalePrice = (float)$this->getMinSalePrice()->minSalePrice;
+    $maxSalePrice = (float)$this->getMaxSalePrice()->maxSalePrice;
+
+    $priceRanges = [];
+    $price = $minSalePrice;
+    $i = 0;
+
+    do {
+      $nextPrice = $price + 200;
+      // $priceRanges[] = ["priceLevel$i" => "$$price - $$nextPrice"];
+      $priceRanges["priceLevel$i"] = [
+        'label' => "$$price - $$nextPrice",
+        'min' => $price,
+        'max' => $nextPrice
+      ];
+      $price = $nextPrice;
+      $i++;
+    } while ($price <= $maxSalePrice);
+
+
+    return $priceRanges;
+  }
+
+  public function getProductCountPriceRanges()
+  {
+
+    $priceRanges = $this->priceRanges();
+    foreach ($priceRanges as $key => $value) {
+      $params = [
+        'minPrice' => $value['min'],
+        'maxPrice' => $value['max']
+      ];
+      $query = "SELECT COUNT(product_id) AS productCount FROM product 
+              WHERE ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN :minPrice AND :maxPrice";
+
+      $productCount = $this->db->query($query, $params)->fetch()->productCount;
+      $priceRanges[$key]['count'] = $productCount;
+    }
+
+    // return price ranges that 
+    return array_filter($priceRanges, fn ($priceRange) => $priceRange['count'] > 0);
+  }
+
+
+
   public function adminProductSearch($params)
   {
     $query = "SELECT * FROM product p 
@@ -190,6 +252,7 @@ class Product
     $conditions = [];
     $allParams = [];
 
+    // handling category filter
     if (!empty($params['category_id'])) {
       $categoryIdsParams = array_combine(
         array_map(fn ($key) => 'cat' . $key, array_keys($params['category_id'])),
@@ -200,6 +263,7 @@ class Product
       $allParams = array_merge($allParams, $categoryIdsParams);
     }
 
+    // handling storage filter
     if (!empty($params['storage'])) {
       $storageParams = array_combine(
         array_map(fn ($key) => 'stor' . $key, array_keys($params['storage'])),
@@ -207,6 +271,13 @@ class Product
       );
       $conditions[] = 'f.storage IN (' . implode(', ', array_map(fn ($key) => ':' . $key, array_keys($storageParams))) . ')';
       $allParams = array_merge($allParams, $storageParams);
+    }
+
+    // Adding price range filter
+    if (!empty($params['minPrice']) && !empty($params['maxPrice'])) {
+      $conditions[] = 'ROUND(p.list_price * (1 - p.disc_pct / 100), 2) BETWEEN :minPrice AND :maxPrice';
+      $allParams['minPrice'] = $params['minPrice'];
+      $allParams['maxPrice'] = $params['maxPrice'];
     }
 
 
@@ -220,10 +291,6 @@ class Product
       $query .= " AND (" . implode(' AND ', $conditions) . ")";
     }
 
-
-    // inspectAndDie($query);
-
-    // Execute the query using your query function which handles the binding
     $products = $this->db->query($query, $allParams)->fetchAll();
 
     return $products;

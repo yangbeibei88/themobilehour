@@ -38,7 +38,7 @@
                       <img src="<?php assetPath('uploads/images/product-placeholder.jpeg') ?>" alt="<?= $product->product_name ?>" class="card-img-top p-4">
                     <?php endif; ?>
                   </a>
-                  <div class="card-body">
+                  <div class="card-body d-flex flex-column justify-content-between">
                     <h5 class="card-title">
                       <a href="<?= assetPath('products/' . $product->product_id) ?>" class="link-underline link-underline-opacity-0">
                         <?= $product->product_name ?>
@@ -62,6 +62,8 @@
                     <?php else : ?>
                       <a href="#" class="btn btn-secondary w-100 disabled" role="button" aria-disabled="true">Unavailable</a>
                     <?php endif; ?> -->
+                  </div>
+                  <div class="card-footer">
                     <?php if ($product->stock_on_hand > 0) : ?>
                       <p class="card-text text-success text-center mt-2">
                         In Stock</p>
