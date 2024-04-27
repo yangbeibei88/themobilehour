@@ -148,9 +148,10 @@ class Product
 
   public function setSessionUserId($userId)
   {
+    $params = ['userId' => $userId];
     $query = "SET @cms_user_id = :userId";
 
-    $this->db->query($query, ['userId' => $userId]);
+    $this->db->query($query, $params);
   }
   public function getSessionUserId($userId)
   {
@@ -176,18 +177,17 @@ class Product
     return $this->db->query($query)->fetch();
   }
 
-  public function priceRanges()
+  public function setPriceRanges()
   {
     $minSalePrice = (float)$this->getMinSalePrice()->minSalePrice;
     $maxSalePrice = (float)$this->getMaxSalePrice()->maxSalePrice;
 
     $priceRanges = [];
-    $price = $minSalePrice;
+    $price = round($minSalePrice, 0, PHP_ROUND_HALF_DOWN);
     $i = 0;
 
     do {
       $nextPrice = $price + 200;
-      // $priceRanges[] = ["priceLevel$i" => "$$price - $$nextPrice"];
       $priceRanges["priceLevel$i"] = [
         'label' => "$$price - $$nextPrice",
         'min' => $price,
@@ -204,7 +204,7 @@ class Product
   public function getProductCountPriceRanges()
   {
 
-    $priceRanges = $this->priceRanges();
+    $priceRanges = $this->setPriceRanges();
     foreach ($priceRanges as $key => $value) {
       $params = [
         'minPrice' => $value['min'],
@@ -217,10 +217,38 @@ class Product
       $priceRanges[$key]['count'] = $productCount;
     }
 
-    // return price ranges that 
+    // return price ranges that product count > 0
     return array_filter($priceRanges, fn ($priceRange) => $priceRange['count'] > 0);
   }
 
+
+  public function setProductSorts()
+  {
+    $sortOptions = [
+      'PLH' => [
+        'label' => 'Price Low to High',
+        'target' => 'ROUND(list_price * (1 - disc_pct / 100),2)',
+        'sortType' => 'ASC'
+      ],
+      'PHL' => [
+        'label' => 'Price High to Low',
+        'target' => 'ROUND(list_price * (1 - disc_pct / 100),2)',
+        'sortType' => 'DESC'
+      ],
+      'BAZ' => [
+        'label' => 'Brand A-Z',
+        'target' => 'c.category_name',
+        'sortType' => 'ASC'
+      ],
+      'BZA' => [
+        'label' => 'Brand Z-A',
+        'target' => 'c.category_name',
+        'sortType' => 'DESC'
+      ],
+    ];
+
+    return $sortOptions;
+  }
 
 
   public function adminProductSearch($params)
@@ -284,6 +312,17 @@ class Product
       }
     }
 
+    // Handling sort
+    $sortCondition = [];
+    if (!empty($params['sortBy'])) {
+      $sortOptions = $this->setProductSorts();
+      foreach ($params['sortBy'] as $sortKey) {
+        if (isset($sortOptions[$sortKey])) {
+          $sortCondition[] = "ORDER BY {$sortOptions[$sortKey]['target']} {$sortOptions[$sortKey]['sortType']}";
+        }
+      }
+    }
+
     // Include price range conditions in the main conditions
     if (!empty($priceRangeConditions)) {
       $conditions[] = '(' . implode(' OR ', $priceRangeConditions) . ')';
@@ -297,6 +336,10 @@ class Product
 
     if (!empty($conditions)) {
       $query .= " AND (" . implode(' AND ', $conditions) . ")";
+    }
+
+    if (!empty($sortCondition)) {
+      $query .= " {$sortCondition[0]}";
     }
 
     // inspectAndDie($query);

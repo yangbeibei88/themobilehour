@@ -1,5 +1,4 @@
 // rich text editor setup
-
 document.addEventListener("DOMContentLoaded", () => {
   // console.log("DOM fully loaded and parsed");
   const textareas = document.querySelectorAll("textarea.quill-editor");
@@ -39,3 +38,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// control accordion collapse in small device
+function adjustAccordionBehavior() {
+  const accordionItems = document.querySelectorAll(".accordion-collapse");
+
+  if (window.innerWidth >= 768) {
+    accordionItems.forEach((item) => {
+      item.classList.add("show");
+    });
+  } else {
+    accordionItems.forEach((item) => {
+      item.classList.remove("show");
+    });
+  }
+}
+window.addEventListener("resize", adjustAccordionBehavior);
+window.addEventListener("DOMContentLoaded", adjustAccordionBehavior);

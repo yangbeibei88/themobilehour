@@ -80,15 +80,22 @@
       <aside class="col-12 col-md-3 order-1">
         <div class="container">
           <form method="GET" action="<?= assetPath("products/filter") ?>" id="product-filters">
+            <h5>Sort</h5>
+            <select name="sortBy[]" id="shop-sort" class="form-select mb-4" aria-label="Default select">
+              <option selected>Best Seller</option>
+              <?php foreach ($sorts as $sortKey => $sort) : ?>
+                <option value="<?= $sortKey ?>" <?= in_array($sortKey, $_GET['sortBy'] ?? []) ? 'selected' : '' ?>><?= $sort['label'] ?></option>
+              <?php endforeach; ?>
+            </select>
             <h5>Filters</h5>
-            <div class="accordion accordion-flush" id="productfilters">
+            <div class="accordion mb-3" id="productfilters">
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter" aria-expanded="true" aria-controls="categoryFilter">
                     By Brand
                   </button>
                 </h2>
-                <div id="categoryFilter" class="accordion-collapse collapse show">
+                <div id="categoryFilter" class="accordion-collapse collapse">
                   <div class="accordion-body">
                     <?php foreach ($categories as $category) : ?>
                       <div class="form-check">
@@ -101,11 +108,11 @@
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#storageFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#storageFilter" aria-expanded="true" aria-controls="storageFilter">
                     By Storage
                   </button>
                 </h2>
-                <div id="storageFilter" class="accordion-collapse collapse show">
+                <div id="storageFilter" class="accordion-collapse collapse">
                   <div class="accordion-body">
                     <?php foreach ($storages as $storage) : ?>
                       <div class="form-check">
@@ -118,11 +125,11 @@
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#priceFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#priceFilter" aria-expanded="true" aria-controls="priceFilter">
                     By Price
                   </button>
                 </h2>
-                <div id="priceFilter" class="accordion-collapse collapse show">
+                <div id="priceFilter" class="accordion-collapse collapse">
                   <div class="accordion-body">
                     <?php foreach ($priceRanges as $key => $range) : ?>
                       <div class="form-check">

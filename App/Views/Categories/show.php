@@ -82,14 +82,21 @@
       <aside class="col-12 col-md-3 order-1">
         <div class="container">
           <form method="GET" action="<?= assetPath("categories/filter/" . $category->category_id) ?>" id="category-product-filters">
-            <div class="accordion accordion-flush" id="productfilters">
+            <h5>Sort</h5>
+            <select name="sortBy[]" id="category-sort" class="form-select mb-4" aria-label="Default select">
+              <option selected>Best Seller</option>
+              <?php foreach ($sorts as $sortKey => $sort) : ?>
+                <option value="<?= $sortKey ?>" <?= in_array($sortKey, $_GET['sortBy'] ?? []) ? 'selected' : '' ?>><?= $sort['label'] ?></option>
+              <?php endforeach; ?>
+            </select>
+            <div class="accordion mb-3" id="productfiltersByCategory">
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#storageFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#storageFilterByCategory" aria-expanded="true" aria-controls="storageFilterByCategory">
                     By Storage
                   </button>
                 </h2>
-                <div id="storageFilter" class="accordion-collapse collapse show">
+                <div id="storageFilterByCategory" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <?php foreach ($storages as $storage) : ?>
                       <div class="form-check">
@@ -102,16 +109,33 @@
               </div>
               <div class="accordion-item">
                 <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#screensizeFilter" aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#screensizeFilterByCategory" aria-expanded="true" aria-controls="screensizeFilterByCategory">
                     By Screensize
                   </button>
                 </h2>
-                <div id="screensizeFilter" class="accordion-collapse collapse show">
+                <div id="screensizeFilterByCategory" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <?php foreach ($screensizes as $screensize) : ?>
                       <div class="form-check">
                         <input type="checkbox" name="screensize[]" id="<?= number_format($screensize->screensize, 1) . 'inch' ?>" class="form-check-input" value="<?= $screensize->screensize ?>" <?= in_array($screensize->screensize, $_GET['screensize'] ?? []) ? 'checked' : '' ?>>
                         <label for="<?= number_format($screensize->screensize, 1) . 'inch' ?>" class="form-check-label"><?= number_format($screensize->screensize, 1) . 'inch' ?></label>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#priceFilterByCategory" aria-expanded="true" aria-controls="priceFilterByCategory">
+                    By Price
+                  </button>
+                </h2>
+                <div id="priceFilterByCategory" class="accordion-collapse collapse">
+                  <div class="accordion-body">
+                    <?php foreach ($priceRanges as $key => $range) : ?>
+                      <div class="form-check">
+                        <input type="checkbox" name="priceRange[]" id="<?= $key ?>" class="form-check-input" value="<?= $key ?>" <?= in_array($key, $_GET['priceRange'] ?? []) ? 'checked' : '' ?>>
+                        <label for="<?= $key ?>" class="form-check-label"><?= "{$range['label']} ({$range['count']})" ?></label>
                       </div>
                     <?php endforeach; ?>
                   </div>

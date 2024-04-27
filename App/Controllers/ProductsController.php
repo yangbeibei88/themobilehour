@@ -27,6 +27,7 @@ class ProductsController
     $categories = $this->productModel->getActiveProductCountByCategory();
     $storages = $this->productModel->getActiveProductCountByStorage();
     $priceRanges = $this->productModel->getProductCountPriceRanges();
+    $sorts = $this->productModel->setProductSorts();
     // inspect($priceRanges);
     // inspect($products);
     // $products = $db->query("SELECT * FROM product")->fetchAll();
@@ -38,7 +39,8 @@ class ProductsController
         'products' => $products,
         'categories' => $categories,
         'storages' => $storages,
-        'priceRanges' => $priceRanges
+        'priceRanges' => $priceRanges,
+        'sorts' => $sorts
       ]);
     }
   }
@@ -106,6 +108,7 @@ class ProductsController
     $categories = $this->productModel->getActiveProductCountByCategory();
     $storages = $this->productModel->getActiveProductCountByStorage();
     $priceRanges = $this->productModel->getProductCountPriceRanges();
+    $sorts = $this->productModel->setProductSorts();
 
     $args = [
       'category_id' => [
@@ -119,7 +122,11 @@ class ProductsController
       'priceRange' => [
         'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
         'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
-      ]
+      ],
+      'sortBy' => [
+        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ],
     ];
 
     $inputData = filter_input_array(INPUT_GET, $args);
@@ -129,6 +136,7 @@ class ProductsController
     $inputData['category_id'] = $inputData['category_id'] ?? [];
     $inputData['storage'] = $inputData['storage'] ?? [];
     $inputData['priceRange'] = $inputData['priceRange'] ?? [];
+    $inputData['sortBy'] = $inputData['sortBy'] ?? [];
 
     // // Extract price range filter values if any
     // if (!empty($inputData['priceRange'])) {
@@ -147,7 +155,8 @@ class ProductsController
       'products' => $products,
       'categories' => $categories,
       'storages' => $storages,
-      'priceRanges' => $priceRanges
+      'priceRanges' => $priceRanges,
+      'sorts' => $sorts
     ]);
   }
 }

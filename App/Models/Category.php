@@ -177,6 +177,102 @@ class Category
     return $resolutions;
   }
 
+
+  public function getMinSalePriceByCategory($params)
+  {
+    $id = $params['id'];
+    $params = [
+      'id' => $id
+    ];
+    $query = "SELECT MIN(ROUND(list_price * (1 - disc_pct / 100),2)) AS minSalePrice FROM product WHERE category_id = :id";
+
+    return $this->db->query($query, $params)->fetch();
+  }
+
+  public function getMaxSalePriceByCategory($params)
+  {
+    $id = $params['id'];
+    $params = [
+      'id' => $id
+    ];
+    $query = "SELECT MAX(ROUND(list_price * (1 - disc_pct / 100),2)) AS maxSalePrice FROM product WHERE category_id = :id";
+
+    return $this->db->query($query, $params)->fetch();
+  }
+
+  public function setPriceRangesByCategory($params)
+  {
+    $id = $params['id'];
+    $params = [
+      'id' => $id
+    ];
+    $minSalePrice = (float)$this->getMinSalePriceByCategory($params)->minSalePrice;
+    $maxSalePrice = (float)$this->getMaxSalePriceByCategory($params)->maxSalePrice;
+
+    $priceRanges = [];
+    $price = round($minSalePrice, 0, PHP_ROUND_HALF_DOWN);
+    $i = 0;
+
+    do {
+      $nextPrice = $price + 200;
+      $priceRanges["priceLevel$i"] = [
+        'label' => "$$price - $$nextPrice",
+        'min' => $price,
+        'max' => $nextPrice
+      ];
+      $price = $nextPrice;
+      $i++;
+    } while ($price <= $maxSalePrice);
+
+
+    return $priceRanges;
+  }
+
+  public function getProductCountPriceRangesByCategory($params)
+  {
+
+    $id = $params['id'];
+    $params = [
+      'id' => $id
+    ];
+
+    $priceRanges = $this->setPriceRangesByCategory($params);
+    foreach ($priceRanges as $key => $value) {
+      $params = [
+        'minPrice' => $value['min'],
+        'maxPrice' => $value['max'],
+        'id' => $params['id']
+      ];
+      $query = "SELECT COUNT(product_id) AS productCount FROM product 
+              WHERE category_id = :id AND ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN :minPrice AND :maxPrice";
+
+      $productCount = $this->db->query($query, $params)->fetch()->productCount;
+      $priceRanges[$key]['count'] = $productCount;
+    }
+
+    // return price ranges that product count > 0
+    return array_filter($priceRanges, fn ($priceRange) => $priceRange['count'] > 0);
+  }
+
+  public function setProductSortsByCategory()
+  {
+    $sortOptions = [
+      'PLH' => [
+        'label' => 'Price Low to High',
+        'target' => 'ROUND(list_price * (1 - disc_pct / 100),2)',
+        'sortType' => 'ASC'
+      ],
+      'PHL' => [
+        'label' => 'Price High to Low',
+        'target' => 'ROUND(list_price * (1 - disc_pct / 100),2)',
+        'sortType' => 'DESC'
+      ],
+    ];
+
+    return $sortOptions;
+  }
+
+
   public function insert($fields, $values, $params)
   {
     $query = "INSERT INTO category({$fields}) VALUES({$values})";
@@ -220,6 +316,33 @@ class Category
       $allParams = array_merge($allParams, $screensizeParams);
     }
 
+    // Handling price filter
+    $priceRangeConditions = [];
+    if (!empty($params['priceRange'])) {
+      $priceRanges = $this->getProductCountPriceRangesByCategory(['id' => $id]); // Ensure this fetches the price ranges
+      foreach ($params['priceRange'] as $rangeKey) {
+        if (isset($priceRanges[$rangeKey])) {
+          $priceRangeConditions[] = 'ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN ' . $priceRanges[$rangeKey]['min'] . ' AND ' . $priceRanges[$rangeKey]['max'];
+        }
+      }
+    }
+
+    // Handling sort
+    $sortCondition = [];
+    if (!empty($params['sortBy'])) {
+      $sortOptions = $this->setProductSortsByCategory();
+      foreach ($params['sortBy'] as $sortKey) {
+        if (isset($sortOptions[$sortKey])) {
+          $sortCondition[] = "ORDER BY {$sortOptions[$sortKey]['target']} {$sortOptions[$sortKey]['sortType']}";
+        }
+      }
+    }
+
+    // Include price range conditions in the main conditions
+    if (!empty($priceRangeConditions)) {
+      $conditions[] = '(' . implode(' OR ', $priceRangeConditions) . ')';
+    }
+
     // if (empty($conditions)) {
     //   return []; // No filters selected, could return all or none based on requirements
     // }
@@ -232,6 +355,10 @@ class Category
 
     if (!empty($conditions)) {
       $query .= " AND (" . implode(' AND ', $conditions) . ")";
+    }
+
+    if (!empty($sortCondition)) {
+      $query .= " {$sortCondition[0]}";
     }
 
 

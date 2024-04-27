@@ -22,6 +22,7 @@ class CategoriesController
   {
     $categories = $this->categoryModel->getAllActiveCategories();
 
+
     loadView('Categories/index', [
       'categories' => $categories,
     ]);
@@ -33,6 +34,8 @@ class CategoriesController
     $products = $this->categoryModel->getAllActiveProductsByCategory($params);
     $storages = $this->categoryModel->getStoragesbyCategory($params);
     $screensizes = $this->categoryModel->getScreensizeByCategory($params);
+    $priceRanges = $this->categoryModel->getProductCountPriceRangesByCategory($params);
+    $sorts = $this->categoryModel->setProductSortsByCategory();
     // $resolutions = $this->categoryModel->getResolutionByCategory($params);
 
     // inspectAndDie($category);
@@ -45,6 +48,8 @@ class CategoriesController
         'products' => $products,
         'storages' => $storages,
         'screensizes' => $screensizes,
+        'priceRanges' => $priceRanges,
+        'sorts' => $sorts
         // 'resolutions' => $resolutions
       ]);
     }
@@ -57,6 +62,8 @@ class CategoriesController
     $category = $this->categoryModel->getSingleCategory($params);
     $storages = $this->categoryModel->getStoragesbyCategory($params);
     $screensizes = $this->categoryModel->getScreensizeByCategory($params);
+    $priceRanges = $this->categoryModel->getProductCountPriceRangesByCategory($params);
+    $sorts = $this->categoryModel->setProductSortsByCategory();
 
     $args = [
       'storage' => [
@@ -66,7 +73,15 @@ class CategoriesController
       'screensize' => [
         'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
         'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
-      ]
+      ],
+      'priceRange' => [
+        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ],
+      'sortBy' => [
+        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+        'flags'  => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY
+      ],
     ];
 
     $inputData = filter_input_array(INPUT_GET, $args);
@@ -75,6 +90,8 @@ class CategoriesController
     // Ensure both category_id and storage are set and are arrays
     $inputData['storage'] = $inputData['storage'] ?? [];
     $inputData['screensize'] = $inputData['screensize'] ?? [];
+    $inputData['priceRange'] = $inputData['priceRange'] ?? [];
+    $inputData['sortBy'] = $inputData['sortBy'] ?? [];
     $inputData['id'] = $id;
 
     $products = $this->categoryModel->getCategoryFilterProducts($inputData);
@@ -85,7 +102,9 @@ class CategoriesController
       'category' => $category,
       'products' => $products,
       'screensizes' => $screensizes,
-      'storages' => $storages
+      'priceRanges' => $priceRanges,
+      'storages' => $storages,
+      'sorts' => $sorts
     ]);
   }
 }
