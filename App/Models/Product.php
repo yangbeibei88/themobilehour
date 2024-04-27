@@ -273,13 +273,21 @@ class Product
       $allParams = array_merge($allParams, $storageParams);
     }
 
-    // Adding price range filter
-    if (!empty($params['minPrice']) && !empty($params['maxPrice'])) {
-      $conditions[] = 'ROUND(p.list_price * (1 - p.disc_pct / 100), 2) BETWEEN :minPrice AND :maxPrice';
-      $allParams['minPrice'] = $params['minPrice'];
-      $allParams['maxPrice'] = $params['maxPrice'];
+    // Handling price filter
+    $priceRangeConditions = [];
+    if (!empty($params['priceRange'])) {
+      $priceRanges = $this->getProductCountPriceRanges(); // Ensure this fetches the price ranges
+      foreach ($params['priceRange'] as $rangeKey) {
+        if (isset($priceRanges[$rangeKey])) {
+          $priceRangeConditions[] = 'ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN ' . $priceRanges[$rangeKey]['min'] . ' AND ' . $priceRanges[$rangeKey]['max'];
+        }
+      }
     }
 
+    // Include price range conditions in the main conditions
+    if (!empty($priceRangeConditions)) {
+      $conditions[] = '(' . implode(' OR ', $priceRangeConditions) . ')';
+    }
 
     $query = "SELECT p.*, f.*, c.*, g.*, p.is_active AS product_is_active, c.is_active AS category_is_active FROM product p 
     LEFT JOIN feature f ON p.feature_id = f.feature_id  
@@ -290,6 +298,8 @@ class Product
     if (!empty($conditions)) {
       $query .= " AND (" . implode(' AND ', $conditions) . ")";
     }
+
+    // inspectAndDie($query);
 
     $products = $this->db->query($query, $allParams)->fetchAll();
 

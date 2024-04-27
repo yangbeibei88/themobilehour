@@ -40,10 +40,10 @@
         <?php foreach ($changelogs as $changelog) : ?>
           <tr>
             <td><?= $changelog->date_created ?></td>
-            <td><a href="#"><?= $changelog->created_by ?></a></td>
-            <td><a href="product-management/<?= $changelog->product_id ?>"><?= $changelog->sku ?></a></td>
+            <td><?= $changelog->created_by ?></td>
+            <td><a href="<?= assetPath('admin/product-management/show/' . $changelog->product_id) ?>"><?= $changelog->sku ?></a></td>
             <td><?= $changelog->date_last_modified ?></td>
-            <td><a href="#"><?= $changelog->modified_by ?></a></td>
+            <td><?= $changelog->modified_by ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>
