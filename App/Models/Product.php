@@ -250,13 +250,62 @@ class Product
     return $sortOptions;
   }
 
-
-  public function adminProductSearch($params)
+  public function setOperators()
   {
+    $operators = [
+      'equalTo' => [
+        'label' => 'Equal to',
+        'syntax' => '='
+      ],
+      'greaterThan' => [
+        'label' => 'Greater than',
+        'syntax' => '>'
+      ],
+      'greaterThanEqual' => [
+        'label' => 'Greater than and equal to',
+        'syntax' => '>='
+      ],
+      'lessThan' => [
+        'label' => 'Less than',
+        'syntax' => '<'
+      ],
+      'lessThanEqual' => [
+        'label' => 'Less than and equal to',
+        'syntax' => '<='
+      ],
+    ];
+
+    return $operators;
+  }
+
+
+  public function adminProductSearch($params = [])
+  {
+    $conditions = [];
+
     $query = "SELECT * FROM product p 
     LEFT JOIN feature f ON p.feature_id = f.feature_id  
     LEFT JOIN category c ON p.category_id = c.category_id
-    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id WHERE sku LIKE :term OR product_name LIKE :term";
+    LEFT JOIN product_image_gallery g ON p.image_gallery_id = g.image_gallery_id";
+
+
+
+    // Handling search term
+    if (!empty($params['term'])) {
+      $conditions[] = "(sku LIKE :term OR product_name LIKE :term)";
+    }
+
+    // handling stock quantity condition
+    if (!empty($params['stockOperator']) && $params['stockQty'] >= 0) {
+      $operators = $this->setOperators();
+      $conditions[] = "(stock_on_hand {$operators[$params['stockOperator']]['syntax']} :stockQty)";
+    }
+
+    if (!empty($conditions)) {
+      $query .= " WHERE " . implode(' AND ', $conditions);
+    }
+
+    // inspectAndDie($query);
 
     $products = $this->db->query($query, $params)->fetchAll();
     return $products;

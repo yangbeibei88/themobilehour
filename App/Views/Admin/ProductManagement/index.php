@@ -10,20 +10,43 @@
 
 <main id="product-manager">
   <div class="container my-4">
-    <div class="row justify-content-between" id="product-manager-top">
-      <form class="col-md-6 me-auto d-flex" role="search" action="<?= assetPath('admin/product-management/search') ?>" method="GET">
-        <input type="search" name="term" id="admin-product-search" placeholder="Search by SKU or Product Name" aria-label="Search" class="form-control me-2" value="<?= $term ?? '' ?>">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
-      <div class="col-auto ms-auto">
-        <a href="product-management/create" role="button" class="btn btn-outline-primary">Add New
-          Product</a>
-      </div>
+    <div class="d-flex justify-content-end mb-3">
+      <a href="product-management/create" role="button" class="btn btn-outline-primary">Add New
+        Product</a>
     </div>
-    <?php if (isset($term)) : ?>
-      <div class="text-center border border-1 rounded py-2 bg-light">Search Result for: <strong><?= "'{$term}'" ?></strong>. Matches Found: <strong><?= $count ?></strong></div>
+
+    <form class="row row-cols-1 row-cols-sm-2 row-cols-md-4 align-items-center justify-conent-between border rounded bg-body-tertiary p-2" role="search" action="<?= assetPath('admin/product-management/search') ?>" method="GET">
+      <div class="col col-md-6">
+        <label for="admin-product-search" class="form-label">Search</label>
+        <input type="search" name="term" id="admin-product-search" placeholder="Search by SKU or Product Name" aria-label="Search" class="form-control me-2" value="<?= $term ?? '' ?>">
+        <div class="text-danger"><?= $errors['term'] ?? '' ?></div>
+      </div>
+      <div class="col">
+        <label for="stockOperator" class="form-label">Operator</label>
+        <select name="stockOperator" id="stockOperator" class="form-select">
+          <option value="" selected>Select a operator</option>
+          <?php foreach ($operators as $key => $value) : ?>
+            <option value="<?= $key ?>" <?= (isset($inputData['stockOperator']) && $inputData['stockOperator'] == $key) ? 'selected' : '' ?>><?= $value['label'] ?></option>
+          <?php endforeach; ?>
+        </select>
+        <div class="text-danger"><?= $errors['stockOperator'] ?? '' ?></div>
+      </div>
+      <div class="col">
+        <label for="stockQty" class="form-label">Stock Qty</label>
+        <input type="number" name="stockQty" id="stockQty" class="form-control" value="<?= $inputData['stockQty'] ?? '' ?>">
+        <div class="text-danger"><?= $errors['stockQty'] ?? '' ?></div>
+      </div>
+
+      <div class="col d-flex flex-grow-1 align-items-end justify-content-end mt-auto gap-3 pt-3">
+        <a href="<?= assetPath('admin/product-management') ?>" class="btn btn-secondary">Reset</a>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+
+    <?php if (!empty($inputData) && empty($errors)) : ?>
+      <div class="text-center border border-1 rounded py-2 bg-light">Search Result for: <strong><?= "'{$term}'" ?? '' ?> <?= !empty($inputData['stockOperator']) ? ' stock quantity ' . $operators[$inputData['stockOperator']]['label'] : '' ?> <?= $inputData['stockQty'] ?? '' ?></strong>. Matches Found: <strong><?= $count ?? '' ?></strong></div>
     <?php else : ?>
-      All Products
+      Total: <?= count($products) ?> products
     <?php endif; ?>
     <div class="table-responsive">
       <table class="table">

@@ -1,6 +1,6 @@
 <?= loadPartial('header') ?>
 <?= loadPartial('navbar') ?>
-<?= loadPartial('breadcrumb') ?>
+
 <main>
   <div class="container py-4">
     <h2><?= $status . ": " . $message ?></h2>

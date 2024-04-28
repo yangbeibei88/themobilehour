@@ -138,14 +138,6 @@ class ProductsController
     $inputData['priceRange'] = $inputData['priceRange'] ?? [];
     $inputData['sortBy'] = $inputData['sortBy'] ?? [];
 
-    // // Extract price range filter values if any
-    // if (!empty($inputData['priceRange'])) {
-    //   $selectedPriceRange = $priceRanges[$inputData['priceRange'][0]] ?? null; // Assumes the first selected range; adjust if multiple selections are allowed
-    //   if ($selectedPriceRange) {
-    //     $inputData['minPrice'] = $selectedPriceRange['min'];
-    //     $inputData['maxPrice'] = $selectedPriceRange['max'];
-    //   }
-    // }
 
     $products = $this->productModel->getPublicFilterProducts($inputData);
 

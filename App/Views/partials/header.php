@@ -12,7 +12,7 @@
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
   <link rel="stylesheet" href="<?= assetPath("css/custom.css") ?>">
   <script src="<?= assetPath("js/main.js") ?>" defer></script>
-  <title><?= $pageTitle ?></title>
+  <title><?= isset($pageTitle) ? "$pageTitle | The Mobile Hour" : 'The Mobile Hour' ?></title>
 </head>
 
 <body>

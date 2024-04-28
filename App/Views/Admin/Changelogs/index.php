@@ -8,10 +8,14 @@
 
 <main id="changelogs">
   <div class="container mt-4">
+    <?php if (isset($errors['date']) && !empty($errors['date'])) : ?>
+      <div class="alert alert-danger" role="alert">
+        <?= $errors['date']  ?>
+      </div>
+    <?php endif; ?>
     <form action="<?= assetPath('admin/changelogs/filter') ?>" method="GET" class="row gap-column-3 flex-wrap border rounded bg-body-tertiary p-2" id="changelogs-top">
       <div class="col-12 col-md-6">
         <label for="filterByUser" class="form-label">User</label>
-        <!-- <input type="text" name="admin-changeloguser-search" id="admin-changeloguser-search" placeholder="Search by user" aria-label="Search by user" class="form-control me-2"> -->
         <select name="admin_user" id="filterByUser" class="form-select">
           <option selected value="">Select a user</option>
           <?php foreach ($users as $user) : ?>
@@ -41,27 +45,35 @@
         <button type="submit" class="btn btn-primary">Search</button>
       </div>
     </form>
-    <table class="table my-4" id="admin-order-list">
-      <thead>
-        <tr>
-          <th scope="col">Date created</th>
-          <th scope="col">Created by</th>
-          <th scope="col">Product</th>
-          <th scope="col">Date Modified</th>
-          <th scope="col">Modified by</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($changelogs as $changelog) : ?>
-          <tr>
-            <td><?= $changelog->date_created ?></td>
-            <td><?= $changelog->created_by ?></td>
-            <td><a href="<?= assetPath('admin/product-management/show/' . $changelog->product_id) ?>"><?= $changelog->sku ?></a></td>
-            <td><?= $changelog->date_last_modified ?></td>
-            <td><?= $changelog->modified_by ?></td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+    <?php if (count($changelogs) > 0) : ?>
+      <p class="mb-0"><?= count($changelogs) . ' records' ?></p>
+      <div class="table-responsive">
+        <table class="table my-4" id="admin-order-list">
+          <thead>
+            <tr>
+              <th scope="col">Date created</th>
+              <th scope="col">Created by</th>
+              <th scope="col">Product</th>
+              <th scope="col">Date Modified</th>
+              <th scope="col">Modified by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($changelogs as $changelog) : ?>
+              <tr>
+                <td><?= $changelog->date_created ?></td>
+                <td><?= $changelog->created_by ?></td>
+                <td><a href="<?= assetPath('admin/product-management/show/' . $changelog->product_id) ?>"><?= $changelog->sku ?></a></td>
+                <td><?= $changelog->date_last_modified ?></td>
+                <td><?= $changelog->modified_by ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php else : ?>
+      <p>No Results Found</p>
+    <?php endif; ?>
   </div>
 </main>
+<?= loadPartial('footer') ?>

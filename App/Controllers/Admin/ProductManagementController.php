@@ -212,9 +212,11 @@ class ProductManagementController
   public function index()
   {
     $products = $this->productModel->getAllProducts();
+    $operators = $this->productModel->setOperators();
 
     loadView('Admin/ProductManagement/index', [
       'products' => $products,
+      'operators' => $operators
     ]);
   }
 
@@ -620,22 +622,64 @@ class ProductManagementController
   public function search()
   {
     // $term = filter_input(INPUT_GET, 'term', FILTER_SANITIZE_SPECIAL_CHARS);
-    $term = isset($_GET['term']) ? sanitize($_GET['term']) : '';
-    // inspectAndDie($term);
-    // inspectAndDie($_GET);
+    $errors = [];
 
-    $params = [
-      'term' => "%{$term}%"
+    $products = $this->productModel->getAllProducts();
+    $operators = $this->productModel->setOperators();
+
+
+    $inputData = filter_input_array(INPUT_GET, [
+      'term' => FILTER_DEFAULT,
+      'stockOperator' => FILTER_DEFAULT,
+      'stockQty' => FILTER_DEFAULT
+    ]);
+
+    $errors = [
+      'term' => Validation::text('term', trim($inputData['term']), 0, 100, FALSE),
+      'stockQty' => Validation::number('stockQty', $inputData['stockQty'], 0, NULL, FALSE),
     ];
 
-    $products = $this->productModel->adminProductSearch($params);
+    if ($inputData['stockQty'] < 0 && !empty($inputData['stockOperator'])) {
+      $errors['stockQty'] = 'Please enter a valid number';
+    }
+    if ($inputData['stockQty'] >= 0 && empty($inputData['stockOperator'])) {
+      $errors['stockOperator'] = 'Please select a operator';
+    }
 
-    $count = count($products);
+    // Filter out any non-errors
+    $errors = array_filter($errors);
 
-    loadView('Admin/ProductManagement/index', [
-      'products' => $products,
-      'term' => $term,
-      'count' => $count
-    ]);
+    if (!empty($errors)) {
+      loadView('Admin/ProductManagement/index', [
+        'errors' => $errors,
+        'products' => $products,
+        'operators' => $operators,
+        'inputData' => $inputData
+      ]);
+      exit;
+    } else {
+      $term = $inputData['term'];
+      $sanitizedInputData = [
+        'term' => filter_var(trim($inputData['term']), FILTER_SANITIZE_SPECIAL_CHARS),
+        'stockOperator' => filter_var($inputData['stockOperator'], FILTER_SANITIZE_SPECIAL_CHARS),
+        'stockQty' => filter_var($inputData['stockQty'], FILTER_SANITIZE_NUMBER_INT),
+      ];
+
+      $sanitizedInputData['term'] = "%{$term}%";
+
+      $sanitizedInputData = array_filter($sanitizedInputData, fn ($data) => $data <> '' || $data <> NULL);
+
+      $products = $this->productModel->adminProductSearch($sanitizedInputData);
+
+      $count = count($products);
+
+      loadView('Admin/ProductManagement/index', [
+        'products' => $products,
+        'term' => $term,
+        'count' => $count,
+        'operators' => $operators,
+        'inputData' => $sanitizedInputData
+      ]);
+    }
   }
 }
