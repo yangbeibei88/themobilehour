@@ -55,3 +55,21 @@ function adjustAccordionBehavior() {
 }
 window.addEventListener("resize", adjustAccordionBehavior);
 window.addEventListener("DOMContentLoaded", adjustAccordionBehavior);
+
+// changelog date synchronize date if one of them is empty
+document.addEventListener("DOMContentLoaded", () => {
+  const changeLogDateFrom = document.getElementById("dateFromChangelog");
+  const changeLogDateTo = document.getElementById("dateToChangelog");
+  function changeLogDateHandling(source, target) {
+    if (source.value && !target.value) {
+      target.value = source.value;
+    }
+  }
+
+  changeLogDateFrom.addEventListener("change", () =>
+    changeLogDateHandling(changeLogDateFrom, changeLogDateTo)
+  );
+  changeLogDateTo.addEventListener("change", () =>
+    changeLogDateHandling(changeLogDateTo, changeLogDateFrom)
+  );
+});

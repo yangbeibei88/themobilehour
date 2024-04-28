@@ -45,6 +45,7 @@ $router->post('/themobilehour/admin/user-management/update/{id}', 'Admin\UserMan
 
 /*---------------------------Admin changelog routes------------------------------------------*/
 $router->get('/themobilehour/admin/changelogs', 'Admin\ChangelogsController@index', ['authAdmin']);
+$router->get('/themobilehour/admin/changelogs/filter', 'Admin\ChangelogsController@filter', ['authAdmin']);
 
 /*---------------------------Admin account routes------------------------------------------*/
 $router->get('/themobilehour/admin/auth/login', 'Admin\AccountController@login', ['guest']);

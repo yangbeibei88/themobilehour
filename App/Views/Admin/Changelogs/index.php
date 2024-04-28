@@ -7,24 +7,39 @@
 ]) ?>
 
 <main id="changelogs">
-  <div class="container my-4">
-    <form class="row row-cols-1 row-cols-md-4 border rounded bg-body-tertiary py-4" id="changelogs-top">
-      <div class="col col-md-3">
-        <input type="text" name="admin-changeloguser-search" id="admin-changeloguser-search" placeholder="Search by user" aria-label="Search by user" class="form-control me-2">
+  <div class="container mt-4">
+    <form action="<?= assetPath('admin/changelogs/filter') ?>" method="GET" class="row gap-column-3 flex-wrap border rounded bg-body-tertiary p-2" id="changelogs-top">
+      <div class="col-12 col-md-6">
+        <label for="filterByUser" class="form-label">User</label>
+        <!-- <input type="text" name="admin-changeloguser-search" id="admin-changeloguser-search" placeholder="Search by user" aria-label="Search by user" class="form-control me-2"> -->
+        <select name="admin_user" id="filterByUser" class="form-select">
+          <option selected value="">Select a user</option>
+          <?php foreach ($users as $user) : ?>
+            <option value="<?= $user->admin_user_id ?>" <?= $user->admin_user_id == ($filterInputData['admin_user'] ?? '') ? 'selected' : '' ?>> <?= $user->full_name ?></option>
+          <?php endforeach; ?>
+        </select>
       </div>
-      <div class="col col-md-3">
-        <input type="text" name="admin-changelogproduct-search" id="admin-changelogproduct-search" placeholder="Search by product" aria-label="Search by product" class="form-control me-2">
+      <div class="col-12 col-md-6">
+        <label for="filterByProduct" class="form-label">Product</label>
+        <input type="text" name="product_term" id="filterByProduct" placeholder="Search by product" aria-label="Search by product" value="<?= $product_term ?? '' ?>" class="form-control me-2">
       </div>
-      <div class="col col-md-3">
-        <input type="date" name="admin-changelogDatefrom-search" id="admin-changelogDatefrom-search" placeholder="Date from" aria-label="Date from" class="form-control me-2">
+      <fieldset class="col-12 col-md-6 rounded p-2">
+        <legend class="fs-6 fw-bold">Created Date</legend>
+        <div class="d-flex gap-3">
+          <div class="col">
+            <label for="dateFromChangelog" class="form-label">From</label>
+            <input type="date" name="dateFrom" id="dateFromChangelog" placeholder="Date from" aria-label="Date from" value="<?= $filterInputData['dateFrom'] ?? '' ?>" class="form-control me-2">
+          </div>
+          <div class="col">
+            <label for="dateToChangelog" class="form-label">To</label>
+            <input type="date" name="dateTo" id="dateToChangelog" placeholder="Date to" aria-label="Date to" value="<?= $filterInputData['dateTo'] ?? '' ?>" class="form-control me-2">
+          </div>
+        </div>
+      </fieldset>
+      <div class="col-12 col-md-6 d-flex align-items-end justify-content-end gap-2">
+        <a href="<?= assetPath('admin/changelogs') ?>" class="btn btn-secondary">Reset</a>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
-      <div class="col col-md-3">
-        <input type="date" name="admin-changelogDateto-search" id="admin-changelogDateto-search" placeholder="Date to" aria-label="Date to" class="form-control me-2">
-      </div>
-      <div class="col col-md-3 my-2">
-        <input type="submit" value="Search" name="search" class="btn btn-primary">
-      </div>
-
     </form>
     <table class="table my-4" id="admin-order-list">
       <thead>
