@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\Admin\ErrorController as AdminErrorController;
 use App\Models\Changelog;
+use Framework\Validation;
 
 class ChangelogsController
 {
@@ -46,8 +47,19 @@ class ChangelogsController
       ]
     );
 
+    $errors = [
+      'product_term' => Validation::text('product_term', $inputData['product_term'], 0, 100, FALSE),
+      'dateFrom' => Validation::validateDate('dateFrom', $inputData['dateFrom'], FALSE),
+      'dateTo' => Validation::validateDate('dateTo', $inputData['dateTo'], FALSE),
+    ];
+
     if ($inputData['dateTo'] < $inputData['dateFrom']) {
-      $errors['date'] = 'End date must be equal to or later than start date';
+      $errors['dateTo'] = 'End date must be equal to or later than start date';
+    }
+
+    $errors = array_filter($errors);
+
+    if (!empty($errors)) {
       loadView('Admin/Changelogs/index', [
         'errors' => $errors,
         'changelogs' => $changelogs,
@@ -56,23 +68,20 @@ class ChangelogsController
       ]);
       exit;
     } else {
-
       // Create sanitizedInputData array excluding empty values
       $sanitizedInputData = [];
       $product_term = $inputData['product_term'];
-      if (!empty($inputData['admin_user'])) {
-        $sanitizedInputData['admin_user'] = filter_var($inputData['admin_user'], FILTER_SANITIZE_NUMBER_INT);
-      }
-      if (!empty($inputData['product_term'])) {
-        $product_term = filter_var(trimAndUpperCase($inputData['product_term']), FILTER_SANITIZE_SPECIAL_CHARS);
-        $sanitizedInputData['product_term'] = "%{$product_term}%";
-      }
-      if (!empty($inputData['dateFrom'])) {
-        $sanitizedInputData['dateFrom'] = filter_var($inputData['dateFrom'], FILTER_SANITIZE_SPECIAL_CHARS);
-      }
-      if (!empty($inputData['dateTo'])) {
-        $sanitizedInputData['dateTo'] = filter_var($inputData['dateTo'], FILTER_SANITIZE_SPECIAL_CHARS);
-      }
+      $sanitizedInputData = [
+        'admin_user' => filter_var($inputData['admin_user'], FILTER_SANITIZE_NUMBER_INT),
+        'product_term' => filter_var($inputData['product_term'], FILTER_SANITIZE_SPECIAL_CHARS),
+        'dateFrom' => filter_var($inputData['dateFrom'], FILTER_SANITIZE_SPECIAL_CHARS),
+        'dateTo' => filter_var($inputData['dateTo'], FILTER_SANITIZE_SPECIAL_CHARS),
+      ];
+
+      $sanitizedInputData['product_term'] = "%{$product_term}%";
+
+      $sanitizedInputData = array_filter($sanitizedInputData, fn ($data) => $data <> '' || $data <> NULL);
+
 
       // inspectAndDie($sanitizedInputData);
 

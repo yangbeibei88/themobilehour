@@ -8,11 +8,6 @@
 
 <main id="changelogs">
   <div class="container mt-4">
-    <?php if (isset($errors['date']) && !empty($errors['date'])) : ?>
-      <div class="alert alert-danger" role="alert">
-        <?= $errors['date']  ?>
-      </div>
-    <?php endif; ?>
     <form action="<?= assetPath('admin/changelogs/filter') ?>" method="GET" class="row gap-column-3 flex-wrap border rounded bg-body-tertiary p-2" id="changelogs-top">
       <div class="col-12 col-md-6">
         <label for="filterByUser" class="form-label">User</label>
@@ -27,16 +22,19 @@
         <label for="filterByProduct" class="form-label">Product</label>
         <input type="text" name="product_term" id="filterByProduct" placeholder="Search by product" aria-label="Search by product" value="<?= $product_term ?? '' ?>" class="form-control me-2">
       </div>
+      <div class="text-danger"><?= $errors['product_term'] ?? '' ?></div>
       <fieldset class="col-12 col-md-6 rounded p-2">
         <legend class="fs-6 fw-bold">Created Date</legend>
         <div class="d-flex gap-3">
           <div class="col">
             <label for="dateFromChangelog" class="form-label">From</label>
             <input type="date" name="dateFrom" id="dateFromChangelog" placeholder="Date from" aria-label="Date from" value="<?= $filterInputData['dateFrom'] ?? '' ?>" class="form-control me-2">
+            <div class="text-danger"><?= $errors['dateFrom'] ?? '' ?></div>
           </div>
           <div class="col">
             <label for="dateToChangelog" class="form-label">To</label>
             <input type="date" name="dateTo" id="dateToChangelog" placeholder="Date to" aria-label="Date to" value="<?= $filterInputData['dateTo'] ?? '' ?>" class="form-control me-2">
+            <div class="text-danger"><?= $errors['dateTo'] ?? '' ?></div>
           </div>
         </div>
       </fieldset>

@@ -312,4 +312,26 @@ class Validation
       }
     }
   }
+
+  /**
+   * Validate date
+   *
+   * @param string $date
+   * @return void
+   */
+  public static function validateDate($name, $value, $required = TRUE)
+  {
+    $value = trim($value);
+    if ($required && empty($value)) {
+      return "$name is required.";
+    } elseif (!empty($value)) {
+      if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+        if (!strtotime($value)) {
+          return "Invalid date";
+        }
+      } else {
+        return "Date format is not valid";
+      }
+    }
+  }
 }

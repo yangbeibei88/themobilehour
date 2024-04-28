@@ -70,6 +70,8 @@ class ProductsController
     // inspect($_GET);
     $categories = $this->productModel->getActiveProductCountByCategory();
     $storages = $this->productModel->getActiveProductCountByStorage();
+    $priceRanges = $this->productModel->getProductCountPriceRanges();
+    $sorts = $this->productModel->setProductSorts();
 
     $term = filter_input(INPUT_GET, 'term', FILTER_DEFAULT);
 
@@ -98,7 +100,9 @@ class ProductsController
       'term' => $term,
       'count' => $count,
       'categories' => $categories,
-      'storages' => $storages
+      'storages' => $storages,
+      'priceRanges' => $priceRanges,
+      'sorts' => $sorts
     ]);
   }
 
