@@ -19,7 +19,7 @@ class ChangelogsController
   {
     $changelogs = $this->changelogModel->getAllChangelogs();
     $users = $this->changelogModel->getDistinctUsers();
-    inspect($users);
+    // inspect($users);
 
     if (!$changelogs) {
       AdminErrorController::notFound('Changelogs not found');

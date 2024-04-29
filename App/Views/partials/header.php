@@ -15,4 +15,4 @@
   <title><?= isset($pageTitle) ? "$pageTitle | The Mobile Hour" : 'The Mobile Hour' ?></title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">

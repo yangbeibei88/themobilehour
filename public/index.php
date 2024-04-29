@@ -2,9 +2,9 @@
 
 // session_start();
 require __DIR__ . '/../vendor/autoload.php';
-echo '__DIR__: ' . __DIR__;
-echo '<br>';
-echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
+// echo '__DIR__: ' . __DIR__;
+// echo '<br>';
+// echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
 
 
 use Framework\Router;
@@ -34,38 +34,38 @@ require '../functions.php';
 // });
 
 // $now = date("Y-m-d H:i:s");
-echo '<br>';
-echo getDateTime();
-echo '<br>';
-echo 'basePath(): ' . basePath();
-echo '<br>';
-echo 'DIRECTORY_SEPARATOR: ' . DIRECTORY_SEPARATOR;
-echo '<br>';
-echo 'DOCUMENT_ROOT: ' . $_SERVER['DOCUMENT_ROOT'];
-echo '<br>';
-echo '__DIR__: ' . __DIR__;
-echo '<br>';
-echo '__FILE__' . __FILE__;
-echo '<br>';
-echo substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
-echo '<br>';
-echo substr(dirname(__DIR__), strlen($_SERVER['DOCUMENT_ROOT']));
-echo '<br>';
-echo 'actual URI: ' . $_SERVER['REQUEST_URI'];
-echo '<br>';
-echo 'parse_url: ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-echo '<br>';
-echo 'removed subfolder name URI: ' . getURI($_SERVER['REQUEST_URI']);
-echo '<br>';
+// echo '<br>';
+// echo getDateTime();
+// echo '<br>';
+// echo 'basePath(): ' . basePath();
+// echo '<br>';
+// echo 'DIRECTORY_SEPARATOR: ' . DIRECTORY_SEPARATOR;
+// echo '<br>';
+// echo 'DOCUMENT_ROOT: ' . $_SERVER['DOCUMENT_ROOT'];
+// echo '<br>';
+// echo '__DIR__: ' . __DIR__;
+// echo '<br>';
+// echo '__FILE__' . __FILE__;
+// echo '<br>';
+// echo substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
+// echo '<br>';
+// echo substr(dirname(__DIR__), strlen($_SERVER['DOCUMENT_ROOT']));
+// echo '<br>';
+// echo 'actual URI: ' . $_SERVER['REQUEST_URI'];
+// echo '<br>';
+// echo 'parse_url: ' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// echo '<br>';
+// echo 'removed subfolder name URI: ' . getURI($_SERVER['REQUEST_URI']);
+// echo '<br>';
 
-echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
-echo '<br>';
-echo 'image_path_db: ' . assetPath(IMAGE_UPLOADS);
-echo '<br>';
-echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
-echo '<br>';
-echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
-echo '<br>';
+// echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
+// echo '<br>';
+// echo 'image_path_db: ' . assetPath(IMAGE_UPLOADS);
+// echo '<br>';
+// echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
+// echo '<br>';
+// echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
+// echo '<br>';
 // inspectAndDie(Session::get('adminUser')['id']);
 
 

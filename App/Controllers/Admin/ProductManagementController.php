@@ -255,14 +255,6 @@ class ProductManagementController
   public function edit($params)
   {
 
-    // $id = $params['id'] ?? '';
-
-    // inspect($id);
-    inspect($params);
-
-    // $params = [
-    //   'id' => $id
-    // ];
     $product = $this->productModel->getSingleProduct($params);
     $categories = $this->getCategories();
 

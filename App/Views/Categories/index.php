@@ -3,7 +3,7 @@
 <?= loadPartial('pagetitle', ['pageTitle' => 'All Brands']) ?>
 
 <!-- categories -->
-<section id="categories">
+<main id="categories" class="flex-fill">
   <div class="container my-5 text-center">
     <div class="row row-cols-2 row-cols-md-3 g-5">
       <?php foreach ($categories as $category) : ?>
@@ -24,5 +24,5 @@
       <?php endforeach; ?>
     </div>
   </div>
-</section>
+</main>
 <?= loadPartial('footer') ?>

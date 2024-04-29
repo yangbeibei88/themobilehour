@@ -7,7 +7,7 @@
 
   <div class="container my-5 text-center">
     <h2>Shop By Brand</h2>
-    <div class="row row-cols-1 row-cols-sm-2 g-5">
+    <div class="row row-cols-1 row-cols-sm-2 g-5 py-3">
       <?php foreach ($categories as $category) : ?>
         <div class="col">
           <div class="card">

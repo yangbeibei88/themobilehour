@@ -19,12 +19,12 @@ define('IMAGE_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEP
 define('DOCUMENT_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR);
 define('AVATAR_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR);
 
-echo '<br>';
-echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
-echo '<br>';
-echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
-echo '<br>';
-echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
+// echo '<br>';
+// echo 'image_uploads_folder: ' . IMAGE_UPLOADS;
+// echo '<br>';
+// echo 'documents_uploads_folder: ' . DOCUMENT_UPLOADS;
+// echo '<br>';
+// echo 'avatars_uploads_folder: ' . AVATAR_UPLOADS;
 
 /**
  * Get formatted current date time
@@ -83,7 +83,7 @@ function loadView($name, $data = [])
 {
   $viewPath = basePath("App/Views/{$name}.php");
 
-  inspect($viewPath);
+  // inspect($viewPath);
 
   if (file_exists($viewPath)) {
     extract($data);

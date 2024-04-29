@@ -52,3 +52,4 @@
     </form>
   </div>
 </main>
+<?= loadPartial('footer') ?>

@@ -1,5 +1,9 @@
 <?= loadPartial('header', ['pageTitle' => $product->product_name]) ?>
 <?= loadPartial('navbar') ?>
+<?= loadPartial('breadcrumb', [
+  'backLink' => 'products',
+  'backLinkText' => 'Back to Products'
+]) ?>
 <?php
 
 // push each product's not-null image paths to a new array

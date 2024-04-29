@@ -46,3 +46,4 @@
     </table>
   </div>
 </main>
+<?= loadPartial('footer') ?>
