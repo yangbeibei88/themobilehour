@@ -76,12 +76,12 @@ class Session
   {
     // Empty $_SESSION superglobal, equal to $_SESSION = []
     session_unset();
+    // Destroy the session data on the server
+    session_destroy();
     // Get session cookie parameters
     $params = session_get_cookie_params();
-    // Clear session cookie, $prams['expire'] = 60 * 60 * 24 (1day)
+    // Clear the session cookie from the browser by setting its expiration to one day (60*60*24=86400) ago
     setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    // Destroy the session
-    session_destroy();
   }
 
   /**

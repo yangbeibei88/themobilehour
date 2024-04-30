@@ -3,6 +3,7 @@
 ]) ?>
 <?= loadPartial('navbar-admin') ?>
 <?= loadPartial('pagetitle', ['pageTitle' => 'Add New Product']) ?>
+<?= loadPartial('message') ?>
 
 <main id="add-product">
   <div class="container my-4">

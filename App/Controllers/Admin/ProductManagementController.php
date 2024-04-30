@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Feature;
 use App\Models\Product;
 use App\Models\ProductImageGallery;
+use Exception;
+use Framework\Database;
 use Framework\Session;
 use Framework\Validation;
 use HTMLPurifier;
@@ -14,6 +16,7 @@ use HTMLPurifier_Config;
 
 class ProductManagementController
 {
+  protected $db;
   protected $productModel;
   protected $categoryModel;
   protected $featureModel;
@@ -21,6 +24,8 @@ class ProductManagementController
 
   public function __construct()
   {
+    $config = require basePath('config/config.php');
+    $this->db = new Database($config);
     $this->productModel = new Product();
   }
 
@@ -466,87 +471,52 @@ class ProductManagementController
       ]);
       exit;
     } else {
+      /*----------------------TRANSACTION BEGINS--------------------------------- */
+      try {
+        $this->db->conn->beginTransaction();
+        // get sanitized data
+        $sanitizedData = $this->sanitizeProductInputData($inputProductMetaData, $inputProductFeatureData, $inputProductImgGalleryData);
 
-      // get sanitized data
-      $sanitizedData = $this->sanitizeProductInputData($inputProductMetaData, $inputProductFeatureData, $inputProductImgGalleryData);
+        $newProductMetaData = $sanitizedData['productMetaData'];
 
-      $newProductMetaData = $sanitizedData['productMetaData'];
+        $newProductFeatureData = $sanitizedData['productFeatureData'];
 
-      $newProductFeatureData = $sanitizedData['productFeatureData'];
+        $newProductImgGalleryData = $sanitizedData['productImgGalleryData'];
 
-      $newProductImgGalleryData = $sanitizedData['productImgGalleryData'];
+        $this->moveAndUpdateFiles($_FILES, $newProductImgGalleryData);
 
-      $this->moveAndUpdateFiles($_FILES, $newProductImgGalleryData);
+        // Insert image gallery data
+        $productImgGalleryFields = implode(', ', array_keys($newProductImgGalleryData));
+        $productImgGalleryValues = ':' . implode(', :', array_keys($newProductImgGalleryData));
+        $this->getProductImageGalleryModel()->insert($productImgGalleryFields, $productImgGalleryValues, $newProductImgGalleryData);
+        $newProductMetaData['image_gallery_id'] = $this->productImageGalleryModel->getInsertID();
 
-      /*-------------------SUBMIT PRODUCT IMAGE DATA START------------------------ */
+        // Insert feature data
+        $productFeatureFields = implode(', ', array_keys($newProductFeatureData));
+        $productFeatureValues = ':' . implode(', :', array_keys($newProductFeatureData));
+        $this->getFeatureModel()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
+        $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
 
+        // Insert product meta data
+        $productMetaFields = implode(', ', array_keys($newProductMetaData));
+        $productMetaValues = ':' . implode(', :', array_keys($newProductMetaData));
+        $this->productModel->insert($productMetaFields, $productMetaValues, $newProductMetaData);
 
-      $productImgGalleryFields = [];
-      $productImgGalleryValues = [];
-
-      foreach ($newProductImgGalleryData as $field => $value) {
-        $productImgGalleryFields[] = $field;
-        $productImgGalleryValues[] = ':' . $field;
+        $this->db->conn->commit();
+        Session::setFlashMessage('success_message', 'PRODUCT CREATED SUCCESSFULLY');
+        redirect(assetPath('admin/product-management'));
+      } catch (Exception $e) {
+        $this->db->conn->rollBack();
+        Session::setFlashMessage('error_message', 'Failed to create product: ' . $e->getMessage());
+        loadView('Admin/ProductManagement/create', [
+          'productMeta' => $inputProductMetaData,
+          'productFeature' => $inputProductFeatureData,
+          'productImgGallery' => $inputProductImgGalleryData,
+          'categories' => $categories
+        ]);
+        exit;
       }
-
-      $productImgGalleryFields = implode(', ', $productImgGalleryFields);
-      $productImgGalleryValues = implode(', ', $productImgGalleryValues);
-
-      // inspectAndDie($newProductImgGalleryData);
-
-      $this->getProductImageGalleryModel()->insert($productImgGalleryFields, $productImgGalleryValues, $newProductImgGalleryData);
-      $newProductMetaData['image_gallery_id'] = $this->productImageGalleryModel->getInsertID();
-
-
-      /*-------------------SUBMIT PRODUCT IMAGE DATA END------------------------ */
-
-      /*-------------------SUBMIT FEATURE DATA START------------------------ */
-      $productFeatureFields = [];
-      $productFeatureValues = [];
-
-      foreach ($newProductFeatureData as $field => $value) {
-        $productFeatureFields[] = $field;
-        $productFeatureValues[] = ':' . $field;
-      }
-
-      $productFeatureFields = implode(', ', $productFeatureFields);
-      $productFeatureValues = implode(', ', $productFeatureValues);
-
-      $this->getFeatureModel()->insert($productFeatureFields, $productFeatureValues, $newProductFeatureData);
-      $newProductMetaData['feature_id'] = $this->featureModel->getInsertID();
-      // inspectAndDie($newProductMetaData['feature_id']);
-
-
-      /*-------------------SUBMIT FEATURE DATA END------------------------ */
-
-
-      /*-------------------SUBMIT PRODUCT META DATA START------------------------ */
-
-      $productMetaFields = [];
-      $productMetaValues = [];
-
-      foreach ($newProductMetaData as $field => $value) {
-        $productMetaFields[] = $field;
-
-        $productMetaValues[] = ':' . $field;
-      }
-
-      $productMetaFields = implode(', ', $productMetaFields);
-      $productMetaValues = implode(', ', $productMetaValues);
-
-      // inspectAndDie($productMetaValues);
-
-      $this->productModel->insert($productMetaFields, $productMetaValues, $newProductMetaData);
-
-
-      Session::setFlashMessage('success_message', 'PRODUCT CREATED SUCCESSFULLY');
-      // $_SESSION['success_message'] = 'PRODUCT CREATED SUCCESSFULLY';
-
-      /*-------------------SUBMIT PRODUCT META DATA END------------------------ */
-
-      redirect('product-management');
-      // inspectAndDie($fields);
-      // inspectAndDie($values);
+      /*----------------------TRANSACTION END--------------------------------- */
     }
   }
 
