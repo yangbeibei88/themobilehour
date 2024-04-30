@@ -182,9 +182,11 @@ class Category
   {
     $id = $params['id'];
     $params = [
-      'id' => $id
+      'id' => $id,
+      'is_active' => 1
     ];
-    $query = "SELECT MIN(ROUND(list_price * (1 - disc_pct / 100),2)) AS minSalePrice FROM product WHERE category_id = :id";
+    $query = "SELECT MIN(ROUND(list_price * (1 - disc_pct / 100),2)) AS minSalePrice 
+              FROM product WHERE category_id = :id AND is_active = :is_active";
 
     return $this->db->query($query, $params)->fetch();
   }
@@ -193,9 +195,11 @@ class Category
   {
     $id = $params['id'];
     $params = [
-      'id' => $id
+      'id' => $id,
+      'is_active' => 1
     ];
-    $query = "SELECT MAX(ROUND(list_price * (1 - disc_pct / 100),2)) AS maxSalePrice FROM product WHERE category_id = :id";
+    $query = "SELECT MAX(ROUND(list_price * (1 - disc_pct / 100),2)) AS maxSalePrice 
+              FROM product WHERE category_id = :id AND is_active = :is_active";
 
     return $this->db->query($query, $params)->fetch();
   }
@@ -241,10 +245,12 @@ class Category
       $params = [
         'minPrice' => $value['min'],
         'maxPrice' => $value['max'],
-        'id' => $params['id']
+        'id' => $params['id'],
+        'is_active' => 1
       ];
       $query = "SELECT COUNT(product_id) AS productCount FROM product 
-              WHERE category_id = :id AND ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN :minPrice AND :maxPrice";
+              WHERE is_active = :is_active AND category_id = :id 
+              AND ROUND(list_price * (1 - disc_pct / 100),2) BETWEEN :minPrice AND :maxPrice";
 
       $productCount = $this->db->query($query, $params)->fetch()->productCount;
       $priceRanges[$key]['count'] = $productCount;
