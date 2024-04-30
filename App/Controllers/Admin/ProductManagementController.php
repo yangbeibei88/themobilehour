@@ -335,83 +335,57 @@ class ProductManagementController
       ]);
       exit;
     } else {
+      /*----------------------TRANSACTION BEGINS--------------------------------- */
+      try {
+        $this->db->conn->beginTransaction();
 
-      $sanitizedData = $this->sanitizeProductInputData($inputProductMetaData, $inputProductFeatureData, $inputProductImgGalleryData);
+        $sanitizedData = $this->sanitizeProductInputData($inputProductMetaData, $inputProductFeatureData, $inputProductImgGalleryData);
 
-      $updateProductMetaData = $sanitizedData['productMetaData'];
-      // inspectAndDie($updateProductMetaData);
+        $updateProductMetaData = $sanitizedData['productMetaData'];
+        // inspectAndDie($updateProductMetaData);
 
-      $updateProductFeatureData = $sanitizedData['productFeatureData'];
-      // inspectAndDie($updateProductFeatureData);
+        $updateProductFeatureData = $sanitizedData['productFeatureData'];
+        // inspectAndDie($updateProductFeatureData);
 
-      $updateProductImgGalleryData = $sanitizedData['productImgGalleryData'];
+        $updateProductImgGalleryData = $sanitizedData['productImgGalleryData'];
 
+        $this->moveAndUpdateFiles($_FILES, $updateProductImgGalleryData);
 
-      $this->moveAndUpdateFiles($_FILES, $updateProductImgGalleryData);
+        // Update product meta data
+        $updateProductMetaFields = implode(', ', array_map(fn ($field) => "{$field} = :{$field}", array_keys($updateProductMetaData)));
 
+        $updateProductMetaData['id'] = $params['id'];
+        $this->productModel->update($updateProductMetaFields, $updateProductMetaData);
 
-      // inspectAndDie($updateProductImgGalleryData);
+        // Update features
+        if ($product->feature_id) {
+          $updateProductFeatureFields = implode(', ', array_map(fn ($field) => "{$field} = :{$field}", array_keys($updateProductFeatureData)));
 
-      // submit updated data to database
+          $updateProductFeatureData['id'] = $product->feature_id;
+          $this->getFeatureModel()->update($updateProductFeatureFields, $updateProductFeatureData);
+        }
 
-      /*-----------------------UPDATE PRODUCT META START------------------------*/
+        // Update product images
+        if ($product->image_gallery_id) {
+          $updateProductImgGalleryFields = implode(', ', array_map(fn ($field) => "{$field} = :{$field}", array_keys($updateProductImgGalleryData)));
 
-      $updateProductMetaFields = [];
-      foreach (array_keys($updateProductMetaData) as $field) {
-        $updateProductMetaFields[] = "{$field} =:{$field}";
+          $updateProductImgGalleryData['id'] = $product->image_gallery_id;
+          $this->getProductImageGalleryModel()->update($updateProductImgGalleryFields, $updateProductImgGalleryData);
+        }
+
+        $this->db->conn->commit();
+        Session::setFlashMessage('success_message', "PRODUCT: <strong>{$product->sku}</strong> UPDATED SUCCESSFULLY");
+        redirect(assetPath('admin/product-management'));
+      } catch (Exception $e) {
+        $this->db->conn->rollBack();
+        Session::setFlashMessage('error_message', 'Failed to update product: ' . $e->getMessage());
+        loadView('Admin/ProductManagement/edit', [
+          'product' => $product,
+          'categories' => $categories
+        ]);
+        exit;
       }
-      $updateProductMetaFields = implode(', ', $updateProductMetaFields);
-
-      $updateProductMetaData['id'] = $params['id'];
-      $this->productModel->update($updateProductMetaFields, $updateProductMetaData);
-
-
-      /*-----------------------UPDATE PRODUCT META END------------------------*/
-
-
-
-      /*-----------------------UPDATE FEATURES START------------------------*/
-      $updateProductFeatureFields = [];
-
-      foreach (array_keys($updateProductFeatureData) as $field) {
-        $updateProductFeatureFields[] = "{$field} =:{$field}";
-      }
-      $updateProductFeatureFields = implode(', ', $updateProductFeatureFields);
-
-      if ($product->feature_id) {
-        $updateProductFeatureData['id'] = $product->feature_id;
-        $this->getFeatureModel()->update($updateProductFeatureFields, $updateProductFeatureData);
-      }
-      // inspectAndDie($updateProductFeatureFields);
-      /*-----------------------UPDATE FEATURES END------------------------*/
-
-      /*-----------------------UPDATE PRODUCT IMAGES START------------------------*/
-
-
-      $updateProductImgGalleryFields = [];
-
-      foreach (array_keys($updateProductImgGalleryData) as $field) {
-        $updateProductImgGalleryFields[] = "{$field} =:{$field}";
-      }
-
-      $updateProductImgGalleryFields = implode(', ', $updateProductImgGalleryFields);
-
-
-      // inspectAndDie($updateProductImgGalleryFields);
-      // inspectAndDie($updateProductImgGalleryData);
-
-      if ($product->image_gallery_id) {
-        $updateProductImgGalleryData['id'] = $product->image_gallery_id;
-        $this->getProductImageGalleryModel()->update($updateProductImgGalleryFields, $updateProductImgGalleryData);
-      }
-
-      /*-----------------------UPDATE PRODUCT IMAGES END------------------------*/
-
-      // set flash message
-      // $_SESSION['success_message'] = 'PRODUCT UPDATED SUCCESSFULLY';
-      Session::setFlashMessage('success_message', "PRODUCT: <strong>{$product->sku}</strong> UPDATED SUCCESSFULLY");
-
-      redirect(assetPath('admin/product-management'));
+      /*----------------------TRANSACTION ENDS--------------------------------- */
     }
   }
 

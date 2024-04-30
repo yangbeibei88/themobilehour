@@ -3,6 +3,7 @@
 ]) ?>
 <?= loadPartial('navbar-admin') ?>
 <?= loadPartial('pagetitle', ['pageTitle' => 'Edit Product ' . $product->sku]) ?>
+<?= loadPartial('message') ?>
 <?php
 // push each product's not-null image paths to a new array
 $imagePaths = [];
