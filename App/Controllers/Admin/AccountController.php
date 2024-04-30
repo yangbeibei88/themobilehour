@@ -102,7 +102,6 @@ class AccountController
           'lastname' => $adminUserRow->lastname
         ]);
 
-
         redirect(assetPath('admin/dashboard'));
       }
     }
@@ -117,8 +116,8 @@ class AccountController
   {
     // Session::clear('adminUser');
     Session::clearAll();
-    $params = session_get_cookie_params();
-    setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    // $params = session_get_cookie_params();
+    // setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
     redirect(assetPath('admin/auth/login'));
   }
 

@@ -6,8 +6,8 @@ $db = [
   'port' => '3307',
   'dbname' => 'themobilehour',
   'charset' => 'utf8mb4',
-  'username' => 'root',
-  'password' => ''
+  'username' => 'tbh_admin',
+  'password' => '@.4Cn/MEp/Aix_)e'
 ];
 
 return $db;

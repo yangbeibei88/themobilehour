@@ -74,7 +74,13 @@ class Session
    */
   public static function clearAll()
   {
+    // Empty $_SESSION superglobal, equal to $_SESSION = []
     session_unset();
+    // Get session cookie parameters
+    $params = session_get_cookie_params();
+    // Clear session cookie, $prams['expire'] = 60 * 60 * 24 (1day)
+    setcookie('PHPSESSID', '', time() - 86400, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    // Destroy the session
     session_destroy();
   }
 

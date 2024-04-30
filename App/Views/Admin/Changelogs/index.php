@@ -20,7 +20,7 @@
       </div>
       <div class="col-12 col-md-6">
         <label for="filterByProduct" class="form-label">Product</label>
-        <input type="text" name="product_term" id="filterByProduct" placeholder="Search by product" aria-label="Search by product" value="<?= $product_term ?? '' ?>" class="form-control me-2">
+        <input type="text" name="product_term" id="filterByProduct" placeholder="Search by product SKU or Model Number" aria-label="Search by product SKU or Model Number" value="<?= $product_term ?? '' ?>" class="form-control me-2">
       </div>
       <div class="text-danger"><?= $errors['product_term'] ?? '' ?></div>
       <fieldset class="col-12 col-md-6 rounded p-2">
