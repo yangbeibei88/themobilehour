@@ -4,7 +4,7 @@
 
 <main id="user-edit-admin-account">
   <div class="container my-4">
-    <form action="<?= assetPath("admin/auth/account/update/" . $adminUser->user_id) ?>" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="edit-admin-form">
+    <form action="<?= urlPath("admin/auth/account/update/" . $adminUser->user_id) ?>" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="edit-admin-form">
       <div class="col-12 col-md-8 col-lg-6">
         <label for="firstname" class="form-label">First
           Name</label>

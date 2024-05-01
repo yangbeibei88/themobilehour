@@ -11,7 +11,7 @@
       <?php foreach ($categories as $category) : ?>
         <div class="col">
           <div class="card">
-            <a href="<?= assetPath('categories/' . $category->category_id) ?>">
+            <a href="<?= urlPath('categories/' . $category->category_id) ?>">
               <?php if (!empty($category->category_img_path)) : ?>
                 <img src="<?= $category->category_img_path ?>" class="card-img" alt="<?= $category->category_img_alt ?>">
               <?php else : ?>

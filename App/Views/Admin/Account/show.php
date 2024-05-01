@@ -5,7 +5,7 @@
 
 <main id="admin-user-account-show">
   <div class="container-sm my-4">
-    <a href="<?= assetPath('admin/dashboard') ?>" class="btn btn-link">Back to dashboard</a>
+    <a href="<?= urlPath('admin/dashboard') ?>" class="btn btn-link">Back to dashboard</a>
     <div class="card my-4">
       <div class="card-body">
         <h5 class="card-title">Account Information</h5>

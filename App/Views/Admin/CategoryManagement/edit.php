@@ -8,7 +8,7 @@
 <?= loadPartial('message') ?>
 <main id="edit-category">
   <div class="container my-4">
-    <form action="/themobilehour/admin/category-management/update/<?= $category->category_id ?>" method="POST" enctype="multipart/form-data" id="category-edit-form">
+    <form action="<?= urlPath('admin/category-management/update/') . $category->category_id ?>" method="POST" enctype="multipart/form-data" id="category-edit-form">
       <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <?php if (!empty($error)) : ?>

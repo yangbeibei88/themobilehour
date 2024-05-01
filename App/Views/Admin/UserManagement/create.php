@@ -4,7 +4,7 @@
 
 <main id="add-admin-account">
   <div class="container my-4">
-    <form action="/themobilehour/admin/user-management" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="create-admin-form">
+    <form action="<?= urlPath('admin/user-management') ?>" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="create-admin-form">
       <!-- <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <div class="alert alert-danger" role="alert">

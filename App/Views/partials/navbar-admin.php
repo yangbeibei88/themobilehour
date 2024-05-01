@@ -8,10 +8,10 @@ use Framework\Session;
     <div class="container">
       <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-end gap-2">
         <?php if (Session::has('adminUser')) : ?>
-          <li class="nav-item"><a href="<?= assetPath("admin/auth/account/show/" . Session::get('adminUser')['id']) ?>" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
+          <li class="nav-item"><a href="<?= urlPath("admin/auth/account/show/" . Session::get('adminUser')['id']) ?>" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
           </li>
           <!-- <div class="vr"></div> -->
-          <li class="nav-item"><a href="<?= assetPath('admin/dashboard') ?>" class="nav-link"><?= Session::get('adminUser')['role'] ?></a>
+          <li class="nav-item"><a href="<?= urlPath('admin/dashboard') ?>" class="nav-link"><?= Session::get('adminUser')['role'] ?></a>
           </li>
           <!-- <div class="vr"></div> -->
           <!-- <li class="nav-item"><a href="" class="nav-link">Logout</a> -->
@@ -19,7 +19,7 @@ use Framework\Session;
             <button type="submit" class="nav-link">Logout</button>
           </form>
         <?php else : ?>
-          <li class="nav-item"><a href="<?= assetPath('admin/auth/login') ?>" class="nav-link">Admin Login</a>
+          <li class="nav-item"><a href="<?= urlPath('admin/auth/login') ?>" class="nav-link">Admin Login</a>
           <?php endif; ?>
       </ul>
     </div>
@@ -29,7 +29,7 @@ use Framework\Session;
     <div class="row align-items-center justify-content-between">
       <div class="col order-1">
         <a href="<?= assetPath('home') ?>" class="navbar-brand">
-          <img src="<?= assetPath('assets/logo/the mobile hour logo-3-logo.png') ?>" alt="logo" width="120" height="auto">
+          <img src="<?= assetPath('assets/logo/the-mobile-hour-logo-3-logo.png') ?>" alt="logo" width="120" height="auto">
         </a>
       </div>
       <div class="col order-2">

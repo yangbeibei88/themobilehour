@@ -8,7 +8,8 @@
       </div>
       <div class="card-body">
         <div class="text-danger text-center"><?= $errors['credentials'] ?? '' ?></div>
-        <form action="/themobilehour/admin/auth/login" method="POST" class="row g-3 flex-column align-items-center justify-content-center" id="admin-login-form" novalidate>
+
+        <form action="<?= urlPath('admin/auth/login') ?>" method="POST" class="row g-3 flex-column align-items-center justify-content-center" id="admin-login-form" novalidate>
           <div class="col-12 col-md-6">
             <label for="email" class="form-label">Username (Email)</label>
             <input type="email" name="email" id="email" class="form-control <?= !empty($errors['email']) ? 'is-invalid' : '' ?>">
@@ -28,7 +29,7 @@
       <div class="card-footer">
         <div class="row g-3 flex-column align-items-center justify-content-center">
           <div class="col-12 col-md-6">
-            <a href="">Forgot password?</a>
+            <a href="#">Forgot password?</a>
           </div>
         </div>
       </div>

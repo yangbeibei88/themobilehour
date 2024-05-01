@@ -109,20 +109,21 @@ class Router
    * @param string $method http method
    * @return void
    */
-  public function route($uri)
+  public function route()
   {
+
+    $uri = $this->normalizedURIPath();
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-    // split the current URI into segments
-    $uriSegments = explode('/', trim($uri, '/'));
+    inspect($uri);
 
-    // inspectAndDie($uriSegments);
 
     foreach ($this->routes as $route) {
 
-
       // split the route URI into segments
       $routeSegments = explode('/', trim($route['uri'], '/'));
+      // split the current URI into segments
+      $uriSegments = explode('/', $uri);
 
       // inspect($routeSegments);
 
@@ -168,24 +169,6 @@ class Router
           return;
         }
       }
-
-      /**--------------------------first version start ---------------------------------- */
-      // if ($route['uri'] === $uri && $route['method'] === $method) {
-      //   // require basePath('App/' . $route['controller']);
-      //   // Extract controller and controller method
-      //   $controller = 'App\\Controllers\\' . $route['controller'];
-      //   $action = $route['action'];
-
-      //   // instantiate the controller and call the method
-      //   $controllerInstance = new $controller();
-      //   $controllerInstance->$action();
-
-      //   inspect($controller);
-      //   inspect($action);
-
-      //   return;
-      // }
-      /**--------------------------first version end ---------------------------------- */
     }
 
     if (in_array('admin', $uriSegments)) {
@@ -193,5 +176,99 @@ class Router
     } else {
       ErrorController::notFound();
     }
+  }
+
+  // public function route($uri)
+  // {
+
+  //   /*----------------------------------------------------------*/
+  //   $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+  //   // split the current URI into segments
+  //   $uriSegments = explode('/', trim($uri, '/'));
+
+  //   // inspectAndDie($uriSegments);
+
+  //   foreach ($this->routes as $route) {
+
+
+  //     // split the route URI into segments
+  //     $routeSegments = explode('/', trim($route['uri'], '/'));
+
+  //     // inspect($routeSegments);
+
+  //     // check if actual uri and route uri match, set initial value to true
+  //     $match = true;
+
+  //     // first check if the number of segments matches
+  //     if (count($uriSegments) === count($routeSegments) && strtoupper($route['method'] === $requestMethod)) {
+  //       $params = [];
+
+  //       for ($i = 0; $i < count($uriSegments); $i++) {
+  //         // if actual uri segment part not match router uri segment part, and there is no pram
+  //         if ($routeSegments[$i] !== $uriSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
+  //           $match = false;
+  //           break;
+  //         }
+
+  //         // check for the pram and add to $params array
+  //         if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
+  //           // inspectAndDie($matches); // $matches[0] == {id}, $matches[1] == id
+  //           // inspectAndDie($uriSegments[$i]);
+  //           $params[$matches[1]] = $uriSegments[$i];
+  //           // inspectAndDie($params);
+  //         }
+  //       }
+
+  //       if ($match) {
+  //         foreach ($route['middleware'] as $role) {
+  //           (new Authorize())->handle($role);
+  //         }
+
+  //         // Extract controller and controller method
+  //         $controller = 'App\\Controllers\\' . $route['controller'];
+  //         $action = $route['action'];
+
+  //         // instantiate the controller and call the method
+  //         $controllerInstance = new $controller();
+  //         $controllerInstance->$action($params);
+
+  //         // inspect($controller);
+  //         // inspect($action);
+
+  //         return;
+  //       }
+  //     }
+  //   }
+
+  //   if (in_array('admin', $uriSegments)) {
+  //     AdminErrorController::notFound();
+  //   } else {
+  //     ErrorController::notFound();
+  //   }
+  // }
+
+  private function normalizedURIPath()
+  {
+    // $requestUri = $_SERVER['REQUEST_URI'];
+
+    $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+
+    // // Normalize the request URI by removing the script name or its directory
+    // $appBasePath = dirname($scriptName);
+
+    // Calculate the base path dynamically: Remove the script's filename and then strip it from the request URI
+    $appBasePath = str_replace('/public/index.php', '', $scriptName); // removes the trailing '/public/index.php'
+
+    if (strpos($requestUri, $appBasePath) === 0) {
+      $path = substr($requestUri, strlen($appBasePath));
+    } else {
+      $path = $requestUri; // Fallback if something unexpected occurs
+    }
+
+
+    $path = trim($path, '/');
+    return $path;
   }
 }

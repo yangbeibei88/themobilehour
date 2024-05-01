@@ -32,7 +32,7 @@ $categories = $categoryModel->getAllActiveCategories();
   <!-- main nav -->
   <nav class="navbar navbar-expand-md bg-dark border-bottom border-body main-navbar" data-bs-theme="dark">
     <div class="container">
-      <a href="<?= assetPath('home') ?>" class="navbar-brand"><img src="<?= assetPath('assets/logo/the mobile hour logo-3-logo.png') ?>" alt="logo" width="100" height="auto"></a>
+      <a href="<?= assetPath('home') ?>" class="navbar-brand"><img src="<?= assetPath('assets/logo/the-mobile-hour-logo-3-logo.png') ?>" alt="logo" width="100" height="auto"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

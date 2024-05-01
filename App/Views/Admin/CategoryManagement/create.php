@@ -17,7 +17,7 @@
         <?php endif; ?>
       <?php endforeach; ?>
     <?php endif; ?>
-    <form action="/themobilehour/admin/category-management" method="POST" enctype="multipart/form-data" id="add-new-category-form">
+    <form action="<?= urlPath('admin/category-management') ?>" method="POST" enctype="multipart/form-data" id="add-new-category-form">
       <div class="accordion" id="categoryAccordion">
         <div class="accordion-item">
           <div class="accordion-header">

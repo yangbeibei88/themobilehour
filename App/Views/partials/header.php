@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
   <link rel="stylesheet" href="<?= assetPath("css/custom.css") ?>">
+  <link rel="shortcut icon" type="image/x-icon" href="<?= assetPath("assets/logo/favicon.ico") ?>">
   <script src="<?= assetPath("js/main.js") ?>" defer></script>
   <title><?= isset($pageTitle) ? "$pageTitle | The Mobile Hour" : 'The Mobile Hour' ?></title>
 </head>

@@ -2,7 +2,7 @@
 
 // session_start();
 require __DIR__ . '/../vendor/autoload.php';
-// echo '__DIR__: ' . __DIR__;
+echo '__DIR__: ' . __DIR__;
 // echo '<br>';
 // echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
 
@@ -68,6 +68,10 @@ require '../functions.php';
 // echo '<br>';
 // inspectAndDie(Session::get('adminUser')['id']);
 
+// inspect('appBasePath: ' . appBasePath());
+// inspect(strpos($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']));
+// inspect('normalizedURIPath: ' . normalizedURIPath());
+
 
 // require '../config/config.php';
 // require basePath('App/Views/Home/index.php');
@@ -94,8 +98,11 @@ $router = new Router();
 // get routes
 $routes = require basePath('routes.php');
 
+/*----------------get current URI and HTTP method start-------------*/
 // get current URI and HTTP method
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+/*----------------get current URI and HTTP method end-------------*/
+
 // move $method to Router, 
 // $method = $_SERVER['REQUEST_METHOD'];
 
@@ -105,7 +112,8 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Route the request
 // $router->route($uri, $method);
-$router->route($uri);
+// $router->route($uri);
+$router->route();
 
 // if uri exists in routes, then...
 // if (array_key_exists($uri, $routes)) {

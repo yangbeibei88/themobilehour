@@ -24,7 +24,7 @@ foreach ((array) $product as $key => $value) {
 
 <main id="edit-product">
   <div class="container my-4">
-    <form method="POST" action="/themobilehour/admin/product-management/update/<?= $product->product_id ?>" enctype="multipart/form-data" id="product-edit-form" novalidate>
+    <form method="POST" action="<?= urlPath('admin/product-management/update/' . $product->product_id) ?>" enctype="multipart/form-data" id="product-edit-form" novalidate>
       <!-- <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <?php if (!empty($error)) : ?>

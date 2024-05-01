@@ -15,7 +15,7 @@
         Product</a>
     </div>
 
-    <form class="row row-cols-1 row-cols-sm-2 row-cols-md-4 align-items-center justify-conent-between border rounded bg-body-tertiary p-2" role="search" action="<?= assetPath('admin/product-management/search') ?>" method="GET">
+    <form class="row row-cols-1 row-cols-sm-2 row-cols-md-4 align-items-center justify-conent-between border rounded bg-body-tertiary p-2" role="search" action="<?= urlPath('admin/product-management/search') ?>" method="GET">
       <div class="col col-md-6">
         <label for="admin-product-search" class="form-label">Search</label>
         <input type="search" name="term" id="admin-product-search" placeholder="Search by SKU or Product Name" aria-label="Search" class="form-control me-2" value="<?= $term ?? '' ?>">

@@ -10,7 +10,7 @@
 <main id="category-manager">
   <div class="container my-4">
     <div class="d-flex align-items-center justify-content-end mb-3" id="product-manager-top">
-      <a href="<?= assetPath('admin/category-management/create') ?>" role="button" class="btn btn-outline-primary">Add New
+      <a href="<?= urlPath('admin/category-management/create') ?>" role="button" class="btn btn-outline-primary">Add New
         Category</a>
     </div>
 

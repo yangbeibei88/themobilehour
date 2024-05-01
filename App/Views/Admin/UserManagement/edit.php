@@ -4,7 +4,7 @@
 
 <main id="edit-admin-account">
   <div class="container my-4">
-    <form action="/themobilehour/admin/user-management/update/<?= $adminUser->user_id ?>" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="edit-admin-form">
+    <form action="<?= urlPath('admin/user-management/update/') . $adminUser->user_id ?>" method="POST" class="row row-cols-1 flex-column g-2 align-items-center justify-content-center" novalidate id="edit-admin-form">
       <!-- <?php if (isset($errors)) : ?>
         <?php foreach ($errors as $error) : ?>
           <div class="alert alert-danger" role="alert">
