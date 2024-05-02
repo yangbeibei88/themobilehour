@@ -11,7 +11,7 @@ $categories = $categoryModel->getAllActiveCategories();
   <!-- top-navbar -->
   <nav class="navbar navbar-expand-md bg-dark border-bottom py-0 top-navbar" data-bs-theme="dark">
     <div class="container">
-      <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-end">
+      <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-end gap-2">
         <?php if (Session::has('adminUser')) : ?>
           <li class="nav-item"><a href="<?= assetPath("admin/auth/account/show/" . Session::get('adminUser')['id']) ?>" class="nav-link"><?= Session::get('adminUser')['firstname'] ?></a>
           </li>

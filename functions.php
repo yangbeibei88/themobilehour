@@ -18,8 +18,8 @@ define('IMAGE_MAX_SIZE', '5000000');                                    // Max f
 define('IMAGE_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR);
 define('DOCUMENT_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR);
 define('AVATAR_UPLOADS', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR);
-inspect(substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT'])));
-inspect('urlPath: ' . urlPath('admin/product-management'));
+// inspect(substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT'])));
+// inspect('urlPath: ' . urlPath('admin/product-management'));
 
 // echo '<br>';
 // echo 'image_uploads_folder: ' . IMAGE_UPLOADS;

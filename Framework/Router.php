@@ -115,7 +115,7 @@ class Router
     $uri = $this->normalizedURIPath();
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-    inspect($uri);
+    // inspect($uri);
 
 
     foreach ($this->routes as $route) {
@@ -178,75 +178,6 @@ class Router
     }
   }
 
-  // public function route($uri)
-  // {
-
-  //   /*----------------------------------------------------------*/
-  //   $requestMethod = $_SERVER['REQUEST_METHOD'];
-
-  //   // split the current URI into segments
-  //   $uriSegments = explode('/', trim($uri, '/'));
-
-  //   // inspectAndDie($uriSegments);
-
-  //   foreach ($this->routes as $route) {
-
-
-  //     // split the route URI into segments
-  //     $routeSegments = explode('/', trim($route['uri'], '/'));
-
-  //     // inspect($routeSegments);
-
-  //     // check if actual uri and route uri match, set initial value to true
-  //     $match = true;
-
-  //     // first check if the number of segments matches
-  //     if (count($uriSegments) === count($routeSegments) && strtoupper($route['method'] === $requestMethod)) {
-  //       $params = [];
-
-  //       for ($i = 0; $i < count($uriSegments); $i++) {
-  //         // if actual uri segment part not match router uri segment part, and there is no pram
-  //         if ($routeSegments[$i] !== $uriSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
-  //           $match = false;
-  //           break;
-  //         }
-
-  //         // check for the pram and add to $params array
-  //         if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
-  //           // inspectAndDie($matches); // $matches[0] == {id}, $matches[1] == id
-  //           // inspectAndDie($uriSegments[$i]);
-  //           $params[$matches[1]] = $uriSegments[$i];
-  //           // inspectAndDie($params);
-  //         }
-  //       }
-
-  //       if ($match) {
-  //         foreach ($route['middleware'] as $role) {
-  //           (new Authorize())->handle($role);
-  //         }
-
-  //         // Extract controller and controller method
-  //         $controller = 'App\\Controllers\\' . $route['controller'];
-  //         $action = $route['action'];
-
-  //         // instantiate the controller and call the method
-  //         $controllerInstance = new $controller();
-  //         $controllerInstance->$action($params);
-
-  //         // inspect($controller);
-  //         // inspect($action);
-
-  //         return;
-  //       }
-  //     }
-  //   }
-
-  //   if (in_array('admin', $uriSegments)) {
-  //     AdminErrorController::notFound();
-  //   } else {
-  //     ErrorController::notFound();
-  //   }
-  // }
 
   private function normalizedURIPath()
   {

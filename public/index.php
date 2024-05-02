@@ -2,7 +2,7 @@
 
 // session_start();
 require __DIR__ . '/../vendor/autoload.php';
-echo '__DIR__: ' . __DIR__;
+// echo '__DIR__: ' . __DIR__;
 // echo '<br>';
 // echo 'dirname(__DIR__,1): ' . dirname(__DIR__, 1);
 
