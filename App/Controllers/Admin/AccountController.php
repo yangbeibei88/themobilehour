@@ -52,7 +52,8 @@ class AccountController
     if (!empty($errors)) {
       // if either email or password doesn't comply with validation, display error
       loadView('Admin/Account/login', [
-        'errors' => $errors
+        'errors' => $errors,
+        'email' => trim($inputData['email'])
       ]);
       exit;
     } else {

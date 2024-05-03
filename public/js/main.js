@@ -41,7 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // control accordion collapse in small device
 function adjustAccordionBehavior() {
-  const accordionItems = document.querySelectorAll(".accordion-collapse");
+  const accordionItems = document.querySelectorAll(
+    "#product-filters .accordion-collapse, #productfiltersByCategory .accordion-collapse"
+  );
 
   if (window.innerWidth >= 768) {
     accordionItems.forEach((item) => {

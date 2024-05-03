@@ -12,7 +12,7 @@
         <form action="<?= urlPath('admin/auth/login') ?>" method="POST" class="row g-3 flex-column align-items-center justify-content-center" id="admin-login-form" novalidate>
           <div class="col-12 col-md-6">
             <label for="email" class="form-label">Username (Email)</label>
-            <input type="email" name="email" id="email" class="form-control <?= !empty($errors['email']) ? 'is-invalid' : '' ?>">
+            <input type="email" name="email" id="email" class="form-control <?= !empty($errors['email']) ? 'is-invalid' : '' ?>" value="<?= $email ?? '' ?>">
             <div class="text-danger"><?= $errors['email'] ?? '' ?></div>
           </div>
           <div class="col-12 col-md-6">
@@ -26,13 +26,13 @@
         </form>
 
       </div>
-      <div class="card-footer">
+      <!-- <div class="card-footer">
         <div class="row g-3 flex-column align-items-center justify-content-center">
           <div class="col-12 col-md-6">
             <a href="#">Forgot password?</a>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
 

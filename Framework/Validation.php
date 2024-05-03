@@ -168,14 +168,14 @@ class Validation
   {
     $value = trim($value);
     if ($required && empty($value)) {
-      return "{$name} email is rquired";
+      return "{$name} is required";
     } elseif (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
       return "Please enter a valid email address";
     } elseif (filter_var($value, FILTER_VALIDATE_EMAIL)) {
       if (strlen($value) < 5) {
-        return "{$name} email must be more than 5 characters";
+        return "{$name} must be more than 5 characters";
       } elseif (strlen($value) > 254) {
-        return "{$name} email must not exceed 254 characters";
+        return "{$name} must not exceed 254 characters";
       }
     }
 

@@ -29,16 +29,16 @@
           <div id="categoryPanel" class="accordion-collapse collapse show">
             <div class="accordion-body">
               <div class="row mb-3">
-                <label for="category-name" class="col-2 col-form-label">Category
+                <label for="category-name" class="col-12 col-md-2 col-form-label">Category
                   Name</label>
-                <div class="col-10 col-md-6">
+                <div class="col-12 col-md-6">
                   <input type="text" name="category_name" id="category-name" class="form-control" value="<?= $category->category_name ?? '' ?>">
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="category-desc" class="col-2 col-form-label">Category
+                <label for="category-desc" class="col-12 col-md-2 col-form-label">Category
                   Description</label>
-                <div class="col-10 col-md-6">
+                <div class="col-12 col-md-6">
                   <textarea name="category_desc" id="category-desc" rows="15" class="quill-editor form-control"><?= $category->category_desc ?? '' ?></textarea>
                 </div>
               </div>
@@ -49,7 +49,7 @@
                 </div>
               </div>
               <div class="row mb-3">
-                <div class="col-10">
+                <div class="col-12">
                   <div class="input-group">
                     <label for="category-image" class="input-group-text">Upload Category Image</label>
                     <input type="file" name="category_img_path" id="category-image" accept="image/*" class="form-control">
@@ -67,10 +67,10 @@
       </div>
       <div class="row justify-content-center my-5 action-buttons">
         <div class="col-6 d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary w-25">Save</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </div>
         <div class="col-6 d-flex justify-content-start">
-          <a href="<?= assetPath("admin/category-management") ?>" class="btn btn-secondary w-25">Cancel</a>
+          <a href="<?= assetPath("admin/category-management") ?>" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>

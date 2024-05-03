@@ -27,22 +27,22 @@
           <div id="productMetaPanel" class="accordion-collapse collapse show">
             <div class="accordion-body">
               <div class="row mb-3">
-                <label for="sku" class="col-2 col-form-label">SKU</label>
-                <div class="col-10 col-md-6">
+                <label for="sku" class="col-12 col-md-2 col-form-label">SKU</label>
+                <div class="col-12 col-md-6">
                   <input type="text" name="sku" id="sku" class="form-control <?= !empty($errors['sku']) ? 'is-invalid' : '' ?>" value="<?= $productMeta['sku'] ?? '' ?>">
                   <div class="text-danger"><?= $errors['sku'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="title" class="col-2 col-form-label">Title</label>
-                <div class="col-10 col-md-6">
+                <label for="title" class="col-12 col-md-2 col-form-label">Title</label>
+                <div class="col-12 col-md-6">
                   <input type="text" name="product_name" id="title" class="form-control <?= !empty($errors['product_name']) ? 'is-invalid' : '' ?>" value="<?= $productMeta['product_name'] ?? '' ?>">
                   <div class="text-danger"><?= $errors['product_name'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="category" class="col-2 col-form-label">Category</label>
-                <div class="col-10 col-md-6">
+                <label for="category" class="col-12 col-md-2 col-form-label">Category</label>
+                <div class="col-12 col-md-6">
                   <select name="category_id" id="category" class="form-select <?= !empty($errors['category_id']) ? 'is-invalid' : '' ?>">
                     <option selected value="">Select a
                       Category</option>
@@ -59,43 +59,43 @@
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="product_model" class="col-2 col-form-label">Model</label>
-                <div class="col-10 col-md-6">
+                <label for="product_model" class="col-12 col-md-2 col-form-label">Model</label>
+                <div class="col-12 col-md-6">
                   <input type="text" name="product_model" id="product_model" class="form-control <?= !empty($errors['product_model']) ? 'is-invalid' : '' ?>" value="<?= $productMeta['product_model'] ?? '' ?>">
                   <div class="text-danger"><?= $errors['product_model'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="manufacturer" class="col-2 col-form-label">Manufacturer</label>
-                <div class="col-10 col-md-6">
+                <label for="manufacturer" class="col-12 col-md-2 col-form-label">Manufacturer</label>
+                <div class="col-12 col-md-6">
                   <input type="text" name="manufacturer" id="manufacturer" class="form-control <?= !empty($errors['manufacturer']) ? 'is-invalid' : '' ?>" value="<?= $productMeta['manufacturer'] ?? '' ?>">
                   <div class="text-danger"><?= $errors['manufacturer'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="list_price" class="col-2 col-form-label">List
+                <label for="list_price" class="col-12 col-md-2 col-form-label">List
                   Price</label>
-                <div class="col-10 col-md-6">
+                <div class="col-12 col-md-6">
                   <input type="number" name="list_price" id="list_price" class="form-control <?= !empty($errors['list_price']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $productMeta['list_price'] ?? 0 ?>">
                   <div class="text-danger"><?= $errors['list_price'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="discount" class="col-2 col-form-label">Discount</label>
-                <div class="col-10 col-md-6">
+                <label for="discount" class="col-12 col-md-2 col-form-label">Discount</label>
+                <div class="col-12 col-md-6">
                   <input type="number" name="disc_pct" id="discount" class="form-control <?= !empty($errors['disc_pct']) ? 'is-invalid' : '' ?>" step="0.01" value="<?= $productMeta['disc_pct'] ?? 0 ?>">
                   <div class="text-danger"><?= $errors['disc_pct'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="stock" class="col-2 col-form-label">Stock</label>
-                <div class="col-10 col-md-6">
+                <label for="stock" class="col-12 col-md-2 col-form-label">Stock</label>
+                <div class="col-12 col-md-6">
                   <input type="number" name="stock_on_hand" id="stock" class="form-control <?= !empty($errors['stock_on_hand']) ? 'is-invalid' : '' ?>" value="<?= $productMeta['stock_on_hand'] ?? 0 ?>">
                   <div class="text-danger"><?= $errors['stock_on_hand'] ?? '' ?></div>
                 </div>
               </div>
               <div class="row mb-3 form-check form-switch">
-                <div class="col-10">
+                <div class="col-12">
                   <label for="displayOnline" class="form-check-label">Display
                     Online</label>
                   <input type="checkbox" class="form-check-input" role="switch" id="displayOnline" name="is_active" value="1" <?= isset($productMeta['is_active']) && $productMeta['is_active'] == 1 ? 'checked' : '' ?>>
@@ -156,42 +156,6 @@
                 <label class="input-group-text" for="product-alt3">Alt-text</label>
                 <input type="text" name="alt3" id="product-alt3" class="form-control <?= !empty($errors['alt3']) ? 'is-invalid' : '' ?>">
               </div>
-
-              <table class="table" id="product-imagegallery-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Thumbnail
-                    </th>
-                    <th scope="col">File Name
-                    </th>
-                    <th scope="col">File Size
-                    </th>
-                    <th scope="col">Alt text
-                    </th>
-                    <th scope="col">Delete</th>
-                  </tr>
-                </thead>
-                <!-- <tbody>
-                  <tr>
-                    <td><img src="uploads/images/IP15PRMX256NT.jpg" alt="" width="50" height="50"></td>
-                    <td>file-name.jpg</td>
-                    <td>120 KB</td>
-                    <td><input type="text" name="img-alt" class="form-control">
-                    </td>
-                    <td><button type="button" class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><img src="uploads/images/IP15PRMX256NT_2.jpg" alt="" width="50" height="50"></td>
-                    <td>file-name.jpg</td>
-                    <td>120 KB</td>
-                    <td><input type="text" name="img-alt" class="form-control">
-                    </td>
-                    <td><button type="button" class="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                </tbody> -->
-              </table>
             </div>
           </div>
         </div>
@@ -285,10 +249,10 @@
       <div class="row justify-content-center my-5 action-buttons">
         <div class="col-6 d-flex justify-content-end">
           <!-- <input type="submit" value="Submit" name="submit" class="btn btn-primary w-25"> -->
-          <button type="submit" class="btn btn-primary w-25">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         <div class="col-6 d-flex justify-content-start">
-          <a href="<?= assetPath("admin/product-management") ?>" class="btn btn-secondary w-25">Cancel</a>
+          <a href="<?= assetPath("admin/product-management") ?>" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>
