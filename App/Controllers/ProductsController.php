@@ -95,7 +95,7 @@ class ProductsController
 
     $count = count($products);
 
-    loadView('products/index', [
+    loadView('Products/index', [
       'products' => $products,
       'term' => $term,
       'count' => $count,
@@ -147,7 +147,7 @@ class ProductsController
 
     // inspectAndDie($inputData);
 
-    loadView('products/index', [
+    loadView('Products/index', [
       'products' => $products,
       'categories' => $categories,
       'storages' => $storages,
