@@ -33,8 +33,6 @@ Check out the live site: [The Mobile Hour](https://themobilehour.beibeiyang.app/
 
 Beibei Yang - [LinkedIn](https://www.linkedin.com/in/beibei-yang/) - [beibeiyang88@hotmail.com](mailto:beibeiyang88@hotmail.com)
 
-Project Link: [https://github.com/yangbeibei88/themobilehour](https://github.com/yangbeibei88/themobilehour)
-
 ## License
 
-Distributed under the MIT License. See LICENSE.md for more information.
+The project is licensed under [Apache license 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
